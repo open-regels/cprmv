@@ -1,6 +1,6 @@
 {
   "name": "cprmv",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "Core Public Rule Management Vocabulary ReSpec specification",
   "main": "index.html",
   "scripts": {
