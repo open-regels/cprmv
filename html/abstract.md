@@ -1,0 +1,1 @@
+This specification defines the [[[CPRMV]]]. The [[[CPRMV]]] is the basis for a standard for public rule management for which the [[[RONL]]] is the (Dutch) portal for all related knowledge and tooling for now.

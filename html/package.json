@@ -1,0 +1,14 @@
+{
+  "name": "cprmv",
+  "version": "0.2.0",
+  "description": "Core Public Rule Management Vocabulary ReSpec specification",
+  "main": "index.html",
+  "scripts": {
+    "build": "npx respec --no-sandbox --localhost --src index.html --out ./public/snapshot.html && cp -f -R media public"
+  },
+  "author": "Bas Kaptijn",
+  "license": "CC0",
+  "dependencies": {
+    "respec": "^35.2.2"
+  }
+}

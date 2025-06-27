@@ -1,0 +1,67 @@
+VERSION "1.2"
+BASE :<http://example.com/>
+PREFIX cprmv: <https://cprmv.open-regels.nl/0.3.0/>
+PREFIX cprmvmethods: <https://cprmv.open-regels.nl/0.3.0/methods>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX owl: <http://www.w3.org/2002/07/owl#>
+PREFIX vann: <http://purl.org/vocab/vann/>
+PREFIX dct: <http://purl.org/dc/terms/>
+
+<https://www.open-regels.nl/standards/cprmv/0.3.0/methods> a owl:Ontology;
+  vann:preferredNamespaceURI "https://www.open-regels.nl/standards/cprmv/methods";
+  vann:preferredNamespacePrefix "cprmv";
+  dct:title "CPRMV";
+  dct:description "Core Public Rule Management Vocabulary is a vocabulary for expressing knowledge about agreements published as rules which can both be expressed in natural language like articles in laws as well as more formal business rules for automation of decisions, and also how all these rules relate";
+  owl:versionIRI <https://www.open-regels.nl/standards/cprmv/0.3.0/methods>;
+  owl:versionInfo "0.3.0";
+  dct:created "2025-06-25"^^xsd:date;
+  dct:creator <https://www.ictu.nl/>;
+  dct:license <https://creativecommons.org/licenses/by/4.0/>;
+  rdfs:seeAlso <https://www.open-regels.nl/standards/cprmv/methods> .
+
+cprmvmethods:lawanalysis a cprmv:AnalysisMethod;
+    cprmv:id "Law Analysis/JAS"@en;
+    cprmv:id "Wetsanalyse/JAS"@nl;
+    cprmv:comment "zie: https://regels.overheid.nl/standaarden/wetsanalyse"@nl.
+
+cprmvmethods:calculemusflint a cprmv:AnalysisMethod;
+    cprmv:id "Calculemus/FLINT"@en;
+    cprmv:id "Calculemus/FLINT"@nl;
+    cprmv:comment "zie: https://normativesystems.gitlab.io/knowledge-modeling/documentation-website/docs/"@nl.
+    cprmv:comment "see: https://normativesystems.gitlab.io/knowledge-modeling/documentation-website/docs/"@en.
+
+cprmvmethods:bwb a cprmv:AnalysisMethod;
+    cprmv:id "bwb"@nl;
+    cprmv:comment "zie: https://www.overheid.nl/sites/default/files/wetten/Procedurehandboek_BWB_3.7.pdf and https://www.overheid.nl/sites/default/files/pdf/Handleiding%2BSRU%2BBWB.pdf"@nl.
+
+cprmvmethods:dmn13 a cprmv:FormalisationMethod;
+    cprmv:id "DMN 1.3";
+    cprmv:comment "see https://www.omg.org/spec/DMN/1.3/About-DMN".
+
+cprmv:acknowledged a owl:ObjectProperty;
+
+cprmvmethods:rulemethods a owl:Class;
+    cprmv:acknowledged (
+        cprmvmethods:lawanalysis,
+        cprmvmethods:calculemusflint,
+        cprmvmethods:bwb,
+        cprmvmethods:dmn13
+    ).
+
+cprmvmethods:analysismethods  a owl:Class;
+    cprmv:acknowledged (
+        cprmvmethods:lawanalysis,
+        cprmvmethods:calculemusflint,
+        cprmvmethods:bwb
+    ).
+
+cprmvmethods:formalisationmethods a owl:Class;
+    cprmv:acknowledged (
+        cprmvmethods:dmn13
+    ).
+
+cprmvmethods:codificationmethods a owl:Class;
+    cprmv:acknowledged ().
+
+cprmvmethods:testmethods a owl:Class;
+    cprmv:acknowledged ().

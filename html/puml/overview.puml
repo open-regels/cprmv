@@ -1,0 +1,85 @@
+@startuml
+left to right direction
+
+package "cpsv-ap v3.2.0 (relevant part)" as cpsv-ap {
+    object "cpsv-ap:Rule" as cpsvrule
+    object "cpsv-ap:PublicService" as service
+    service "0..*" -u-> cpsvrule : follows
+    
+    object "eli:LegalResource" as legalresource
+    legalresource <-[dotted]- "0..*" cpsvrule : implements
+    object "cv:output" as output
+    service "0..*" -l-> output : produces
+    object "dcat:dataset" as dcat
+    output --> "0..*" dcat : isPartOf
+    object "cv:Event" as event
+    object "cv.LifeEvent" as lifeevent
+    lifeevent -u-|> event
+    service <-- event : hasRelatedService
+    service --> event : isGroupedBy
+
+    object "cv:PublicOrganisation" as organisation
+    service --> "1..*" organisation : hasCompetentAuthority
+
+    service "0..*" --> service : requires
+    service "0..*" --> service : related
+}
+
+package cprmv {
+    object RuleSet {
+        id
+        comment
+    }
+    object TestSet
+    TestSet -u-|> RuleSet
+    RuleSet --|> legalresource
+    object Rule {
+        id
+        comment
+        sourcequote
+        definition
+        postDefinition
+    }
+    object TestCase
+    TestCase -u-|> Rule
+    RuleSet *-- Rule : contains
+    TestSet *-- TestCase : contains
+    Rule "0..*" --> Rule : extends
+
+    object Explanation {
+        id
+        type
+        comment
+    }
+
+    RuleSet <-l- Explanation : explains
+    Rule <-l- Explanation : explains
+
+    object RuleMethod {
+        id
+        comment
+    }
+    Rule --> "1..1" RuleMethod : method
+    RuleMethod <-l- Explanation : explains
+
+    object AnalysisMethod
+    object FormalisationMethod
+    object TestMethod
+    RuleMethod <|-- AnalysisMethod
+    RuleMethod <|-- FormalisationMethod
+    RuleMethod <|-- TestMethod
+    
+    package cprmvmethods {
+        object rulemethods
+        RuleMethod <-- rulemethods : acknowledged
+    }
+    
+    TestCase "1..1" --> TestMethod : method
+    
+}
+
+RuleSet --> "1..1" legalresource : extends
+RuleSet  -[dotted]-> service : "output-of"
+output <|--  RuleSet
+
+@enduml
