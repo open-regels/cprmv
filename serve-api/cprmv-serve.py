@@ -82,7 +82,7 @@ def loadRuleSet(cprmvid):
         if not (None, CPRMV.id, Literal(cprmvid)) in g:
             # todo : check if the file exists locally // otherwise cprmv.id might also be a source URI pointing to a web address the resource can be downloaded from
             print(f"Info: loading {cprmvid}.ttl")
-            g.parse(cprmvid+".ttl", format="turtle") # todo : support for other formats ?
+            g.parse(f"data/{cprmvid}.ttl", format="turtle") # todo : support for other formats ?
     except Exception as e:
         if "unbound prefix" in str(e).lower(): #TODO maybe this should not be ignonred always
             print(f"Warning: ignoring unbound prefix encountered: {e}")
