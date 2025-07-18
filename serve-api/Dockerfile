@@ -1,19 +1,29 @@
-FROM python:3.12-slim
+FROM python:3.12-bookworm
 
 WORKDIR /app
 
-# Install system dependencies that might be needed for rdflib
-RUN apt-get update && apt-get install -y \
-    gcc \
-    && rm -rf /var/lib/apt/lists/*
+# Install Dutch locale
+RUN apt-get update && apt-get install -y locales && \
+    sed -i '/nl_NL.UTF-8/s/^# //g' /etc/locale.gen && \
+    locale-gen && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/*
 
+# Set environment variables for locale
+ENV LANG=nl_NL.UTF-8
+ENV LANGUAGE=nl_NL:nl
+ENV LC_ALL=nl_NL.UTF-8
+
+# Copy requirements first for better caching
 COPY requirements.txt .
 
-# Install Python dependencies
-RUN pip install --no-cache-dir --upgrade pip && \
-    pip install --no-cache-dir --timeout=300 fastapi uvicorn[standard] rdflib parse lxml
+# Install dependencies with more specific pip options
+RUN python -m pip install --no-cache-dir --upgrade pip setuptools wheel && \
+    pip install --no-cache-dir --timeout=300 --retries=3 -r requirements.txt
 
+# Copy application code
 COPY cprmv-serve.py .
+COPY data/ ./data/
 
 EXPOSE 8000
 
