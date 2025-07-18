@@ -99,7 +99,7 @@ def getBWBPublicationAsCPRMVRuleSet(cprmvid):
             xml = etree.parse(open(tmp_file.name))
             print("transforming BWB resource into CPRMV RuleSet ...")
             ac = etree.XSLTAccessControl(read_network=False, read_file=False)
-            transform = etree.XSLT(etree.parse('bwb2cprmv.xsl'), access_control=ac)
+            transform = etree.XSLT(etree.parse('data/bwb2cprmv.xsl'), access_control=ac)
             result = str(transform(xml))
             os.remove(tmp_file.name)
             return result

@@ -1,0 +1,11 @@
+version: "3.8"
+
+services:
+  cprmv-api:
+    container_name: cprmv-api
+    image: datafluisteraar/cprmv-api:latest  # Use the pre-built image
+    ports:
+      - "8000:8000"  # Map host port 8000 to container port 8000
+    volumes:
+      - /volume2/docker/cprmv-ttl:/app/data
+    restart: unless-stopped
