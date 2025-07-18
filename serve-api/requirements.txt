@@ -1,2 +1,3 @@
-rdflib
-FastAPI
+fastapi==0.104.1
+uvicorn[standard]==0.24.0
+rdflib==7.0.0
