@@ -23,14 +23,14 @@ to try out the API
 ### Build the Docker Image
 From your project folder:
 
-`cd /volume2/development/cprmv/serve-api/`
+`cd /volume2/development/cprmv/serve-api/`<br>
 `docker build -t cprmv-fastapi .`
 
 ### Run the Docker Container
 
 `docker run -d --name cprmv-api -p 8000:8000 cprmv-fastapi`
 
-App will be available at: http://<NAS-IP>:8000/
+App will be available at: http://{NAS-IP}:8000/
 
 #### Basic Docker Commands
 - **Stop**: docker stop cprmv-api
@@ -40,18 +40,9 @@ App will be available at: http://<NAS-IP>:8000/
 
 ## Optional: Docker Compose (for Persistence & Autostart)
 
-### Docker Compose File
+`cd /volume2/development/cprmv/serve-api/`<br>
+`docker-compose up -d --build`
 
-Create `/volume2/docker/projects/cprmv/serve-api/compose.yml`
-
-```
-version: "3.8"
-
-services:
-  cprmv-api:
-    container_name: cprmv-api
-    build: .
-    ports:
-      - "8000:8000"
-    restart: unless-stopped
-```
+### How This Works
+- Your .ttl RDF files should go in `/volume2/docker/cprmv/` on Synology NAS.
+- Inside the container, these files will be available at /app/data/.
