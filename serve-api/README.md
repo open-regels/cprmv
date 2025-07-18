@@ -9,6 +9,7 @@ requires python, FastAPI and rdflib:
 
 pip install FastAPI
 pip install rdflib
+pip install parse
 
 ""usage""
 

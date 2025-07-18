@@ -5,6 +5,17 @@ from rdflib.namespace import RDF
 from typing import Union
 from fastapi import FastAPI
 from fastapi.responses import RedirectResponse
+from parse import search
+from parse import with_pattern
+from urllib.request import Request, urlopen
+from urllib.error import URLError
+from lxml import etree
+import shutil
+import tempfile
+import os
+
+import locale
+locale.setlocale(locale.LC_ALL, 'nl_NL') # todo, find out whether locale has effect on the parse module at all, and if so, make NL not the hard coded locale but dependent on language arguments
 
 app = FastAPI(
     title="CPRMV Rules Serve API",
@@ -13,7 +24,7 @@ app = FastAPI(
     contact={
         "name": "Bas Kaptijn",
         "url": "http://git.open-regels.nl/standards/cprmv",
-        "email": "info@ictu.nl",
+        "email": "Bas.Kaptijn@ictu.nl",
     },
     license_info={
         "name": "EUPL",
@@ -44,13 +55,13 @@ def ruleset(rulesetid: str, format: str = 'cprmv-json', language: Union[str, Non
     return getRules(rulesetid, rulesetid, format)
     
 @app.get("/rules/{rulesetid}/{ruleidpath}")
-def rules(rulesetid: str, ruleidpath: str, path_delimiter: str = ',', format: str = 'cprmv-json', language: Union[str, None] = None, regex: str='s/cprmv:definition ".*€.\([0-9]\{0,3\}\).\{0,1\}\([0-9]\{1,3\},[0-9]\{1,2\}\).*"/cprmv:definition "\1\2"/g'):
+def rules(rulesetid: str, ruleidpath: str, path_delimiter: str = ',', format: str = 'cprmv-json', language: Union[str, None] = None, unformat: str='{situatie:paramvalue}: € {norm:paramvalue};'):
     """
     Returns the Rule including all Rules it contains and that can be found as indicated in the given Rule Id Path (ruleidpath) within the Rule Set that has the given Rule Set Id (rulesetid)
     
     Note that the path consists out of the values of the cprmv:id of the rules in the given ruleset delimited by a delimiter (default delimiter is ',') and for convenience the path may also leave out id's of rules in the path. The first matching rule (depth first) is the one returned.
     
-    Note that the id's in the path are matched case sensitive (!) but surrounding whitespace will be ignored. Case sensitivity will be removed lateron.
+    Note that the id's in the path are matched case sensitive (!) but surrounding whitespace will be ignored. Case sensitivity might get removed lateron.
     
     Note that the Rule Set cprmv resource has to have been installed with this API as a turtle file with the rulsetid name in order for it to be found (for instance "BWBR0015703_2025-07-01_0", being the concatenation of the BWB id, valid from date and index number on this date and which is provided as example with this API).
     
@@ -60,9 +71,10 @@ def rules(rulesetid: str, ruleidpath: str, path_delimiter: str = ',', format: st
     
     The language parameter for now should always be "nl" (default). Multilingual support will be added in a later version.
     
-    The regex parameter is not implemented yet. The idea is that this will allow to apply a regular expression search and replace on the definition values of all Rules returned. This could be used to extract and convert parts of the definitions, for instance retrieving amounts at the end of a definition after a semicolon (see for instance Artikel 20, lid 1, onderdeel a. of the ruleset BWBR0015703_2025-07-01_0)
+    The unformat argument allows for simple string parsing for instance extracting the amount in the sentence of Artikel 20, lid 1, onderdeel a. of the ruleset BWBR0015703_2025-07-01_0 which can also assert parts of the sentence to be expected.
+    It is not neccesary to specify the whole expected content and it works as a search string (using parse.search()) on the formatted output depending on the format argument. For more information on how to use this see https://pypi.org/project/parse/
     """
-    return getRules(rulesetid, ruleidpath, path_delimiter, format)
+    return getRules(rulesetid, ruleidpath, path_delimiter, format, unformat)
 
 @app.get("/jci13/{jciuri}")
 def jci13(jciuri: str = 'jci1.3:c:BWBR0015703&hoofdstuk=3&paragraaf=3.2&artikel=20&z=2025-07-01&g=2025-07-01'):
@@ -75,14 +87,41 @@ def jci13(jciuri: str = 'jci1.3:c:BWBR0015703&hoofdstuk=3&paragraaf=3.2&artikel=
         return response
     return { "error" : "not implemented"}
 
-# if exists in graphs, return it, otherwise load it with rdflib
+def getBWBPublicationAsCPRMVRuleSet(cprmvid):
+    bwbid, pubdate, index = cprmvid.split('_')
+    req = Request(f"https://repository.officiele-overheidspublicaties.nl/bwb/{bwbid}/{pubdate}_{index}/xml/{cprmvid}.xml")
+    try:
+        print("downloading publication...")
+        response = urlopen(req)
+        with tempfile.NamedTemporaryFile(delete=False) as tmp_file:
+            shutil.copyfileobj(response, tmp_file)
+            print(f"opening publication from temp file {tmp_file.name}")
+            xml = etree.parse(open(tmp_file.name))
+            print("transforming BWB resource into CPRMV RuleSet ...")
+            ac = etree.XSLTAccessControl(read_network=False, read_file=False)
+            transform = etree.XSLT(etree.parse('bwb2cprmv.xsl'), access_control=ac)
+            result = str(transform(xml))
+            os.remove(tmp_file.name)
+            return result
+    except URLError as e:
+        if hasattr(e, 'reason'):
+            print('We failed to reach a server.')
+            print('Reason: ', e.reason)
+            raise e
+        elif hasattr(e, 'code'):
+            print('The server couldn\'t fulfill the request.')
+            print('Error code: ', e.code)
+            raise e
+    else:
+        raise Exception('unknown error loading BWB publication ...')
+
+# load the requested publication from the official repository and transform it to CPRMV and load it
 def loadRuleSet(cprmvid):
     g = Graph()
     try:
         if not (None, CPRMV.id, Literal(cprmvid)) in g:
-            # todo : check if the file exists locally // otherwise cprmv.id might also be a source URI pointing to a web address the resource can be downloaded from
-            print(f"Info: loading {cprmvid}.ttl")
-            g.parse(cprmvid+".ttl", format="turtle") # todo : support for other formats ?
+            ttl = getBWBPublicationAsCPRMVRuleSet(cprmvid)
+            g.parse(data=ttl, format="turtle")
     except Exception as e:
         if "unbound prefix" in str(e).lower(): #TODO maybe this should not be ignonred always
             print(f"Warning: ignoring unbound prefix encountered: {e}")
@@ -91,7 +130,11 @@ def loadRuleSet(cprmvid):
             raise e
     return g
     
-def getRules(rulesetid, ruleidpath='', path_delimiter: str = ',', formatarg: str = 'cprmv-json'):
+@with_pattern(r'.+')
+def paramvalue(pvalue):
+    return pvalue
+
+def getRules(rulesetid, ruleidpath='', path_delimiter: str = ',', formatarg: str = 'cprmv-json', unformat: str=''):
     print(f"Info: retrieving info for cprmv:RuleSet : {rulesetid}")
     try:
         g = loadRuleSet(rulesetid)
@@ -99,16 +142,25 @@ def getRules(rulesetid, ruleidpath='', path_delimiter: str = ',', formatarg: str
         return { "error" : str(e) }
     r = getFirstRuleByIdPath(g, ruleidpath, path_delimiter)
     if(r == None):
-        return ""
+        return "None"
     if(formatarg == 'cprmv-json'):
-        return getRule(g, r)
-    result = g.cbd(r)
-    return result.serialize(format=formatarg)
+        result = getRule(g, r)
+    else:
+        result = g.cbd(r).serialize(format=formatarg)
+    if(unformat != ''):
+        definition = str(' '.join(result[CPRMV.definition].split()))
+        definition = search(unformat, definition, extra_types={'paramvalue':paramvalue})
+        if(definition != None):
+            definition = definition.named
+            definition['rulesetid'] = rulesetid
+            definition['ruleidpath'] = ruleidpath
+            result.update(definition)
+    return result
 
 def getFirstRuleByIdPath(g, path, path_delimiter: str = ','):
     reversed_pathsplit = path.split(path_delimiter)
     reversed_pathsplit.reverse()
-    firstid = reversed_pathsplit.pop();
+    firstid = reversed_pathsplit.pop().strip();
     for rootrule in g.subjects(CPRMV.id, Literal(firstid, lang="nl")):
         rule = getFirstRuleByReversedIdPathSplitFromRuleAsRoot(g, rootrule, reversed_pathsplit)
         if(rule != None):
