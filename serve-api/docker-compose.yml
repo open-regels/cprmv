@@ -3,7 +3,7 @@ version: "3.8"
 services:
   cprmv-api:
     container_name: cprmv-api
-    build: .
+    image: datafluisteraar/cprmv-api:latest  # Use the pre-built image
     ports:
       - "8000:8000"  # Map host port 8000 to container port 8000
     volumes:
