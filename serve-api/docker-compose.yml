@@ -5,7 +5,7 @@ services:
     container_name: cprmv-api
     build: .
     ports:
-      - "8000:8000"
+      - "8000:8000"  # Map host port 8000 to container port 8000
     volumes:
-      - /volume2/docker/cprmv:/app/data
+      - /volume2/docker/cprmv-ttl:/app/data
     restart: unless-stopped
