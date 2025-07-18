@@ -1,5 +1,5 @@
 fastapi==0.104.1
 uvicorn[standard]==0.24.0
 rdflib==7.0.0
-parse
-lxml
+parse==1.20.0
+lxml==4.9.3

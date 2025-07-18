@@ -15,7 +15,16 @@ import tempfile
 import os
 
 import locale
-locale.setlocale(locale.LC_ALL, 'nl_NL') # todo, find out whether locale has effect on the parse module at all, and if so, make NL not the hard coded locale but dependent on language arguments
+
+try:
+    locale.setlocale(locale.LC_ALL, 'nl_NL.UTF-8') # todo, find out whether locale has effect on the parse module at all, and if so, make NL not the hard coded locale but dependent on language arguments
+    print("Dutch locale (nl_NL.UTF-8) set successfully")
+except locale.Error:
+    try:
+        locale.setlocale(locale.LC_ALL, 'nl_NL')
+        print("Dutch locale (nl_NL) set successfully")
+    except locale.Error:
+        print("Warning: Dutch locale not available, using system default")
 
 app = FastAPI(
     title="CPRMV Rules Serve API",
