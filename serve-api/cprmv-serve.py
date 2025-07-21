@@ -29,7 +29,7 @@ except locale.Error:
 app = FastAPI(
     title="CPRMV Rules Serve API",
     description="This experimental API allows fetching single CPRMV Rules from locally provided CPRMV RuleSets in a desired RDF format",
-    version="0.1.0",
+    version="0.2.0",
     contact={
         "name": "Bas Kaptijn",
         "url": "http://git.open-regels.nl/standards/cprmv",
@@ -55,11 +55,11 @@ def ruleset(rulesetid: str, format: str = 'cprmv-json', language: Union[str, Non
     """
     returns all rules of a ruleset with the given cprmv:id value (rulesetid) if it can be found as a cprmv resource.
 
-    Note that the Rule Set cprmv resource has to have been installed with this API as a turtle file with the rulsetid name in order for it to be found (for instance "BWBR0015703_2025-07-01_0", being the concatenation of the BWB id, valid from date and index number on this date and which is provided as example with this API).
+    Note that this version of the API only supports the BWB directory (https://repository.officiele-overheidspublicaties.nl/bwb/...) and no other sources. Given a valid cprmvid, it will fetch a source publication and transform it into a RuleSet on the fly and with a result as intended using the CPRMV. All BWB structure elements will become nested cprmv Rules. For the transformation the API uses a XSLT defined in 'data/bwb2cpmv.xsl' which transforms the XML source fetched from the aforementioned directory, which is exepcted to follow the bwb-toestand scheme (https://repository.officiele-overheidspublicaties.nl/Schema/BWB-toestand/2016-1/xsd/toestand_2016-1.xsd), to the CPRMV RuleSet as a Turtle file. Thhis content is what this API can serve, either by returning the whole RuleSet in the format requested or single Rules (with all the Rules that are nested in them if applicable). This API also allows for simple string interpretation of the definition of a single rule (see /rules/...).
     
-    The format argument allows all built in rdflib formats (see https://rdflib.readthedocs.io/en/stable/apidocs/rdflib.html#rdflib.graph.Graph.serialize)  and implies returning the Concise Bounded Description (CBD) of the indicated Rule (see https://rdflib.readthedocs.io/en/stable/apidocs/rdflib.html#rdflib.graph.Graph.cbd) as well as a default custom cprmv jsonld format which is more easy to use / anderstand and read (but leaves out extra metadata information however in this initial version as it does not use the CBD definition at the moment as it is not a custom rdflib seriallizer yet).
+    The format argument allows all built in rdflib formats (see https://rdflib.readthedocs.io/en/stable/apidocs/rdflib.html#rdflib.graph.Graph.serialize)  and implies returning the Concise Bounded Description (CBD) of the indicated Rule (see https://rdflib.readthedocs.io/en/stable/apidocs/rdflib.html#rdflib.graph.Graph.cbd) as well as a default custom cprmv jsonld format which is more easy to use / anderstand and read (but leaves out extra metadata information in this initial version as it does not use the CBD definition at the moment as it is not a custom rdflib seriallizer (yet)).
     
-    The language parameter for now should always be "nl" (default). Multilingual support will be added in a later version.
+    The language parameter for now will always be "nl" (implicit default regardless what is passed as argument). Multilingual support will be added in a later version.
     """
     return getRules(rulesetid, rulesetid, format)
     
@@ -78,7 +78,7 @@ def rules(rulesetid: str, ruleidpath: str, path_delimiter: str = ',', format: st
     
     The format argument allows all built in rdflib formats (see https://rdflib.readthedocs.io/en/stable/apidocs/rdflib.html#rdflib.graph.Graph.serialize)  and implies returning the Concise Bounded Description (CBD) of the indicated Rule (see https://rdflib.readthedocs.io/en/stable/apidocs/rdflib.html#rdflib.graph.Graph.cbd) as well as a default custom cprmv jsonld format which is more easy to use / anderstand and read (but leaves out extra metadata information however in this initial version as it does not use the CBD definition at the moment as it is not a custom rdflib seriallizer yet).
     
-    The language parameter for now should always be "nl" (default). Multilingual support will be added in a later version.
+    The language parameter for now will always be "nl" (implicit default regardless what is passed as argument). Multilingual support will be added in a later version.
     
     The unformat argument allows for simple string parsing for instance extracting the amount in the sentence of Artikel 20, lid 1, onderdeel a. of the ruleset BWBR0015703_2025-07-01_0 which can also assert parts of the sentence to be expected.
     It is not neccesary to specify the whole expected content and it works as a search string (using parse.search()) on the formatted output depending on the format argument. For more information on how to use this see https://pypi.org/project/parse/
