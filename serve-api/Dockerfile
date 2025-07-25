@@ -27,4 +27,4 @@ COPY data/ ./data/
 
 EXPOSE 8000
 
-CMD ["uvicorn", "cprmv-serve:app", "--host", "0.0.0.0", "--port", "8000", "--reload"]
+CMD ["fastapi", "run", "cprmv-serve.py", "--port", "8000"]
