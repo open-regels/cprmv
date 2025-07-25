@@ -55,9 +55,11 @@ def ruleset(rulesetid: str, format: str = 'cprmv-json', language: Union[str, Non
     """
     returns all rules of a ruleset with the given cprmv:id value (rulesetid) if it can be found as a cprmv resource.
 
-    Note that this version of the API only supports the BWB directory (https://repository.officiele-overheidspublicaties.nl/bwb/...) and no other sources. Given a valid cprmvid, it will fetch a source publication and transform it into a RuleSet on the fly and with a result as intended using the CPRMV. A valid cprmvid for the BWB directory is the concatenation of a BWB id, valid from date (yyyy-mm-dd) and an index number (starting at 0), concatenated with an underscore ('_'). The index number is to support the case when there are multiple versions published on the same date whih is rare. For instance the cprmvid "BWBR0015703_2025-07-01_0" will simply fetch and process https://repository.officiele-overheidspublicaties.nl/bwb/BWBR0015703/2025-07-01_0/xml/BWBR0015703_2025-07-01_0.xml 
+    Note that this version of the API only supports the BWB directory (https://repository.officiele-overheidspublicaties.nl/bwb/...) and the CVDR directory (https://repository.officiele-overheidspublicaties.nl/cvdr/...) and no other sources. Given a valid cprmvid, it will fetch a source publication and transform it into a RuleSet on the fly and with a result as intended using the CPRMV. A valid cprmvid for the BWB directory is the concatenation of a BWB id, valid from date (yyyy-mm-dd) and an index number (starting at 0), concatenated with an underscore ('_'). The index number is to support the case when there are multiple versions published on the same date whih is rare. For instance the cprmvid "BWBR0015703_2025-07-01_0" will simply fetch and process https://repository.officiele-overheidspublicaties.nl/bwb/BWBR0015703/2025-07-01_0/xml/BWBR0015703_2025-07-01_0.xml 
     
-    All BWB structure elements will become nested cprmv Rules. For the transformation the API uses a XSLT defined in 'data/bwb2cpmv.xsl' which transforms the XML source fetched from the aforementioned directory, which is exepcted to follow the bwb-toestand scheme (https://repository.officiele-overheidspublicaties.nl/Schema/BWB-toestand/2016-1/xsd/toestand_2016-1.xsd), to the CPRMV RuleSet as a Turtle file. This content is what this API can serve, either by returning the whole RuleSet in the format requested or single Rules (with all the Rules that are nested in them if applicable). This API also allows for simple string interpretation of the definition of a single rule (see /rules/...).
+    A publication in the CVDR directory is just identified with a concatenation of a CVDR id and an index number concatenated with an underscore ('_'). For instance the cprmvid "CVDR712517_1." will simply fetch and process https://repository.officiele-overheidspublicaties.nl/cvdr/CVDR712517/1/xml/CVDR712517_1.xml
+    
+    All BWB/CVDR structure elements will become nested cprmv Rules. For the transformation the API uses a XSL transformation defined in 'data/bwb2cprmv.xsl' or 'data/cvdr2cprmv.xsl' which transforms the XML source fetched from the aforementioned directory, which is exepcted to follow the bwb-toestand scheme (https://repository.officiele-overheidspublicaties.nl/Schema/BWB-toestand/2016-1/xsd/toestand_2016-1.xsd) or cvdr scheme (http://standaarden.overheid.nl/cvdr/terms/ http://decentrale.regelgeving.overheid.nl/cvdr/xsd/cvdr.xsd), to the CPRMV RuleSet as a Turtle file. This content is what this API can serve, either by returning the whole RuleSet in the format requested or single Rules (with all the Rules that are nested in them if applicable). This API also allows for simple string interpretation of the definition of a single rule (see /rules/...).
     
     The format argument allows all built in rdflib formats (see https://rdflib.readthedocs.io/en/stable/apidocs/rdflib.html#rdflib.graph.Graph.serialize)  and implies returning the Concise Bounded Description (CBD) of the indicated Rule (see https://rdflib.readthedocs.io/en/stable/apidocs/rdflib.html#rdflib.graph.Graph.cbd) as well as a default custom cprmv jsonld format which is more easy to use / anderstand and read (but leaves out extra metadata information in this initial version as it does not use the CBD definition at the moment as it is not a custom rdflib seriallizer (yet)).
     
@@ -68,11 +70,13 @@ def ruleset(rulesetid: str, format: str = 'cprmv-json', language: Union[str, Non
 @app.get("/rules/{rulesetid}/{ruleidpath}")
 def rules(rulesetid: str, ruleidpath: str, path_delimiter: str = ',', format: str = 'cprmv-json', language: Union[str, None] = None, unformat: str='{situatie:paramvalue}: € {norm:paramvalue};'):
     """
-    Returns the Rule including all Rules it contains and that can be found as indicated in the given Rule Id Path (ruleidpath) within the Rule Set that has the given Rule Set Id (rulesetid)
+    Returns the Rule including all Rules it contains and that can be found as indicated in the given Rule Id Path (ruleidpath) within the Rule Set that has been published and is identifiable through the given Rule Set Id (rulesetid)
     
-    Note that this version of the API only supports the BWB directory (https://repository.officiele-overheidspublicaties.nl/bwb/...) and no other sources. Given a valid cprmvid, it will fetch a source publication and transform it into a RuleSet on the fly and with a result as intended using the CPRMV. A valid cprmvid for the BWB directory is the concatenation of a BWB id, valid from date (yyyy-mm-dd) and an index number (starting at 0), concatenated with an underscore ('_'). The index number is to support the case when there are multiple versions published on the same date whih is rare. For instance the cprmvid "BWBR0015703_2025-07-01_0" will simply fetch and process https://repository.officiele-overheidspublicaties.nl/bwb/BWBR0015703/2025-07-01_0/xml/BWBR0015703_2025-07-01_0.xml 
+    Note that this version of the API only supports the Dutch BWB directory (https://repository.officiele-overheidspublicaties.nl/bwb/...) and the CVDR directory (https://repository.officiele-overheidspublicaties.nl/cvdr/...) and no other sources. Given a valid cprmvid, it will fetch a source publication and transform it into a RuleSet on the fly and with a result as intended using the CPRMV. A valid cprmvid for the BWB directory is the concatenation of a BWB id, valid from date (yyyy-mm-dd) and an index number (starting at 0), concatenated with an underscore ('_'). The index number is to support the case when there are multiple versions published on the same date whih is rare. For instance the cprmvid "BWBR0015703_2025-07-01_0" will simply fetch and process https://repository.officiele-overheidspublicaties.nl/bwb/BWBR0015703/2025-07-01_0/xml/BWBR0015703_2025-07-01_0.xml 
     
-    All BWB structure elements will become nested cprmv Rules. For the transformation the API uses a XSLT defined in 'data/bwb2cpmv.xsl' which transforms the XML source fetched from the aforementioned directory, which is exepcted to follow the bwb-toestand scheme (https://repository.officiele-overheidspublicaties.nl/Schema/BWB-toestand/2016-1/xsd/toestand_2016-1.xsd), to the CPRMV RuleSet as a Turtle file. This content is what this API can serve, either by returning the whole RuleSet in the format requested (see /ruleset/...) or as in this method: single Rules (with all the Rules that are nested in them if applicable)
+    A publication in the CVDR directory is just identified with a concatenation of a CVDR id and an index number concatenated with an underscore ('_'). For instance the cprmvid "CVDR712517_1." will simply fetch and process https://repository.officiele-overheidspublicaties.nl/cvdr/CVDR712517/1/xml/CVDR712517_1.xml
+    
+    All BWB/CVDR structure elements will become nested cprmv Rules. For the transformation the API uses a XSL transformation defined in 'data/bwb2cprmv.xsl' or 'data/cvdr2cprmv.xsl' which transforms the XML source fetched from the aforementioned directory, which is exepcted to follow the bwb-toestand scheme (https://repository.officiele-overheidspublicaties.nl/Schema/BWB-toestand/2016-1/xsd/toestand_2016-1.xsd) or cvdr scheme (http://standaarden.overheid.nl/cvdr/terms/ http://decentrale.regelgeving.overheid.nl/cvdr/xsd/cvdr.xsd), to the CPRMV RuleSet as a Turtle file. This content is what this API can serve, either by returning the whole RuleSet in the format requested or single Rules (with all the Rules that are nested in them if applicable). This API also allows for simple string interpretation of the definition of a single rule (see /rules/...) or as in this method: single Rules (with all the Rules that are nested in them if applicable)
     
     Note that the path consists out of the values of the cprmv:id of the rules in the given ruleset delimited by a delimiter (default delimiter is ',') and for convenience the path may also leave out id's of rules in the path. The first matching rule (depth first) is the one returned.
     
@@ -103,9 +107,10 @@ def jci13(jciuri: str = 'jci1.3:c:BWBR0015703&hoofdstuk=3&paragraaf=3.2&artikel=
 
 def getBWBPublicationAsCPRMVRuleSet(cprmvid):
     bwbid, pubdate, index = cprmvid.split('_')
-    req = Request(f"https://repository.officiele-overheidspublicaties.nl/bwb/{bwbid}/{pubdate}_{index}/xml/{cprmvid}.xml")
+    puburl = f"https://repository.officiele-overheidspublicaties.nl/bwb/{bwbid}/{pubdate}_{index}/xml/{cprmvid}.xml"
+    req = Request(puburl)
     try:
-        print("downloading publication...")
+        print(f"downloading publication: {puburl}")
         response = urlopen(req)
         with tempfile.NamedTemporaryFile(delete=False) as tmp_file:
             shutil.copyfileobj(response, tmp_file)
@@ -129,12 +134,46 @@ def getBWBPublicationAsCPRMVRuleSet(cprmvid):
     else:
         raise Exception('unknown error loading BWB publication ...')
 
+def getCVDRPublicationAsCPRMVRuleSet(cprmvid):
+    cvdrid, index = cprmvid.split('_')
+    puburl = f"https://repository.officiele-overheidspublicaties.nl/cvdr/{cvdrid}/{index}/xml/{cprmvid}.xml"
+    req = Request(puburl)
+    try:
+        print(f"downloading publication: {puburl}")
+        response = urlopen(req)
+        with tempfile.NamedTemporaryFile(delete=False) as tmp_file:
+            shutil.copyfileobj(response, tmp_file)
+            print(f"opening publication from temp file {tmp_file.name}")
+            xml = etree.parse(open(tmp_file.name))
+            print("transforming CVDR resource into CPRMV RuleSet ...")
+            ac = etree.XSLTAccessControl(read_network=False, read_file=False)
+            transform = etree.XSLT(etree.parse('data/cvdr2cprmv.xsl'), access_control=ac)
+            result = str(transform(xml))
+            os.remove(tmp_file.name)
+            return result
+    except URLError as e:
+        if hasattr(e, 'reason'):
+            print('We failed to reach a server.')
+            print('Reason: ', e.reason)
+            raise e
+        elif hasattr(e, 'code'):
+            print('The server couldn\'t fulfill the request.')
+            print('Error code: ', e.code)
+            raise e
+    else:
+        raise Exception('unknown error loading CVDR publication ...')
+
 # load the requested publication from the official repository and transform it to CPRMV and load it
 def loadRuleSet(cprmvid):
     g = Graph()
     try:
         if not (None, CPRMV.id, Literal(cprmvid)) in g:
-            ttl = getBWBPublicationAsCPRMVRuleSet(cprmvid)
+            if cprmvid[:3] == 'BWB':
+                ttl = getBWBPublicationAsCPRMVRuleSet(cprmvid)
+            elif cprmvid[:4] == 'CVDR':
+                ttl = getCVDRPublicationAsCPRMVRuleSet(cprmvid)
+            else:
+                raise Exception("No supported publication repository (currently only either BWB of CVDR) use identifiers with the format of the given id. The publication id should start with either 'BWB' or 'CVDR'")
             g.parse(data=ttl, format="turtle")
     except Exception as e:
         if "unbound prefix" in str(e).lower(): #TODO maybe this should not be ignonred always
@@ -154,14 +193,16 @@ def getRules(rulesetid, ruleidpath='', path_delimiter: str = ',', formatarg: str
         g = loadRuleSet(rulesetid)
     except Exception as e:
         return { "error" : str(e) }
+    print(f"processing starts at first rule in path {ruleidpath}")
     r = getFirstRuleByIdPath(g, ruleidpath, path_delimiter)
     if(r == None):
         return "None"
+    print(f"rule found {r}")
     if(formatarg == 'cprmv-json'):
         result = getRule(g, r)
     else:
         result = g.cbd(r).serialize(format=formatarg)
-    if(unformat != ''):
+    if(unformat != '' and CPRMV.definition in result):
         definition = str(' '.join(result[CPRMV.definition].split()))
         definition = search(unformat, definition, extra_types={'paramvalue':paramvalue})
         if(definition != None):
