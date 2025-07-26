@@ -5,6 +5,7 @@
     xmlns:overheidrg="http://standaarden.overheid.nl/cvdr/meta/"
     xmlns:overheid="http://standaarden.overheid.nl/owms/terms/" version="1.0">
   <xsl:output method="text" indent="yes"/>
+  <xsl:param name="cprmvid" select="''"/>
   
   <xsl:template match="text()"/>
   

@@ -1,13 +1,13 @@
-VERSION "1.2"
-BASE :<http://example.com/>
-PREFIX cpsv: <http://purl.org/vocab/cpsv#>
-PREFIX cprmv: <https://cprmv.open-regels.nl/0.2.0/>
-PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
-PREFIX owl: <http://www.w3.org/2002/07/owl#>
-PREFIX vann: <http://purl.org/vocab/vann/>
-PREFIX dct: <http://purl.org/dc/terms/>
-PREFIX eli: <http://data.europa.eu/eli/ontology#>
-PREFIX cv: <http://data.europa.eu/m8g/>
+@base <http://example.com/> .
+@prefix cpsv: <http://purl.org/vocab/cpsv#> .
+@prefix cprmv: <https://cprmv.open-regels.nl/0.2.0/> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix vann: <http://purl.org/vocab/vann/> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix eli: <http://data.europa.eu/eli/ontology#> .
+@prefix cv: <http://data.europa.eu/m8g/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema> .
 
 <https://www.open-regels.nl/standards/cprmv/0.3.0> a owl:Ontology;
   vann:preferredNamespaceURI "https://www.open-regels.nl/standards/cprmv/";
@@ -31,6 +31,10 @@ cprmv:RuleSet a owl:Class;
 cprmv:id a owl:ObjectProperty;
     rdfs:label "id"@en
     rdfs:comment "denotes a universal unique id with which to refer to what the cprmv object like RuleMethod's Explanation's, RuleSet's and Rule's represents."@en.
+    
+cprmv:label a owl:ObjectProperty;
+    rdfs:label "label"@en
+    rdfs:comment "denotes a label with which to refer to what the cprmv object like RuleMethod's Explanation's, RuleSet's and Rule's represents."@en.
     
 cprmv:extends a owl:ObjectProperty;
     rdfs:label "extends"@en
@@ -92,7 +96,12 @@ cprmv:TestMethod a owl:Class;
     rdfs:label "Rule"@en;
     rdfs:comment "A Rule Method with which Rule's are defined that describe test scenario's defined in cprmv:TestSet's containing cprmv:TestCase's, which are specialised cprmv:RuleSet's and cprmv:Rule's and that can be tested in the context of a cprmv:RuleSet's."@en;
     a cprmv:RuleMethod.
-    
+
+cprmv:AnalysisMethod a owl:Class;
+    rdfs:label "Analysis Method"@en;
+    rdfs:comment "A Rule Method with which an existing Rule is extended through analysis, which does not yet entirely formalises a Rule semantically but only defines what is to be seen as a separate Rule and adds metadata to it or normalises its form etcetera."@en;
+    a cprmv:RuleMethod.
+
 cprmv:TestCase a owl:Class;
     rdfs:label "TestCase"@en;
     rdfs:comment "A TestCase is a cprmv:Rule defined with a TestMethod"@en;

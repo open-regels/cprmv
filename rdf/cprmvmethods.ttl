@@ -1,12 +1,12 @@
-VERSION "1.2"
-BASE :<http://example.com/>
-PREFIX cprmv: <https://cprmv.open-regels.nl/0.3.0/>
-PREFIX cprmv-serve: <https://cprmv.open-regels.nl/0.3.0/serve-api>
-PREFIX cprmvmethods: <https://cprmv.open-regels.nl/0.3.0/methods>
-PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
-PREFIX owl: <http://www.w3.org/2002/07/owl#>
-PREFIX vann: <http://purl.org/vocab/vann/>
-PREFIX dct: <http://purl.org/dc/terms/>
+@base <http://example.com/> .
+@prefix cprmv: <https://cprmv.open-regels.nl/0.3.0/> .
+@prefix cprmv-serve: <https://cprmv.open-regels.nl/0.3.0/serve-api/> .
+@prefix cprmvmethods: <https://cprmv.open-regels.nl/0.3.0/methods/> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix vann: <http://purl.org/vocab/vann/> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema> .
 
 <https://www.open-regels.nl/standards/cprmv/0.3.0/methods> a owl:Ontology;
   vann:preferredNamespaceURI "https://www.open-regels.nl/standards/cprmv/methods";
@@ -28,35 +28,36 @@ cprmvmethods:lawanalysis a cprmv:AnalysisMethod;
 cprmvmethods:calculemusflint a cprmv:AnalysisMethod;
     cprmv:id "Calculemus/FLINT"@en;
     cprmv:id "Calculemus/FLINT"@nl;
-    cprmv:comment "zie: https://normativesystems.gitlab.io/knowledge-modeling/documentation-website/docs/"@nl.
+    cprmv:comment "zie: https://normativesystems.gitlab.io/knowledge-modeling/documentation-website/docs/"@nl;
     cprmv:comment "see: https://normativesystems.gitlab.io/knowledge-modeling/documentation-website/docs/"@en.
 
 cprmvmethods:bwb a cprmv:AnalysisMethod;
     cprmv:id "bwb"@nl;
-    cprmv:comment "zie: https://www.overheid.nl/sites/default/files/wetten/Procedurehandboek_BWB_3.7.pdf and https://www.overheid.nl/sites/default/files/pdf/Handleiding%2BSRU%2BBWB.pdf"@nl.
-    cprmv-serve:publication-format "xml"
-    cprmv-serve:publication-id-format "{bwbid}_{date}_{index}"
-    cprmv-serve:frbr-repository "https://repository.officiele-overheidspublicaties.nl/bwb/{bwbid}/{date}_{index}/xml/{cprmvid}.xml"
-    cprmv-serve:xslt "data/bwb2cprmv.xsl"
+    cprmv:label "BWB (NL)";
+    cprmv:comment "zie: https://www.overheid.nl/sites/default/files/wetten/Procedurehandboek_BWB_3.7.pdf and https://www.overheid.nl/sites/default/files/pdf/Handleiding%2BSRU%2BBWB.pdf"@nl;
+    cprmv-serve:publication-format "xml";
+    cprmv-serve:publication-id-format "BWB{bwbid}_{date}_{index}";
+    cprmv-serve:frbr-repository "https://repository.officiele-overheidspublicaties.nl/bwb/BWB{bwbid}/{date}_{index}/xml/BWB{bwbid}_{date}_{index}.xml";
+    cprmv-serve:xslt "data/bwb2cprmv.xsl".
 
 cprmvmethods:cvdr a cprmv:AnalysisMethod;
-    cprmvmethods
     cprmv:id "cvdr"@nl;
-    cprmv:comment "zie: ... and https://www.overheid.nl/sites/default/files/pdf/Handleiding%2BSRU%2BBWB.pdf"@nl.
-    cprmv-serve:publication-format "xml"
-    cprmv-serve:publication-id-format "{bwbid}_{date}_{index}"
-    cprmv-serve:frbr-repository "https://repository.officiele-overheidspublicaties.nl/cvdr/{cvdrid}/{index}/xml/{cprmvid}.xml"
-    cprmv-serve:xslt "data/cvdr2cprmv.xsl"
+    cprmv:label "CVDR (NL)";
+    cprmv:comment "zie: ... and https://www.overheid.nl/sites/default/files/pdf/Handleiding%2BSRU%2BBWB.pdf"@nl;
+    cprmv-serve:publication-format "xml";
+    cprmv-serve:publication-id-format "CVD{cvdrid}_{index}";
+    cprmv-serve:frbr-repository "https://repository.officiele-overheidspublicaties.nl/cvdr/CVD{cvdrid}/{index}/xml/CVD{cvdrid}_{index}.xml";
+    cprmv-serve:xslt "data/cvdr2cprmv.xsl".
 
 cprmvmethods:cellarfmx4 a cprmv:AnalysisMethod;
-    cprmvmethods
     cprmv:id "cellarfmx4"@en;
     cprmv:id "cellarfmx4"@nl;
-    cprmv:comment "see: ... "@en.
-    cprmv-serve:publication-format "xml"
-    cprmv-serve:publication-id-format "{cellarid}_{docid}"
-    cprmv-serve:frbr-repository "https://publications.europa.eu/resource/cellar/{cellarid}/{docid}"
-    cprmv-serve:xslt "data/fmx4cellar2cprmv.xsl"
+    cprmv:label "CELLAR Formex v4 (EU)";
+    cprmv:comment "see: ... "@en;
+    cprmv-serve:publication-format "xml";
+    cprmv-serve:publication-id-format "CFMX4{cellarid}_{docid}";
+    cprmv-serve:frbr-repository "https://publications.europa.eu/resource/cellar/{cellarid}/{docid}";
+    cprmv-serve:xslt "data/fmx4cellar2cprmv.xsl".
 
 cprmvmethods:dmn13 a cprmv:FormalisationMethod;
     cprmv:id "DMN 1.3"@en;
@@ -64,21 +65,25 @@ cprmvmethods:dmn13 a cprmv:FormalisationMethod;
     cprmv:comment "see https://www.omg.org/spec/DMN/1.3/About-DMN".
 
 cprmv:acknowledged a owl:ObjectProperty;
+    rdfs:label "id"@en;
+    rdfs:comment "denotes that a given RuleMethod is ackknowledged to be a member of a certain RuleMethod set."@en.
 
 cprmvmethods:rulemethods a owl:Class;
     cprmv:acknowledged (
-        cprmvmethods:lawanalysis,
-        cprmvmethods:calculemusflint,
-        cprmvmethods:bwb,
+        cprmvmethods:lawanalysis
+        cprmvmethods:calculemusflint
+        cprmvmethods:bwb
+        cprmvmethods:cvdr
+        cprmvmethods:cellarfmx4
         cprmvmethods:dmn13
     ).
 
-cprmvmethods:analysismethods  a owl:Class;
+cprmvmethods:analysismethods a owl:Class;
     cprmv:acknowledged (
-        cprmvmethods:lawanalysis,
-        cprmvmethods:calculemusflint,
-        cprmvmethods:bwb,
-        cprmvmethods:cvdr,
+        cprmvmethods:lawanalysis
+        cprmvmethods:calculemusflint
+        cprmvmethods:bwb
+        cprmvmethods:cvdr
         cprmvmethods:cellarfmx4
     ).
 

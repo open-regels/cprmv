@@ -5,15 +5,16 @@
     xmlns:overheidrg="http://standaarden.overheid.nl/cvdr/meta/"
     xmlns:overheid="http://standaarden.overheid.nl/owms/terms/" version="1.0">
   <xsl:output method="text" indent="yes"/>
+  <xsl:param name="cprmvid" select="''"/>
   
   <xsl:template match="text()"/>
   
-  <xsl:template match="/ACT">
-    <xsl:text xml:space="preserve">@base &lt;http://example.com/&gt; .
+  <xsl:template match="/ACT|/CONS.ACT"><xsl:text xml:space="preserve">@base &lt;http://example.com/&gt; .
 @prefix cpsv: &lt;http://purl.org/vocab/cpsv#&gt; .
 @prefix cprmv: &lt;https://cprmv.open-regels.nl/0.3.0/&gt; .
 @prefix cprmvmethods: &lt;https://cprmv.open-regels.nl/0.3.0/methods/&gt; .
-&lt;http://publications.europa.eu/resource/celex/3</xsl:text><xsl:value-of select="BIB.INSTANCE/DOCUMENT.REF/YEAR"/><xsl:text xml:space="preserve">R</xsl:text><xsl:value-of select="BIB.INSTANCE/NO.DOC/NO.CURRENT"/><xsl:text xml:space="preserve">.NLD.fmx4.</xsl:text><xsl:value-of select="BIB.INSTANCE/DOCUMENT.REF/@FILE"/><xsl:text xml:space="preserve">&gt; a cprmv:RuleSet;
+&lt;http://publications.europa.eu/resource/celex/</xsl:text><xsl:value-of select="$cprmvid"/><xsl:text xml:space="preserve">&gt; a cprmv:RuleSet;
+    cprmv:id "</xsl:text><xsl:value-of select="$cprmvid"/><xsl:text xml:space="preserve">"@nl;
     cprmv:id "3</xsl:text><xsl:value-of select="BIB.INSTANCE/DOCUMENT.REF/YEAR"/><xsl:text xml:space="preserve">R</xsl:text><xsl:value-of select="BIB.INSTANCE/NO.DOC/NO.CURRENT"/><xsl:text xml:space="preserve">.NLD.fmx4.</xsl:text><xsl:value-of select="BIB.INSTANCE/DOCUMENT.REF/@FILE"/><xsl:text xml:space="preserve">"@nl;
     cprmv:method cprmvmethods:cellarfmx4;
     cprmv:output-of [
@@ -22,15 +23,15 @@
         cprmv:providedBy "EU";
         cpsv:produces &lt;http://publications.europa.eu/resource/celex/3</xsl:text><xsl:value-of select="BIB.INSTANCE/DOCUMENT.REF/YEAR"/><xsl:text xml:space="preserve">R</xsl:text><xsl:value-of select="BIB.INSTANCE/NO.DOC/NO.CURRENT"/><xsl:text xml:space="preserve">.NLD.fmx4.</xsl:text><xsl:value-of select="BIB.INSTANCE/DOCUMENT.REF/@FILE"/><xsl:text xml:space="preserve">&gt;
     ];
-    cprmv:contains (</xsl:text><xsl:apply-templates select="./ENACTING.TERMS/DIVISION"/><xsl:text xml:space="preserve">).
+    cprmv:contains (</xsl:text><xsl:apply-templates select="./ENACTING.TERMS/DIVISION|./CONS.DOC/ENACTING.TERMS/DIVISION"/><xsl:text xml:space="preserve">).
 </xsl:text>
   </xsl:template>
 
   <xsl:template match="DIVISION"><xsl:text xml:space="preserve">[
         a cprmv:Rule;
         cprmv:id "</xsl:text><xsl:value-of select="./TITLE/TI/P"/><xsl:text xml:space="preserve">"@nl</xsl:text><xsl:if test="./STI/P/HT"><xsl:text xml:space="preserve">;
-        cprmv:definition "</xsl:text><xsl:value-of select="translate(./STI/P/HT, '&#xA;', '')"/><xsl:text xml:space="preserve">"</xsl:text></xsl:if><xsl:if test="ARTICLE"><xsl:text xml:space="preserve">;
-        cprmv:contains (</xsl:text><xsl:apply-templates select="ARTICLE"/><xsl:text xml:space="preserve">)</xsl:text></xsl:if><xsl:text xml:space="preserve">
+        cprmv:definition "</xsl:text><xsl:value-of select="translate(./STI/P/HT, '&#xA;', '')"/><xsl:text xml:space="preserve">"</xsl:text></xsl:if><xsl:if test="DIVISION|ARTICLE"><xsl:text xml:space="preserve">;
+        cprmv:contains (</xsl:text><xsl:apply-templates select="DIVISION|ARTICLE"/><xsl:text xml:space="preserve">)</xsl:text></xsl:if><xsl:text xml:space="preserve">
     ]</xsl:text>
   </xsl:template>
   
