@@ -11,11 +11,19 @@ requires python, FastAPI, rdflib and lxml
 `pip install parse`
 `pip install lxml`
 
+### Testing
+
+Make sure pytest is installed:
+`pip install pytest`
+
+Then from the directory containing this README and serve.py run:
+`python -m pytest -vv`
+
 ### usage
 
-run:
+Host locally:
 
-`fastapi dev cprmv-serve.py`
+`fastapi dev serve.py`
 
 then navigate with a browser to: http://127.0.0.1/docs
 to try out the API
@@ -48,3 +56,6 @@ App will be available at: http://{NAS-IP}:8000/
 ### How This Works
 - The .xsl file should go in `/volume2/docker/cprmv/` on Synology NAS.
 - Inside the container, these files will be available at /app/data/.
+
+
+

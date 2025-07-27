@@ -29,7 +29,7 @@ except locale.Error:
 app = FastAPI(
     title="CPRMV Rules Serve API",
     description="This experimental API allows fetching single CPRMV Rules from locally provided CPRMV RuleSets in a desired RDF format",
-    version="0.2.0",
+    version="0.3.0",
     contact={
         "name": "Bas Kaptijn",
         "url": "http://git.open-regels.nl/standards/cprmv",
@@ -45,12 +45,24 @@ CPRMV = Namespace("https://cprmv.open-regels.nl/0.3.0/")
 CPRMVSERVE = Namespace("https://cprmv.open-regels.nl/0.3.0/serve-api/")
 CPRMVMETHODS = Namespace("https://cprmv.open-regels.nl/0.3.0/methods/")
 
+def setCPRMVMETHODSKG(path):
+    _cprmvMethods = Graph()
+    _cprmvMethods.parse(path, format="turtle")
+    app.cprmvsettings = { 'CPRMVMETHODS_KG' : _cprmvMethods }
+    return app.cprmvsettings['CPRMVMETHODS_KG']
+setCPRMVMETHODSKG('./data/cprmvmethods.ttl')
+
 @app.get("/")
 def cprmvinfo():
     """
     returns basic app information (title and version)
     """
     return {app.title : app.version}
+    
+@app.get("/methods")
+def methods(format: str='json-ld'):
+    if format in ['json-ld','xml','turtle','ttl','n3','turtle2']:
+        return app.cprmvsettings['CPRMVMETHODS_KG'].serialize(format=format)
     
 @app.get("/rules/{ruleidpath}")
 def rules(ruleidpath: str='BWBR0015703_2025-07-01_0, Artikel 20, onderdeel a.', path_delimiter: str=',', format: str='cprmv-json', language: Union[str, None] = None, unformat: str=''):
@@ -124,8 +136,7 @@ FILTER(str(?langCode)="NLD" && str(?format)="fmx4")
 # finds the first acknowledges AnalysisMethod supported by CPRMV Serve for which the given cprmvid matches the id format defined in the cprmvmethods value lists
 # returns all the information on the matching method as a Dictionary in which also the unformatted cprmvid (one or more key/values) is added under the CPRMV.id key
 def detectCPRMVServeAnalysisMethod(cprmvid):
-    cprmvMethods = Graph()
-    cprmvMethods.parse("./data/cprmvmethods.ttl", format="turtle")
+    cprmvMethods = app.cprmvsettings['CPRMVMETHODS_KG']
     result = None
     methods = cprmvMethods.value(CPRMVMETHODS.analysismethods, CPRMV.acknowledged)
     while (methods != RDF.nil):
@@ -144,8 +155,7 @@ def detectCPRMVServeAnalysisMethod(cprmvid):
         methods = cprmvMethods.value(methods, RDF.rest)
     return result
     
-def getCprmvRuleSetFromPublication(cprmvid, method):
-    print('WTF')
+def getCprmvRuleSetFromPublication(g, cprmvid, method):
     frbr = str(method[CPRMVSERVE['frbr-repository']])
     puburl = frbr.format_map(method[CPRMVSERVE['id_parts']])
     methodLabel = method[CPRMV.label]
@@ -161,8 +171,10 @@ def getCprmvRuleSetFromPublication(cprmvid, method):
             ac = etree.XSLTAccessControl(read_network=False, read_file=False)
             transform = etree.XSLT(etree.parse(method[CPRMVSERVE.xslt]), access_control=ac)
             result = str(transform(xml, cprmvid = etree.XSLT.strparam(cprmvid)))
-            os.remove(tmp_file.name)
-            return result
+            #os.remove(tmp_file.name)
+            print(result)
+            g.parse(data=result, format="turtle")
+            return
     except URLError as e:
         if hasattr(e, 'reason'):
             print('We failed to reach a server.')
@@ -181,8 +193,7 @@ def loadRuleSet(cprmvid):
     try:
         method = detectCPRMVServeAnalysisMethod(cprmvid)
         if method != None:
-            ttl = getCprmvRuleSetFromPublication(cprmvid, method)
-            g.parse(data=ttl, format="turtle")
+            getCprmvRuleSetFromPublication(g, cprmvid, method)
         else:
             raise Exception("No supported publication repository use identifiers with the format of the given Ruleset Id.")
     except Exception as e:

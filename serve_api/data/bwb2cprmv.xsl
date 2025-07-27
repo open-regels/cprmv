@@ -40,9 +40,7 @@
             a cprmv:Rule;
             cprmv:id "</xsl:text><xsl:value-of select="@label"/><xsl:text xml:space="preserve">"@nl</xsl:text><xsl:if test="./al"><xsl:text xml:space="preserve">;
             cprmv:definition "</xsl:text><xsl:value-of select="translate(./al, '&#xA;', '')"/><xsl:text xml:space="preserve">"@nl</xsl:text></xsl:if><xsl:if test="./artikel"><xsl:text xml:space="preserve">;
-            cprmv:contains (</xsl:text><xsl:apply-templates select="artikel">
-                <xsl:with-param name="indent" select="true()"/>
-            </xsl:apply-templates><xsl:text xml:space="preserve">)</xsl:text></xsl:if><xsl:text xml:space="preserve">
+            cprmv:contains (</xsl:text><xsl:apply-templates select="artikel"><xsl:with-param name="indent" select="true()"/></xsl:apply-templates><xsl:text xml:space="preserve">)</xsl:text></xsl:if><xsl:text xml:space="preserve">
         ]</xsl:text>
   </xsl:template>
   
