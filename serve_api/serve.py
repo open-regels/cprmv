@@ -171,8 +171,8 @@ def getCprmvRuleSetFromPublication(g, cprmvid, method):
             ac = etree.XSLTAccessControl(read_network=False, read_file=False)
             transform = etree.XSLT(etree.parse(method[CPRMVSERVE.xslt]), access_control=ac)
             result = str(transform(xml, cprmvid = etree.XSLT.strparam(cprmvid)))
-            #os.remove(tmp_file.name)
-            print(result)
+            os.remove(tmp_file.name)
+            #print(result)
             g.parse(data=result, format="turtle")
             return
     except URLError as e:
