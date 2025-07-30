@@ -98,10 +98,10 @@ The Rule ID Path consisting of the Rule Set ID followed by a comma-separated pat
         
 **Rule Path Navigation:**
         
- - Rule identifiers are matched **case-sensitively** (whitespace ignored)
+ - Rule identifiers are matched **case-sensitively** but **all non alphanumeric characters (including whitespace) are ignored**
  - Uses **depth-first search** for the first matching rule
  - Intermediate rule IDs can be omitted for convenience
- - Path `"Artikel 20, onderdeel a."` finds the same result as `"Artikel 20, lid 1, onderdeel a."`
+ - Path `"Artikel 20, onderdeel a)"` finds the same result as `"Artikel 20,lid1, onderdeel a."`
  - To target specific nested rules, include all intermediate identifiers
         
  **URL Encoding Note:** Remember to URL-encode special characters in the path when making requests.
