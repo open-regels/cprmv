@@ -70,42 +70,42 @@ def rules(
         min_length=10,
         max_length=500,
         description="""
-        The Rule ID Path consisting of the Rule Set ID followed by a comma-separated path of rule identifiers.
+The Rule ID Path consisting of the Rule Set ID followed by a comma-separated path of rule identifiers.
         
-        **Format:** `{RuleSetId}, {RuleId1}, {RuleId2}, ...`
+**Format:** `{RuleSetId}, {RuleId1}, {RuleId2}, ...`
         
-        **Examples:**
-        - `BWBR0015703_2025-07-01_0, Artikel 20, onderdeel a.`
-        - `CVDR712517_1, Hoofdstuk 2, Artikel 5`
-        - `CFMX483e4752e-f2e5-11e8-9982-01aa75ed71a1.0017.02_DOC_2, Article 1`
+**Examples:**
+- `BWBR0015703_2025-07-01_0, Artikel 20, onderdeel a.`
+- `CVDR712517_1, Hoofdstuk 2, Artikel 5`
+- `CFMX483e4752e-f2e5-11e8-9982-01aa75ed71a1.0017.02_DOC_2, Article 1`
         
-        **Supported Rule Set Formats:**
+**Supported Rule Set Formats:**
         
-        1. **BWB (Dutch Law Repository):**
-           - Format: `{BWB_ID}_{DATE}_{INDEX}`
-           - Example: `BWBR0015703_2025-07-01_0`
-           - Fetches from: https://repository.officiele-overheidspublicaties.nl/bwb/
+1. **BWB (Dutch Law Repository):**
+- Format: `{BWB_ID}_{DATE}_{INDEX}`
+- Example: `BWBR0015703_2025-07-01_0`
+- Fetches from: https://repository.officiele-overheidspublicaties.nl/bwb/
         
-        2. **CVDR (Dutch Municipal Regulations):**
-           - Format: `{CVDR_ID}_{INDEX}`
-           - Example: `CVDR712517_1`
-           - Fetches from: https://repository.officiele-overheidspublicaties.nl/cvdr/
+2. **CVDR (Dutch Municipal Regulations):**
+- Format: `{CVDR_ID}_{INDEX}`
+- Example: `CVDR712517_1`
+- Fetches from: https://repository.officiele-overheidspublicaties.nl/cvdr/
         
-        3. **EU CELLAR (European Publications):**
-           - Format: `CFMX4{CELLAR_ID}_{ITEM_ID}`
-           - Example: `CFMX483e4752e-f2e5-11e8-9982-01aa75ed71a1.0017.02_DOC_2`
-           - Fetches from: http://publications.europa.eu/resource/cellar/
+3. **EU CELLAR (European Publications):**
+ - Format: `CFMX4{CELLAR_ID}_{ITEM_ID}`
+ - Example: `CFMX483e4752e-f2e5-11e8-9982-01aa75ed71a1.0017.02_DOC_2`
+ - Fetches from: http://publications.europa.eu/resource/cellar/
         
-        **Rule Path Navigation:**
+**Rule Path Navigation:**
         
-        - Rule identifiers are matched **case-sensitively** (whitespace ignored)
-        - Uses **depth-first search** for the first matching rule
-        - Intermediate rule IDs can be omitted for convenience
-        - Path `"Artikel 20, onderdeel a."` finds the same result as `"Artikel 20, lid 1, onderdeel a."`
-        - To target specific nested rules, include all intermediate identifiers
+ - Rule identifiers are matched **case-sensitively** (whitespace ignored)
+ - Uses **depth-first search** for the first matching rule
+ - Intermediate rule IDs can be omitted for convenience
+ - Path `"Artikel 20, onderdeel a."` finds the same result as `"Artikel 20, lid 1, onderdeel a."`
+ - To target specific nested rules, include all intermediate identifiers
         
-        **URL Encoding Note:** Remember to URL-encode special characters in the path when making requests.
-        """,
+ **URL Encoding Note:** Remember to URL-encode special characters in the path when making requests.
+ """,
         example="BWBR0015703_2025-07-01_0, Artikel 20, onderdeel a."
     ),
     path_delimiter: str = Query(
