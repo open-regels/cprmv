@@ -298,9 +298,13 @@ def getFirstRuleByIdPathSplitFromRuleAsRoot(g, rootrule, pathsplit):
     while(rulelist != RDF.nil):
         rule = g.value(rulelist, RDF.first)
         ruleid = g.value(rule, CPRMV.id)
-        id = pathsplit.pop(0).strip()
+        if(ruleid != None):
+            ruleid = ruleid.toPython()
+            ruleid = "".join(c for c in ruleid if c.isalnum()) #look only at alphanumeric characters
+        id = pathsplit.pop(0)
+        id = "".join(c for c in id if c.isalnum()) #look only at alphanumeric characters
         subrule = None
-        if(Literal(id, lang="nl") == ruleid):
+        if(ruleid == id):
             subrule = getFirstRuleByIdPathSplitFromRuleAsRoot(g, rule, pathsplit)
             pathsplit.insert(0,id)
         else:

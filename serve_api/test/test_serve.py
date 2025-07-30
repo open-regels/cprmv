@@ -16,7 +16,7 @@ client = TestClient(app)
 def test_get_root():
     response = client.get("/")
     assert response.status_code == 200
-    assert response.json() == {'CPRMV Rules Serve API': '0.2.0'}
+    assert response.json() == {'CPRMV Rules Serve API': '0.3.1'}
 
 def test_detectCPRMVServeAnalysisMethod_unknown_identifier():
     try:
@@ -80,14 +80,18 @@ def test_get_rules():
     path = 'file://'+urlquote(os.path.abspath(str(path)))
     tm.set((CPRMVMETHODS.test001bwb, CPRMVSERVE['frbr-repository'],Literal(path)))
     
-    response = client.get("/rules/TEST001BWBR0015703_2025-07-01_0, Artikel 21, onderdeel a.", params={'unformat':'{situatie:paramvalue}: € {norm:paramvalue};'})
+    # note that onderdeel a) should match onderdeel a., id's in the path should match looking only
+    # at alphanumeric characters (especially ignoring comparing the whitespace character with the
+    # non breaking space character and so on, but also any other non alpha numeric character
+    # (uses python's isalnum())
+    response = client.get("/rules/TEST001BWBR0015703_2025-07-01_0, Artikel\xa021, onderdeel\xa0a)", params={'unformat':'{situatie:paramvalue}: € {norm:paramvalue};'})
     assert response.status_code == 200
     assert response.json() == {
         'http://www.w3.org/1999/02/22-rdf-syntax-ns#type': 'https://cprmv.open-regels.nl/0.3.0/Rule',
         'https://cprmv.open-regels.nl/0.3.0/definition': 'een alleenstaande of een alleenstaande ouder zonder kostendelende medebewoners: €\xa01.369,06;',
         'https://cprmv.open-regels.nl/0.3.0/id': 'onderdeel a.',
         'norm': '1.369,06',
-        'ruleidpath': 'TEST001BWBR0015703_2025-07-01_0, Artikel 21, onderdeel a.',
+        'ruleidpath': 'TEST001BWBR0015703_2025-07-01_0, Artikel\xa021, onderdeel\xa0a)',
         'rulesetid': 'TEST001BWBR0015703_2025-07-01_0',
         'situatie': 'een alleenstaande of een alleenstaande ouder zonder kostendelende medebewoners',
     }
