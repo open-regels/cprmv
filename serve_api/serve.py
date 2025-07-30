@@ -3,7 +3,7 @@ from rdflib.term import Literal
 from rdflib.plugins.sparql import prepareQuery
 from rdflib.namespace import RDF
 from typing import Union
-from fastapi import FastAPI
+from fastapi import FastAPI, Path, Query
 from fastapi.responses import RedirectResponse
 from parse import parse, search
 from parse import with_pattern
@@ -29,7 +29,7 @@ except locale.Error:
 app = FastAPI(
     title="CPRMV Rules Serve API",
     description="This experimental API allows fetching single CPRMV Rules from locally provided CPRMV RuleSets in a desired RDF format",
-    version="0.3.0",
+    version="0.3.1",
     contact={
         "name": "Bas Kaptijn",
         "url": "http://git.open-regels.nl/standards/cprmv",
@@ -65,35 +65,75 @@ def methods(format: str='json-ld'):
         return app.cprmvsettings['CPRMVMETHODS_KG'].serialize(format=format)
     
 @app.get("/rules/{ruleidpath}")
-def rules(ruleidpath: str='BWBR0015703_2025-07-01_0, Artikel 20, onderdeel a.', path_delimiter: str=',', format: str='cprmv-json', language: Union[str, None] = None, unformat: str=''):
+def rules(
+    ruleidpath: str = Path(
+        min_length=10,
+        max_length=500,
+        description="""
+        The Rule ID Path consisting of the Rule Set ID followed by a comma-separated path of rule identifiers.
+        
+        **Format:** `{RuleSetId}, {RuleId1}, {RuleId2}, ...`
+        
+        **Examples:**
+        - `BWBR0015703_2025-07-01_0, Artikel 20, onderdeel a.`
+        - `CVDR712517_1, Hoofdstuk 2, Artikel 5`
+        - `CFMX483e4752e-f2e5-11e8-9982-01aa75ed71a1.0017.02_DOC_2, Article 1`
+        
+        **Supported Rule Set Formats:**
+        
+        1. **BWB (Dutch Law Repository):**
+           - Format: `{BWB_ID}_{DATE}_{INDEX}`
+           - Example: `BWBR0015703_2025-07-01_0`
+           - Fetches from: https://repository.officiele-overheidspublicaties.nl/bwb/
+        
+        2. **CVDR (Dutch Municipal Regulations):**
+           - Format: `{CVDR_ID}_{INDEX}`
+           - Example: `CVDR712517_1`
+           - Fetches from: https://repository.officiele-overheidspublicaties.nl/cvdr/
+        
+        3. **EU CELLAR (European Publications):**
+           - Format: `CFMX4{CELLAR_ID}_{ITEM_ID}`
+           - Example: `CFMX483e4752e-f2e5-11e8-9982-01aa75ed71a1.0017.02_DOC_2`
+           - Fetches from: http://publications.europa.eu/resource/cellar/
+        
+        **Rule Path Navigation:**
+        
+        - Rule identifiers are matched **case-sensitively** (whitespace ignored)
+        - Uses **depth-first search** for the first matching rule
+        - Intermediate rule IDs can be omitted for convenience
+        - Path `"Artikel 20, onderdeel a."` finds the same result as `"Artikel 20, lid 1, onderdeel a."`
+        - To target specific nested rules, include all intermediate identifiers
+        
+        **URL Encoding Note:** Remember to URL-encode special characters in the path when making requests.
+        """,
+        example="BWBR0015703_2025-07-01_0, Artikel 20, onderdeel a."
+    ),
+    path_delimiter: str = Query(
+        default=',',
+        description="Delimiter used to separate rule identifiers in the path"
+    ),
+    format: str = Query(
+        default='cprmv-json',
+        description="Output format for the rule data (cprmv-json, json-ld, xml, turtle, ttl, n3, turtle2)"
+    ),
+    language: Union[str, None] = Query(
+        default=None,
+        description="Language for the output (currently only 'nl' is supported)"
+    ),
+    unformat: str = Query(
+        default='',
+        description="Pattern for extracting specific values from rule definitions using parse syntax (e.g., '{situatie:paramvalue}: € {norm:paramvalue}')",
+        example="{situatie:paramvalue}: € {norm:paramvalue}"
+    )
+):
     """
-    Returns the Rule(Set) including all Rules it contains and that can be found as indicated in the given Rule Id Path (ruleidpath) within the Rule Set that has been published and is identifiable through the given Rule Set Id that should come as first element in the path.
+    Returns the Rule(Set) including all Rules it contains and that can be found as indicated in the given Rule Id Path.
     
-    Note that this version of the API only supports the Dutch BWB directory (https://repository.officiele-overheidspublicaties.nl/bwb/...) the Dutch CVDR directory (https://repository.officiele-overheidspublicaties.nl/cvdr/...) and Formex 4 publications in the EU's CELLAR directory and no other sources. Given a valid cprmvid, it will fetch a source publication and transform it into a RuleSet on the fly and with a result as intended using the CPRMV. A valid cprmvid for the BWB directory is the concatenation of a BWB id, valid from date (yyyy-mm-dd) and an index number (starting at 0), concatenated with an underscore ('_'). The index number is to support the case when there are multiple versions published on the same date whih is rare. For instance the cprmvid "BWBR0015703_2025-07-01_0" will simply fetch and process https://repository.officiele-overheidspublicaties.nl/bwb/BWBR0015703/2025-07-01_0/xml/BWBR0015703_2025-07-01_0.xml.
+    This endpoint retrieves a specific rule or rule set from various official publication repositories
+    and transforms it into CPRMV format. It supports BWB, CVDR, and EU CELLAR repositories.
     
-    A publication in the CVDR directory is just identified with a concatenation of a CVDR id and an index number concatenated with an underscore ('_'). For instance the cprmvid "CVDR712517_1" will simply fetch and process https://repository.officiele-overheidspublicaties.nl/cvdr/CVDR712517/1/xml/CVDR712517_1.xml
-    
-    A Formex 4 publication in the CELLAR directory is just identified with a concatenation of a prefix ("CFMX4") and the CELLAR id and an item id concatenated with an underscore ('_'). For instance the cprmvid "CFMX483e4752e-f2e5-11e8-9982-01aa75ed71a1.0017.02_DOC_2" will simply fetch and process http://publications.europa.eu/resource/cellar/83e4752e-f2e5-11e8-9982-01aa75ed71a1.0017.02/DOC_2. See the helper endpoint /cellar-by-celex for how to find these identifiers when only having a CELEX identifier (and only having a ELI identifier is similar)
-    
-    All BWB/CVDR structure elements will become nested cprmv Rules. For the transformation the API uses a XSL transformation defined in 'data/bwb2cprmv.xsl' or 'data/cvdr2cprmv.xsl' or 'data/fmc4cellar2crprmv.xsl' which transforms the XML source fetched from the aforementioned directory, which is exepcted to follow the bwb-toestand scheme (https://repository.officiele-overheidspublicaties.nl/Schema/BWB-toestand/2016-1/xsd/toestand_2016-1.xsd) or cvdr scheme (http://standaarden.overheid.nl/cvdr/terms/ http://decentrale.regelgeving.overheid.nl/cvdr/xsd/cvdr.xsd) or Formex 4 scheme (see: https://op.europa.eu/en/web/eu-vocabularies/formex) , to the CPRMV RuleSet as a Turtle file. This content is what this API can serve, either by returning the whole RuleSet in the format requested or single Rules (with all the Rules that are nested in them if applicable). 
-    
-    This API also allows for simple string interpretation of the definition of a single rule (see /rules/...) or as in this method: single Rules (with all the Rules that are nested in them if applicable)
-    
-    Note that the path consists out of the values of the cprmv:id of the rules in the given ruleset delimited by a delimiter (default delimiter is ',') and for convenience the path may also leave out id's of rules in the path. The first matching rule (depth first) is the one returned.
-    
-    Note that the id's in the path are matched case sensitive (!) but surrounding whitespace will be ignored.
-    
-    So the path "Artikel 20,    onderdeel a. " leads to the same result as "Artikel 20   ,lid 1,Onderdeel a.". To fetch only the "onderdeel a." contained in "Artikel 20, lid 2" you need to include the id of "lid 2" in the path, otherwise the one contained in "lid 1" will be retrieved (depth first). This does depend on the order in which the triples are loaded from the cprmv source however, so it is better to provide a path that is not ambigeous.
-    
-    The format argument allows all built in rdflib formats (see https://rdflib.readthedocs.io/en/stable/apidocs/rdflib.html#rdflib.graph.Graph.serialize)  and implies returning the Concise Bounded Description (CBD) of the indicated Rule (see https://rdflib.readthedocs.io/en/stable/apidocs/rdflib.html#rdflib.graph.Graph.cbd) as well as a default custom cprmv jsonld format which is more easy to use / anderstand and read (but leaves out extra metadata information however in this initial version as it does not use the CBD definition at the moment as it is not a custom rdflib seriallizer yet).
-    
-    The language parameter for now will always be "nl" (implicit default regardless what is passed as argument). Multilingual support will be added in a later version.
-    
-    The unformat argument allows for simple string parsing for instance extracting the amount in the sentence of Artikel 20, lid 1, onderdeel a. of the ruleset BWBR0015703_2025-07-01_0 which can also assert parts of the sentence to be expected.
-    
-    It is not neccesary to specify the whole expected content and it works as a search string (using parse.search()) on the formatted output depending on the format argument. For more information on how to use this see https://pypi.org/project/parse/ ..
-    
-    An example would be using the unformat value : "{situatie:paramvalue}: € {norm:paramvalue}" when requesting with the ruleid path: "BWBR0015703_2025-07-01_0, Artikel 20, onderdeel a.". It also works for Artikel 21 and other Rules in this particular case.
+    The API downloads the source publication on-the-fly, transforms it using XSLT, and serves the resulting
+    CPRMV-formatted rules. You can request individual rules within a rule set by specifying their path.
     """
     return getRules(ruleidpath, path_delimiter, format, unformat)
 
