@@ -22,9 +22,9 @@ RUN python -m pip install --no-cache-dir --upgrade pip setuptools wheel && \
     pip install --no-cache-dir --timeout=300 --retries=3 -r requirements.txt
 
 # Copy application code
-COPY cprmv-serve.py .
+COPY serve.py .
 COPY data/ ./data/
 
 EXPOSE 8000
 
-CMD ["fastapi", "run", "cprmv-serve.py", "--port", "8000"]
+CMD ["fastapi", "run", "serve.py", "--port", "8000"]

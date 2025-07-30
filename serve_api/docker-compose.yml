@@ -7,5 +7,6 @@ services:
     ports:
       - "8000:8000"  # Map host port 8000 to container port 8000
     volumes:
-      - /volume2/docker/cprmv-ttl:/app/data
+    #  - /volume2/docker/cprmv-ttl:/app/data # Synology NAS
+      - ./data:/app/data # localhost
     restart: unless-stopped
