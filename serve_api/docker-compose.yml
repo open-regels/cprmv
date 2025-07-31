@@ -3,10 +3,23 @@ version: "3.8"
 services:
   cprmv-api:
     container_name: cprmv-api
-    image: datafluisteraar/cprmv-api:latest  # Use the pre-built image
+    # Use environment variable to easily switch versions
+    # Default to latest, but can be overridden with: 
+    # IMAGE_TAG=commit-sha docker-compose up
+    image: datafluisteraar/cprmv-api:${IMAGE_TAG:-latest}
     ports:
       - "8000:8000"  # Map host port 8000 to container port 8000
     volumes:
     #  - /volume2/docker/cprmv-ttl:/app/data # Synology NAS
       - ./data:/app/data # localhost
     restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "python", "-c", "from urllib.request import urlopen; urlopen('http://localhost:8000/', timeout=5)"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    environment:
+      - PYTHONUNBUFFERED=1
+    labels:
+      - "com.docker.compose.project=cprmv"
