@@ -4,3 +4,6 @@ install:
 
 deps:
 	./pip-compile.sh
+
+test:
+	pytest tests

@@ -11,4 +11,5 @@ dependencies = [
 ]
 
 [project.optional-dependencies]
+dev = ["pytest", "pytest-cov", "httpx", "pre-commit"]
 tools = ["bandit", "black", "mypy", "ruff", "safety", "vulture"]
