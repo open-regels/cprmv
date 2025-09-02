@@ -1,6 +1,5 @@
 from rdflib import Graph, Namespace
 from rdflib.term import Literal
-from rdflib.plugins.sparql import prepareQuery
 from rdflib.namespace import RDF
 from typing import Union
 from fastapi import FastAPI, Path, Query
@@ -182,10 +181,10 @@ def detectCPRMVServeAnalysisMethod(cprmvid):
     while (methods != RDF.nil):
         method = cprmvMethods.value(methods, RDF.first)
         idformat = cprmvMethods.value(method, CPRMVSERVE['publication-id-format'])
-        if idformat != None:
+        if idformat is not None:
             print(f"Parsing {idformat} on value {cprmvid}")
             result = parse(idformat, cprmvid)
-            if result != None:
+            if result is not None:
                 methodTriples = {}
                 for p, o in cprmvMethods.predicate_objects(method):
                     methodTriples[p] = o
@@ -232,7 +231,7 @@ def loadRuleSet(cprmvid):
     g = Graph()
     try:
         method = detectCPRMVServeAnalysisMethod(cprmvid)
-        if method != None:
+        if method is not None:
             getCprmvRuleSetFromPublication(g, cprmvid, method)
         else:
             raise Exception("No supported publication repository use identifiers with the format of the given Ruleset Id.")
@@ -261,7 +260,7 @@ def getRules(ruleidpath='', path_delimiter: str = ',', formatarg: str = 'cprmv-j
         return { "error" : str(e) }
     print(f"processing starts at first rule in path {ruleidpath}")
     r = getFirstRuleByIdPath(g, ruleidpath, path_delimiter)
-    if(r == None):
+    if(r is None):
         return "No rules found for given path..."
     print(f"rule found {r}")
     if(formatarg == 'cprmv-json'):
@@ -271,7 +270,7 @@ def getRules(ruleidpath='', path_delimiter: str = ',', formatarg: str = 'cprmv-j
     if(unformat != '' and CPRMV.definition in result):
         definition = str(' '.join(result[CPRMV.definition].split())) # transform no break spaces in regular ones
         definition = search(unformat, definition, extra_types={'paramvalue':paramvalue})
-        if(definition != None):
+        if(definition is not None):
             definition = definition.named
             definition['rulesetid'] = rulesetid
             definition['ruleidpath'] = ruleidpath
@@ -281,10 +280,10 @@ def getRules(ruleidpath='', path_delimiter: str = ',', formatarg: str = 'cprmv-j
 # depth first search in the given graph g for the first rule matching the given path (the path splitted as a list) from the given rootrule
 def getFirstRuleByIdPath(g, path, path_delimiter: str = ','):
     pathsplit = path.split(path_delimiter)
-    firstid = pathsplit.pop(0).strip();
+    firstid = pathsplit.pop(0).strip()
     for rootrule in g.subjects(CPRMV.id, Literal(firstid, lang="nl")):
         rule = getFirstRuleByIdPathSplitFromRuleAsRoot(g, rootrule, pathsplit)
-        if(rule != None):
+        if(rule is not None):
             return rule
     return None
 
@@ -293,12 +292,12 @@ def getFirstRuleByIdPathSplitFromRuleAsRoot(g, rootrule, pathsplit):
     if(len(pathsplit) == 0):
         return rootrule
     rulelist = g.value(rootrule, CPRMV.contains)
-    if(rulelist == None):
+    if(rulelist is None):
         return None
     while(rulelist != RDF.nil):
         rule = g.value(rulelist, RDF.first)
         ruleid = g.value(rule, CPRMV.id)
-        if(ruleid != None):
+        if(ruleid is not None):
             ruleid = ruleid.toPython()
             ruleid = "".join(c for c in ruleid if c.isalnum()) #look only at alphanumeric characters
         id = pathsplit.pop(0)
@@ -310,7 +309,7 @@ def getFirstRuleByIdPathSplitFromRuleAsRoot(g, rootrule, pathsplit):
         else:
             pathsplit.insert(0,id)
             subrule = getFirstRuleByIdPathSplitFromRuleAsRoot(g, rule, pathsplit)
-        if(subrule != None):
+        if(subrule is not None):
             return subrule
         rulelist = g.value(rulelist, RDF.rest)
     return None

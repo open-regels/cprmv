@@ -23,14 +23,14 @@ def test_detectCPRMVServeAnalysisMethod_unknown_identifier():
         method = detectCPRMVServeAnalysisMethod("UNKNOWN")
     except Exception as e:
         fail(f"detectCPRMVServeAnalysisMethod() should not raise any Exception. It did: {e}")
-    assert method == None, f"Passing an unknown identifier to detectCPRMVServeAnalysisMethod() not matching any AnalysisMethods should return 'None'. It did not: {method}"
+    assert method is None, f"Passing an unknown identifier to detectCPRMVServeAnalysisMethod() not matching any AnalysisMethods should return 'None'. It did not: {method}"
 
 def test_detectCPRMVServeAnalysisMethod_BWB_identifier():
     try:
         method = detectCPRMVServeAnalysisMethod("BWBAA_BB_CC")
     except Exception as e:
         fail(f"detectCPRMVServeAnalysisMethod() should not raise any Exception. It did: {e}")
-    assert method != None, f"Passing a syntactically valid BWB identifier to detectCPRMVServeAnalysisMethod() should not return 'None'. It did."
+    assert method is not None, "Passing a syntactically valid BWB identifier to detectCPRMVServeAnalysisMethod() should not return 'None'. It did."
     assert method[CPRMV.label] == Literal('BWB (NL)')
     assert method[CPRMVSERVE['publication-format']] == Literal('xml')
     assert method[CPRMVSERVE['publication-id-format']] == Literal('BWB{bwbid}_{date}_{index}')
@@ -43,7 +43,7 @@ def test_detectCPRMVServeAnalysisMethod_CVDR_identifier():
         method = detectCPRMVServeAnalysisMethod("CVDAA_CC")
     except Exception as e:
         fail(f"detectCPRMVServeAnalysisMethod() should not raise any Exception. It did: {e}")
-    assert method != None, f"Passing a syntactically valid CVDR identifier to detectCPRMVServeAnalysisMethod() should not return 'None'. It did."
+    assert method is not None, "Passing a syntactically valid CVDR identifier to detectCPRMVServeAnalysisMethod() should not return 'None'. It did."
     assert method[CPRMV.label] == Literal('CVDR (NL)')
     assert method[CPRMVSERVE['publication-format']] == Literal('xml')
     assert method[CPRMVSERVE['publication-id-format']] == Literal('CVD{cvdrid}_{index}')
@@ -56,7 +56,7 @@ def test_detectCPRMVServeAnalysisMethod_FMX4_identifier():
         method = detectCPRMVServeAnalysisMethod("CFMX4AA_BB")
     except Exception as e:
         fail(f"detectCPRMVServeAnalysisMethod() should not raise any Exception. It did: {e}")
-    assert method != None, f"Passing a syntactically valid CFMX4 identifier to detectCPRMVServeAnalysisMethod() should not return 'None'. It did."
+    assert method is not None, "Passing a syntactically valid CFMX4 identifier to detectCPRMVServeAnalysisMethod() should not return 'None'. It did."
     assert method[CPRMV.label] == Literal('CELLAR Formex v4 (EU)')
     assert method[CPRMVSERVE['publication-format']] == Literal('xml')
     assert method[CPRMVSERVE['publication-id-format']] == Literal('CFMX4{cellarid}_{docid}')
