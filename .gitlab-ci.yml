@@ -61,8 +61,8 @@ test-cprmv-api:
     - echo "Installing API dependencies..."
     - pip install --no-cache-dir -r requirements-dev.txt
     - echo "Running API tests..."
-    - python -m py_compile serve.py
-    - python -c "from serve import app; print('FastAPI app imported successfully')"
+    - python -m py_compile src/serve.py
+    - python -c "from src.serve import app; print('FastAPI app imported successfully')"
     - test -f ./data/cprmvmethods.ttl || echo "Warning cprmvmethods.ttl not found"
     - pytest
     - echo "API tests completed successfully"
