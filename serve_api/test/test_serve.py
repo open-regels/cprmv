@@ -1,13 +1,13 @@
 import os
 from pytest import fail
 from fastapi.testclient import TestClient
-from ..serve import set_CPRMVMETHODSKG
-from ..serve import app
-from ..serve import CPRMV
-from ..serve import CPRMVMETHODS
-from ..serve import CPRMVSERVE
-from ..serve import detectCPRMVServeAnalysisMethod
-from ..serve import loadRuleSet
+from ..src.serve import set_CPRMVMETHODSKG
+from ..src.serve import app
+from ..src.serve import CPRMV
+from ..src.serve import CPRMVMETHODS
+from ..src.serve import CPRMVSERVE
+from ..src.serve import detectCPRMVServeAnalysisMethod
+from ..src.serve import loadRuleSet
 from rdflib import Literal
 from urllib.parse import quote as urlquote
 

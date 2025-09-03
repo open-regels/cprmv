@@ -15,7 +15,7 @@ import os
 
 import locale
 
-from serve_api.constants import (
+from .utils.constants import (
     CPRMV,
     CPRMVMETHODS,
     CPRMVSERVE,
@@ -339,7 +339,7 @@ def getFirstRuleByIdPathSplitFromRuleAsRoot(g, rootrule, pathsplit):
 # Note that rule structures over CPRMV.contains relations should be trees, so no cyclic graphs, otherwise this method will not stop.
 def getRule(g, rule):
     r = {}
-    for p, o in g.predicate_objects(rule):
+    for p, o in g.predicate_objects(rule):  
         if p == CPRMV.contains:
             r[p] = {}
             item = o
