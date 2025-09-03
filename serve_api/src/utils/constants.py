@@ -65,6 +65,6 @@ LANGUAGE: Union[str, None] = Query(
 )
 UNFORMAT: str = Query(
     default="",
-    description="Pattern for extracting specific values from rule definitions using parse syntax (e.g., '{situatie:paramvalue}: € {norm:paramvalue}')",
-    example="{situatie:paramvalue}: € {norm:paramvalue}",
+    description="Pattern for extracting specific values from rule definitions using parse syntax (e.g., '{situatie:param_value}: € {norm:param_value}')",
+    example="{situatie:param_value}: € {norm:param_value}",
 )

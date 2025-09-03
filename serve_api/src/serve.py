@@ -4,8 +4,7 @@ from rdflib.namespace import RDF
 from typing import Union
 from fastapi import FastAPI
 from fastapi.responses import RedirectResponse
-from parse import parse, search
-from parse import with_pattern
+from parse import parse, search, with_pattern, Result, Match
 from urllib.request import Request, urlopen
 from urllib.error import URLError
 from lxml import etree
@@ -14,7 +13,6 @@ import tempfile
 import os
 
 import locale
-
 from .utils.constants import (
     CPRMV,
     CPRMVMETHODS,
@@ -25,6 +23,10 @@ from .utils.constants import (
     PATH_DELIMITER,
     RULE_ID_PATH,
 )
+
+
+type Definition = dict[str, Union[str, dict]]
+
 
 try:
     locale.setlocale(
@@ -78,9 +80,9 @@ def methods(format: str = "json-ld"):
         return app.cprmvsettings["CPRMVMETHODS_KG"].serialize(format=format)
 
 
-@app.get("/rules/{ruleidpath}")
+@app.get("/rules/{rule_id_path}")
 def rules(
-    ruleidpath: str = RULE_ID_PATH,
+    rule_id_path: str = RULE_ID_PATH,
     path_delimiter: str = PATH_DELIMITER,
     format: str = FORMAT,
     _language: Union[str, None] = LANGUAGE,
@@ -95,7 +97,7 @@ def rules(
     The API downloads the source publication on-the-fly, transforms it using XSLT, and serves the resulting
     CPRMV-formatted rules. You can request individual rules within a rule set by specifying their path.
     """
-    return getRules(ruleidpath, path_delimiter, format, unformat)
+    return get_rules(rule_id_path, path_delimiter, format, unformat)
 
 
 @app.get("/jci13/{jciuri}")
@@ -167,7 +169,7 @@ FILTER(str(?langCode)="NLD" && str(?format)="fmx4")
 
 # finds the first acknowledges AnalysisMethod supported by CPRMV Serve for which the given cprmvid matches the id format defined in the cprmvmethods value lists
 # returns all the information on the matching method as a Dictionary in which also the unformatted cprmvid (one or more key/values) is added under the CPRMV.id key
-def detectCPRMVServeAnalysisMethod(cprmvid):
+def detect_cprmv_serve_analysis_method(cprmvid):
     cprmvMethods = app.cprmvsettings["CPRMVMETHODS_KG"]
     result = None
     methods = cprmvMethods.value(CPRMVMETHODS.analysismethods, CPRMV.acknowledged)
@@ -188,7 +190,7 @@ def detectCPRMVServeAnalysisMethod(cprmvid):
     return result
 
 
-def getCprmvRuleSetFromPublication(g, cprmvid, method):
+def get_cprmv_rule_set_from_publication(g, cprmvid, method):
     frbr = str(method[CPRMVSERVE["frbr-repository"]])
     puburl = frbr.format_map(method[CPRMVSERVE["id_parts"]])
     methodLabel = method[CPRMV.label]
@@ -224,12 +226,12 @@ def getCprmvRuleSetFromPublication(g, cprmvid, method):
 
 
 # load the requested publication from the official repository and transform it to CPRMV and load it
-def loadRuleSet(cprmvid):
+def load_rule_set(cprmvid):
     g = Graph()
     try:
-        method = detectCPRMVServeAnalysisMethod(cprmvid)
+        method = detect_cprmv_serve_analysis_method(cprmvid)
         if method is not None:
-            getCprmvRuleSetFromPublication(g, cprmvid, method)
+            get_cprmv_rule_set_from_publication(g, cprmvid, method)
         else:
             raise Exception(
                 "No supported publication repository use identifiers with the format of the given Ruleset Id."
@@ -245,66 +247,66 @@ def loadRuleSet(cprmvid):
 
 
 @with_pattern(r".+")
-def paramvalue(pvalue):
+def param_value(pvalue):
     return pvalue
 
 
-def getRules(
-    ruleidpath="",
+def get_rules(
+    rule_id_path="",
     path_delimiter: str = ",",
     formatarg: str = "cprmv-json",
     unformat: str = "",
 ):
     try:
-        delimindex = ruleidpath.find(path_delimiter)
+        delimindex = rule_id_path.find(path_delimiter)
         print(delimindex)
         if delimindex > 0:
-            rulesetid = ruleidpath[:delimindex].strip()
+            rulesetid = rule_id_path[:delimindex].strip()
         else:
-            rulesetid = ruleidpath.strip()
+            rulesetid = rule_id_path.strip()
         print(f"Info: retrieving info for cprmv:RuleSet : {rulesetid}")
-        g = loadRuleSet(rulesetid)
+        g = load_rule_set(rulesetid)
     except Exception as e:
         return {"error": str(e)}
-    print(f"processing starts at first rule in path {ruleidpath}")
-    r = getFirstRuleByIdPath(g, ruleidpath, path_delimiter)
+    print(f"processing starts at first rule in path {rule_id_path}")
+    r = get_first_rule_by_id_path(g, rule_id_path, path_delimiter)
     if r is None:
         return "No rules found for given path..."
     print(f"rule found {r}")
     if formatarg == "cprmv-json":
-        result = getRule(
+        result = get_rule(
             g, r
         )  # this custom format has a more human readable pretty print layout
     else:
         result = g.cbd(r).serialize(format=formatarg)
     if unformat != "" and CPRMV.definition in result:
-        definition = str(
+        string_definition = str(
             " ".join(result[CPRMV.definition].split())
         )  # transform no break spaces in regular ones
-        definition = search(
-            unformat, definition, extra_types={"paramvalue": paramvalue}
+        definition: Result | Match | None = search(
+            unformat, string_definition, extra_types={"param_value": param_value}
         )
         if definition is not None:
-            definition = definition.named
-            definition["rulesetid"] = rulesetid
-            definition["ruleidpath"] = ruleidpath
-            result.update(definition)
+            named_definition: Definition = definition.named
+            named_definition["rulesetid"] = rulesetid
+            named_definition["rule_id_path"] = rule_id_path
+            result.update(named_definition)
     return result
 
 
 # depth first search in the given graph g for the first rule matching the given path (the path splitted as a list) from the given rootrule
-def getFirstRuleByIdPath(g, path, path_delimiter: str = ","):
+def get_first_rule_by_id_path(g, path, path_delimiter: str = ","):
     pathsplit = path.split(path_delimiter)
     firstid = pathsplit.pop(0).strip()
     for rootrule in g.subjects(CPRMV.id, Literal(firstid, lang="nl")):
-        rule = getFirstRuleByIdPathSplitFromRuleAsRoot(g, rootrule, pathsplit)
+        rule = get_first_rule_by_Id_path_split_from_rule_as_root(g, rootrule, pathsplit)
         if rule is not None:
             return rule
     return None
 
 
 # recursive depth first search in the given graph g for the first rule matching the path (the path splitted as a list) from the given rootrule
-def getFirstRuleByIdPathSplitFromRuleAsRoot(g, rootrule, pathsplit):
+def get_first_rule_by_Id_path_split_from_rule_as_root(g, rootrule, pathsplit):
     if len(pathsplit) == 0:
         return rootrule
     rulelist = g.value(rootrule, CPRMV.contains)
@@ -324,11 +326,15 @@ def getFirstRuleByIdPathSplitFromRuleAsRoot(g, rootrule, pathsplit):
         )  # look only at alphanumeric characters
         subrule = None
         if ruleid == id:
-            subrule = getFirstRuleByIdPathSplitFromRuleAsRoot(g, rule, pathsplit)
+            subrule = get_first_rule_by_Id_path_split_from_rule_as_root(
+                g, rule, pathsplit
+            )
             pathsplit.insert(0, id)
         else:
             pathsplit.insert(0, id)
-            subrule = getFirstRuleByIdPathSplitFromRuleAsRoot(g, rule, pathsplit)
+            subrule = get_first_rule_by_Id_path_split_from_rule_as_root(
+                g, rule, pathsplit
+            )
         if subrule is not None:
             return subrule
         rulelist = g.value(rulelist, RDF.rest)
@@ -337,16 +343,16 @@ def getFirstRuleByIdPathSplitFromRuleAsRoot(g, rootrule, pathsplit):
 
 # retrieves all info of the given rule (and all its subrules from the given graph).
 # Note that rule structures over CPRMV.contains relations should be trees, so no cyclic graphs, otherwise this method will not stop.
-def getRule(g, rule):
+def get_rule(g, rule):
     r = {}
-    for p, o in g.predicate_objects(rule):  
+    for p, o in g.predicate_objects(rule):
         if p == CPRMV.contains:
             r[p] = {}
             item = o
             while item != RDF.nil:
                 firstitem = g.value(item, RDF.first)
                 subid = g.value(firstitem, CPRMV.id)
-                r[p][subid] = getRule(g, firstitem)
+                r[p][subid] = get_rule(g, firstitem)
                 item = g.value(item, RDF.rest)
         else:
             r[p] = o

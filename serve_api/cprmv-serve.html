@@ -60,12 +60,12 @@
             
             The language parameter for now should always be "nl" (default). Multilingual support will be added in a later version.
             """
-            return getRules(rulesetid, rulesetid, format)
+            return get_rules(rulesetid, rulesetid, format)
             
-        @app.get("/rules/{rulesetid}/{ruleidpath}")
-        def rules(rulesetid: str, ruleidpath: str, path_delimiter: str = ',', format: str = 'cprmv-json', language: Union[str, None] = None):
+        @app.get("/rules/{rulesetid}/{rule_id_path}")
+        def rules(rulesetid: str, rule_id_path: str, path_delimiter: str = ',', format: str = 'cprmv-json', language: Union[str, None] = None):
             """
-            Returns the Rule including all Rules it contains and that can be found as indicated in the given Rule Id Path (ruleidpath) within the Rule Set that has the given Rule Set Id (rulesetid)
+            Returns the Rule including all Rules it contains and that can be found as indicated in the given Rule Id Path (rule_id_path) within the Rule Set that has the given Rule Set Id (rulesetid)
             
             Note that the path consists out of the values of the cprmv:id of the rules in the given ruleset delimited by a delimiter (default delimiter is ',') and for convenience the path may also leave out id's of rules in the path. The first matching rule (depth first) is the one returned.
             
@@ -81,7 +81,7 @@
             
             The regex parameter is not implemented yet. The idea is that this will allow to apply a regular expression search and replace on the definition values of all Rules returned. This could be used to extract and convert parts of the definitions, for instance retrieving amounts at the end of a definition after a semicolon (see for instance Artikel 20, lid 1, onderdeel a. of the ruleset BWBR0015703_2025-07-01_0)
             """
-            return getRules(rulesetid, ruleidpath, path_delimiter, format)
+            return get_rules(rulesetid, rule_id_path, path_delimiter, format)
 
         @app.get("/jci13/{jciuri}")
         def jci13(jciuri: str = 'jci1.3:c:BWBR0015703&hoofdstuk=3&paragraaf=3.2&artikel=20&z=2025-07-01&g=2025-07-01'):
@@ -95,7 +95,7 @@
             return { "error" : "not implemented"}
 
         # if exists in graphs, return it, otherwise load it with rdflib
-        def loadRuleSet(cprmvid):
+        def load_rule_set(cprmvid):
             g = Graph()
             try:
                 if not (None, CPRMV.id, Literal(cprmvid)) in g:
@@ -110,21 +110,21 @@
                     raise e
             return g
             
-        def getRules(rulesetid, ruleidpath='', path_delimiter: str = ',', formatarg: str = 'cprmv-json'):
+        def get_rules(rulesetid, rule_id_path='', path_delimiter: str = ',', formatarg: str = 'cprmv-json'):
             print(f"Info: retrieving info for cprmv:RuleSet : {rulesetid}")
             try:
-                g = loadRuleSet(rulesetid)
+                g = load_rule_set(rulesetid)
             except Exception as e:
                 return { "error" : str(e) }
-            r = getFirstRuleByIdPath(g, ruleidpath, path_delimiter)
+            r = get_first_rule_by_id_path(g, rule_id_path, path_delimiter)
             if(r == None):
                 return ""
             if(formatarg == 'cprmv-json'):
-                return getRule(g, r)
+                return get_rule(g, r)
             result = g.cbd(r)
             return result.serialize(format=formatarg)
 
-        def getFirstRuleByIdPath(g, path, path_delimiter: str = ','):
+        def get_first_rule_by_id_path(g, path, path_delimiter: str = ','):
             reversed_pathsplit = path.split(path_delimiter)
             reversed_pathsplit.reverse()
             firstid = reversed_pathsplit.pop();
@@ -156,7 +156,7 @@
                 rulelist = g.value(rulelist, RDF.rest)
             return None
                     
-        def getRule(g, rule):
+        def get_rule(g, rule):
             r = {}
             for p, o in g.predicate_objects(rule):
                 if(p == CPRMV.contains):
@@ -165,7 +165,7 @@
                     while (item != RDF.nil):
                         firstitem = g.value(item, RDF.first)
                         subid = g.value(firstitem, CPRMV.id)
-                        r[p][subid] = getRule(g, firstitem)
+                        r[p][subid] = get_rule(g, firstitem)
                         item = g.value(item, RDF.rest)
                 else:
                     r[p] = o
