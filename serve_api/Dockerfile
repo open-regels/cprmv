@@ -22,7 +22,7 @@ RUN python -m pip install --no-cache-dir --upgrade pip setuptools wheel && \
     pip install --no-cache-dir --timeout=300 --retries=3 -r requirements.txt
 
 # Copy application code
-COPY serve.py .
+COPY src/serve.py ./src/serve.py
 COPY data/ ./data/
 
 # Add labels for better Docker Hub integration
@@ -42,4 +42,4 @@ EXPOSE 8000
 HEALTHCHECK --interval=30s --timeout=30s --start-period=5s --retries=3 \
   CMD python -c "from urllib.request import urlopen; urlopen('http://localhost:8000/', timeout=5)" || exit 1
   
-CMD ["fastapi", "run", "serve.py", "--port", "8000", "--host", "0.0.0.0"]
+CMD ["fastapi", "run", "src/serve.py", "--port", "8000", "--host", "0.0.0.0"]
