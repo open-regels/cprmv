@@ -21,8 +21,8 @@ COPY requirements.txt .
 RUN python -m pip install --no-cache-dir --upgrade pip setuptools wheel && \
     pip install --no-cache-dir --timeout=300 --retries=3 -r requirements.txt
 
-# Copy application code
-COPY src/serve.py ./src/serve.py
+# Copy the entire src directory including any subdirectories like utils
+COPY src/ ./src/
 COPY data/ ./data/
 
 # Add labels for better Docker Hub integration
