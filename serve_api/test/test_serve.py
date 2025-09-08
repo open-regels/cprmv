@@ -8,6 +8,7 @@ from ..src.serve import CPRMVMETHODS
 from ..src.serve import CPRMVSERVE
 from ..src.serve import detect_cprmv_serve_analysis_method
 from ..src.serve import load_rule_set
+from ..src.serve import get_rules
 from rdflib import Literal
 from urllib.parse import quote as urlquote
 
@@ -55,6 +56,7 @@ def test_detect_cprmv_serve_analysis_method_BWB_identifier():
         "bwbid": "AA",
         "date": "BB",
         "index": "CC",
+        "cprmvid": "BWBAA_BB_CC"
     }
 
 
@@ -75,7 +77,7 @@ def test_detect_cprmv_serve_analysis_method_CVDR_identifier():
         "https://repository.officiele-overheidspublicaties.nl/cvdr/CVD{cvdrid}/{index}/xml/CVD{cvdrid}_{index}.xml"
     )
     assert method[CPRMVSERVE["xslt"]] == Literal("data/cvdr2cprmv.xsl")
-    assert method[CPRMVSERVE["id_parts"]] == {"cvdrid": "AA", "index": "CC"}
+    assert method[CPRMVSERVE["id_parts"]] == {"cvdrid": "AA", "index": "CC", "cprmvid": "CVDAA_CC"}
 
 
 def test_detect_cprmv_serve_analysis_method_FMX4_identifier():
@@ -97,21 +99,12 @@ def test_detect_cprmv_serve_analysis_method_FMX4_identifier():
         "https://publications.europa.eu/resource/cellar/{cellarid}/{docid}"
     )
     assert method[CPRMVSERVE["xslt"]] == Literal("data/fmx4cellar2cprmv.xsl")
-    assert method[CPRMVSERVE["id_parts"]] == {"cellarid": "AA", "docid": "BB"}
+    assert method[CPRMVSERVE["id_parts"]] == {"cellarid": "AA", "docid": "BB", "cprmvid": "CFMX4AA_BB"}
 
 
-def test_load_rule_set_unknown_method():
-    try:
-        load_rule_set("UNKNOWN")
-    except Exception as e:
-        assert (
-            str(e)
-            == "No supported publication repository use identifiers with the format of the given Ruleset Id."
-        )
-        return
-    fail(
-        "load_rule_set() should raise an exception when passing a identifier that does not syntactically match a supported AnalysisMethod"
-    )
+def test_detect_cprmv_serve_unknown_method():
+    result = get_rules("UNKNOWN")
+    assert result == { "error": "No supported publication repository use identifiers with the format of the given Ruleset Id."}
 
 
 def test_get_rules():

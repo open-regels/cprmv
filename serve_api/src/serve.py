@@ -11,6 +11,7 @@ from lxml import etree
 import shutil
 import tempfile
 import os
+import ciso8601
 
 import locale
 from .utils.constants import (
@@ -166,8 +167,46 @@ FILTER(str(?langCode)="NLD" && str(?format)="fmx4")
 } LIMIT 100
 """
 
+def find_publication_version_valid_on_date(date, method):
+    date_ts = ciso8601.parse_datetime(date)
+    frbr = str(method[CPRMVSERVE["frbr-repository-versioning-information-url"]])
+    puburl = frbr.format_map(method[CPRMVSERVE["id_parts"]])
+    methodLabel = method[CPRMV.label]
+    try:
+        print(f"retrieving versioning information on publication: {puburl}")
+        req = Request(puburl)
+        response = urlopen(req)
+        with tempfile.NamedTemporaryFile(delete=False) as tmp_file:
+            shutil.copyfileobj(response, tmp_file)
+            print(f"opening publication versioning information from temp file {tmp_file.name}")
+            xml = etree.parse(open(tmp_file.name))
+            last_date = None
+            last_date_ts = None
+            last_index = None
+            for expr in xml.xpath('/work/expression'):
+                found_date, found_index = expr.get('label').split('_')
+                found_date_ts = ciso8601.parse_datetime(found_date)
+                if(last_date_ts is None or (found_date_ts <= date_ts and found_date_ts > last_date_ts)):
+                    last_date = found_date
+                    last_date_ts = found_date_ts
+                    last_index = found_index
+            print(f"latest version found: {last_date}_{last_index}")
+            os.remove(tmp_file.name)
+            return {"date" : last_date, "index" : last_index}
+    except URLError as e:
+        if hasattr(e, "reason"):
+            print("We failed to reach a server.")
+            print("Reason: ", e.reason)
+            raise e
+        elif hasattr(e, "code"):
+            print("The server couldn't fulfill the request.")
+            print("Error code: ", e.code)
+            raise e
+    else:
+        raise Exception(f"unknown error loading {methodLabel} publication versioning information...")
 
-# finds the first acknowledges AnalysisMethod supported by CPRMV Serve for which the given cprmvid matches the id format defined in the cprmvmethods value lists
+
+# finds the first acknowledged AnalysisMethod supported by CPRMV Serve for which the given cprmvid matches the id format defined in the cprmvmethods value lists
 # returns all the information on the matching method as a Dictionary in which also the unformatted cprmvid (one or more key/values) is added under the CPRMV.id key
 def detect_cprmv_serve_analysis_method(cprmvid):
     cprmvMethods = app.cprmvsettings["CPRMVMETHODS_KG"]
@@ -184,13 +223,23 @@ def detect_cprmv_serve_analysis_method(cprmvid):
                 for p, o in cprmvMethods.predicate_objects(method):
                     methodTriples[p] = o
                 methodTriples[CPRMVSERVE["id_parts"]] = result.named
+                if 'index' in methodTriples[CPRMVSERVE["id_parts"]] and methodTriples[CPRMVSERVE["id_parts"]]['index'] == 'latest':
+                    methodTriples[CPRMVSERVE["id_parts"]]['valid-on'] = methodTriples[CPRMVSERVE['id_parts']]['date']
+                    print(f"searching latest version valid on date: {methodTriples[CPRMVSERVE['id_parts']]['date']}")
+                    version = find_publication_version_valid_on_date(methodTriples[CPRMVSERVE["id_parts"]]['date'], methodTriples)
+                    methodTriples[CPRMVSERVE["id_parts"]]['date'] = version['date']
+                    cprmvid = cprmvid.replace(methodTriples[CPRMVSERVE["id_parts"]]['valid-on'], version['date'])
+                    methodTriples[CPRMVSERVE["id_parts"]]['index'] = version['index']
+                    cprmvid = cprmvid.replace('latest', version['index'])
+                methodTriples[CPRMVSERVE["id_parts"]]['cprmvid'] = cprmvid
                 result = methodTriples
                 break
         methods = cprmvMethods.value(methods, RDF.rest)
     return result
 
 
-def get_cprmv_rule_set_from_publication(g, cprmvid, method):
+def get_cprmv_rule_set_from_publication(g, method):
+    cprmvid = method[CPRMVSERVE["id_parts"]]['cprmvid']
     frbr = str(method[CPRMVSERVE["frbr-repository"]])
     puburl = frbr.format_map(method[CPRMVSERVE["id_parts"]])
     methodLabel = method[CPRMV.label]
@@ -226,16 +275,10 @@ def get_cprmv_rule_set_from_publication(g, cprmvid, method):
 
 
 # load the requested publication from the official repository and transform it to CPRMV and load it
-def load_rule_set(cprmvid):
+def load_rule_set(method):
     g = Graph()
     try:
-        method = detect_cprmv_serve_analysis_method(cprmvid)
-        if method is not None:
-            get_cprmv_rule_set_from_publication(g, cprmvid, method)
-        else:
-            raise Exception(
-                "No supported publication repository use identifiers with the format of the given Ruleset Id."
-            )
+        get_cprmv_rule_set_from_publication(g, method)
     except Exception as e:
         if (
             "unbound prefix" in str(e).lower()
@@ -265,7 +308,14 @@ def get_rules(
         else:
             rulesetid = rule_id_path.strip()
         print(f"Info: retrieving info for cprmv:RuleSet : {rulesetid}")
-        g = load_rule_set(rulesetid)
+        method = detect_cprmv_serve_analysis_method(rulesetid)
+        if method is not None:
+            g = load_rule_set(method)
+            rule_id_path = rule_id_path.replace(rulesetid, method[CPRMVSERVE["id_parts"]]['cprmvid']) # the actual latest rulesetid might have been searched and found
+        else:
+            raise Exception(
+                "No supported publication repository use identifiers with the format of the given Ruleset Id."
+            )
     except Exception as e:
         return {"error": str(e)}
     print(f"processing starts at first rule in path {rule_id_path}")

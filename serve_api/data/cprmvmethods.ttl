@@ -38,6 +38,7 @@ cprmvmethods:bwb a cprmv:AnalysisMethod;
     cprmv-serve:publication-format "xml";
     cprmv-serve:publication-id-format "BWB{bwbid}_{date}_{index}";
     cprmv-serve:frbr-repository "https://repository.officiele-overheidspublicaties.nl/bwb/BWB{bwbid}/{date}_{index}/xml/BWB{bwbid}_{date}_{index}.xml";
+    cprmv-serve:frbr-repository-versioning-information-url "https://repository.officiele-overheidspublicaties.nl/bwb/BWB{bwbid}/";
     cprmv-serve:xslt "data/bwb2cprmv.xsl".
 
 cprmvmethods:cvdr a cprmv:AnalysisMethod;
