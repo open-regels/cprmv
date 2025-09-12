@@ -24,7 +24,7 @@
     ];
     tooibwb:id "</xsl:text><xsl:value-of select="./@bwb-id"/><xsl:text xml:space="preserve">";
     tooibwb:inwerkingtreding "</xsl:text><xsl:value-of select="./@inwerkingtreding"/><xsl:text xml:space="preserve">";
-    cprmv:contains (</xsl:text><xsl:apply-templates select="./wetgeving/wet-besluit/wettekst/*"/><xsl:text xml:space="preserve">).
+    cprmv:contains (</xsl:text><xsl:apply-templates select="./wetgeving/wet-besluit/wettekst/*|./wetgeving/regeling/regeling-tekst/*"/><xsl:text xml:space="preserve">).
 </xsl:text>
   </xsl:template>
 
