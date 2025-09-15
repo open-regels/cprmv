@@ -59,6 +59,31 @@ def test_detect_cprmv_serve_analysis_method_BWB_identifier():
         "cprmvid": "BWBAA_BB_CC"
     }
 
+def test_detect_cprmv_serve_analysis_method_BWB_identifier_with_latest():
+    # add extra cprmvmethod knowledge for local testing (using a test frbr repository setting referring to a fixed publication sourcefile)
+    tm = set_CPRMVMETHODSKG("./test/cprmvmethods.ttl")
+    # update relative paths to file:// url with absolute paths
+    path = tm.value(CPRMVMETHODS.test001bwb, CPRMVSERVE["frbr-repository"])
+    path = "file://" + urlquote(os.path.abspath(str(path)))
+    tm.set((CPRMVMETHODS.test001bwb, CPRMVSERVE["frbr-repository"], Literal(path)))
+    path = tm.value(CPRMVMETHODS.test001bwb, CPRMVSERVE["frbr-repository-versioning-information-url"])
+    path = "file://" + urlquote(os.path.abspath(str(path)))
+    tm.set((CPRMVMETHODS.test001bwb, CPRMVSERVE["frbr-repository-versioning-information-url"], Literal(path)))
+    
+    try:
+        method = detect_cprmv_serve_analysis_method("TEST001BWBAA_2025-09-15_latest")
+    except Exception as e:
+        fail(
+            f"detect_cprmv_serve_analysis_method() should not raise any Exception. It did: {e}"
+        )
+    
+    assert method[CPRMVSERVE["id_parts"]] == {
+        "bwbid": "AA",
+        "date": "2025-07-01",
+        "index": "0",
+        "cprmvid": "TEST001BWBAA_2025-07-01_0",
+        "valid-on": "2025-09-15"
+    }
 
 def test_detect_cprmv_serve_analysis_method_CVDR_identifier():
     try:
