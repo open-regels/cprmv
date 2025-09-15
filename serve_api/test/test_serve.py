@@ -18,7 +18,7 @@ client = TestClient(app)
 def test_get_root():
     response = client.get("/")
     assert response.status_code == 200
-    assert response.json() == {"CPRMV Rules Serve API": "0.3.1"}
+    assert response.json() == {"CPRMV Rules Serve API": "0.3.2"}
 
 
 def test_detect_cprmv_serve_analysis_method_unknown_identifier():
