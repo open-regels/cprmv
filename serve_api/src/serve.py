@@ -12,6 +12,8 @@ import shutil
 import tempfile
 import os
 import ciso8601
+from datetime import datetime
+import time
 
 import locale
 from .utils.constants import (
@@ -58,6 +60,7 @@ app = FastAPI(
 
 
 def set_CPRMVMETHODSKG(path):
+    print("loading cprmvmethods.ttl from path: "+path)
     _cprmvMethods = Graph()
     _cprmvMethods.parse(path, format="turtle")
     app.cprmvsettings = {"CPRMVMETHODS_KG": _cprmvMethods}
@@ -169,30 +172,64 @@ FILTER(str(?langCode)="NLD" && str(?format)="fmx4")
 
 def find_publication_version_valid_on_date(date, method):
     date_ts = ciso8601.parse_datetime(date)
-    frbr = str(method[CPRMVSERVE["frbr-repository-versioning-information-url"]])
-    puburl = frbr.format_map(method[CPRMVSERVE["id_parts"]])
+    frbr_sru_url_format = str(method[CPRMVSERVE["frbr-repository-sru-url"]])
+    frbr_valid_from_term_ns = str(method[CPRMVSERVE["frbr-repository-sru-response-from-date-term-namespace"]])
+    frbr_valid_from_term = str(method[CPRMVSERVE["frbr-repository-sru-response-from-date-term"]])
+    fvft_prefix = 'fvft'
+    frbr_valid_from_xpath = '//'+fvft_prefix+':'+frbr_valid_from_term
+    frbr_sru_response_publoc_term_ns = str(method[CPRMVSERVE["frbr-repository-sru-response-publication-location-term-namespace"]])
+    frbr_sru_response_publoc_term = str(method[CPRMVSERVE["frbr-repository-sru-response-publication-location-term"]])
+    fsrpt_prefix = 'fsrpt'
+    frbr_publoc_format = str(method[CPRMVSERVE["frbr-repository-publication-location-format"]])
+    frbr_publoc_xpath = '//'+fsrpt_prefix+':'+frbr_sru_response_publoc_term 
+    sru_url = frbr_sru_url_format.format_map(method[CPRMVSERVE["id_parts"]])
     methodLabel = method[CPRMV.label]
     try:
-        print(f"retrieving versioning information on publication: {puburl}")
-        req = Request(puburl)
+        print(f"retrieving versioning information through SRU service: {sru_url}")
+        req = Request(sru_url)
         response = urlopen(req)
+        print("Saving response from SRU")
         with tempfile.NamedTemporaryFile(delete=False) as tmp_file:
             shutil.copyfileobj(response, tmp_file)
+            tmp_file.close()
             print(f"opening publication versioning information from temp file {tmp_file.name}")
-            xml = etree.parse(open(tmp_file.name))
-            last_date = None
-            last_date_ts = None
-            last_index = None
-            for expr in xml.xpath('/work/expression'):
-                found_date, found_index = expr.get('label').split('_')
-                found_date_ts = ciso8601.parse_datetime(found_date)
-                if(last_date_ts is None or (found_date_ts <= date_ts and found_date_ts > last_date_ts)):
-                    last_date = found_date
-                    last_date_ts = found_date_ts
-                    last_index = found_index
-            print(f"latest version found: {last_date}_{last_index}")
+            try:
+                xml = etree.parse(open(tmp_file.name))
+            except Exception as e:
+                print('Exception parsing sru response: '+str(e))
+                raise Exception(f"error parsing retrieved publication versioning information.")
+            print("succesfull parse of sru response")
+            try:
+                found_date = 'unknown'
+                found_index = 'unknown'
+                for expr in xml.xpath(frbr_valid_from_xpath, namespaces={fvft_prefix : frbr_valid_from_term_ns}):
+                    found_date = expr.text
+                    if not valid_date(found_date):
+                        print("invalid publication valid-from date found: "+found_date)
+                        raise Exception('SRU response contained invalid publication valid-from date.')
+                    break
+                print('publication valid-from date found: '+found_date)
+                for expr in xml.xpath(frbr_publoc_xpath, namespaces={fsrpt_prefix : frbr_sru_response_publoc_term_ns}):
+                    publoc = expr.text
+                    print(f"Parsing frbr-repository-publication-location-format ({frbr_publoc_format}) on value from SRU response: {publoc}")
+                    result = parse(frbr_publoc_format, publoc)
+                    if result is not None:
+                        parts = result.named
+                        if 'index' in parts:
+                            found_index = parts['index']
+                        else:
+                            raise Exception('Error parsing frbr-repository-publication-location-format. No index value configured or found...')
+                        print(f"found publication index: "+found_index)
+                    else:
+                        raise Exception('SRU response contained unexpected publication location url.')
+                    break
+                print('Processed SRU response. valid-from date and index found')
+            except Exception as e:
+                print("Exception processing SRU response: "+str(e))
+                raise Exception(f'error processing retrieved publication versioning information..'+str(e))
+            print(f"latest version found: {found_date}_{found_index}")
             os.remove(tmp_file.name)
-            return {"date" : last_date, "index" : last_index}
+            return {"date" : found_date, "index" : found_index}
     except URLError as e:
         if hasattr(e, "reason"):
             print("We failed to reach a server.")
@@ -202,9 +239,18 @@ def find_publication_version_valid_on_date(date, method):
             print("The server couldn't fulfill the request.")
             print("Error code: ", e.code)
             raise e
-    else:
-        raise Exception(f"unknown error loading {methodLabel} publication versioning information...")
+    except Exception as e:
+        print("Error finding publication versioning information: "+str(e))
+        raise e
+    raise Exception(f"unknown error finding publication versioning information...")
 
+
+def valid_date(datestr):
+    try:
+        datetime.fromisoformat(datestr)
+    except:
+        return False
+    return True
 
 # finds the first acknowledged AnalysisMethod supported by CPRMV Serve for which the given cprmvid matches the id format defined in the cprmvmethods value lists
 # returns all the information on the matching method as a Dictionary in which also the unformatted cprmvid (one or more key/values) is added under the CPRMV.id key
@@ -215,23 +261,28 @@ def detect_cprmv_serve_analysis_method(cprmvid):
     while methods != RDF.nil:
         method = cprmvMethods.value(methods, RDF.first)
         idformat = cprmvMethods.value(method, CPRMVSERVE["publication-id-format"])
-        if idformat is not None:
-            print(f"Parsing {idformat} on value {cprmvid}")
-            result = parse(idformat, cprmvid)
+        normalized_idformat = cprmvMethods.value(method, CPRMVSERVE["normalized-id-format"])
+        if idformat is not None and normalized_idformat is not None:
+            cprmvid_official = cprmvid
+            cprmvid_normalized = normalize_ruleset_id(cprmvid)
+            print(f"Parsing {normalized_idformat} on value {cprmvid_normalized}")
+            result = parse(normalized_idformat, cprmvid_normalized)
             if result is not None:
                 methodTriples = {}
                 for p, o in cprmvMethods.predicate_objects(method):
                     methodTriples[p] = o
-                methodTriples[CPRMVSERVE["id_parts"]] = result.named
-                if 'index' in methodTriples[CPRMVSERVE["id_parts"]] and methodTriples[CPRMVSERVE["id_parts"]]['index'] == 'latest':
-                    methodTriples[CPRMVSERVE["id_parts"]]['valid-on'] = methodTriples[CPRMVSERVE['id_parts']]['date']
-                    print(f"searching latest version valid on date: {methodTriples[CPRMVSERVE['id_parts']]['date']}")
-                    version = find_publication_version_valid_on_date(methodTriples[CPRMVSERVE["id_parts"]]['date'], methodTriples)
-                    methodTriples[CPRMVSERVE["id_parts"]]['date'] = version['date']
-                    cprmvid = cprmvid.replace(methodTriples[CPRMVSERVE["id_parts"]]['valid-on'], version['date'])
-                    methodTriples[CPRMVSERVE["id_parts"]]['index'] = version['index']
-                    cprmvid = cprmvid.replace('latest', version['index'])
-                methodTriples[CPRMVSERVE["id_parts"]]['cprmvid'] = cprmvid
+                methodTriples[CPRMVSERVE['id_parts']] = result.named
+                if 'index' in methodTriples[CPRMVSERVE['id_parts']] and methodTriples[CPRMVSERVE['id_parts']]['index'] == 'latest':
+                    if 'date' in methodTriples[CPRMVSERVE['id_parts']] and valid_date(methodTriples[CPRMVSERVE['id_parts']]['date']):
+                        methodTriples[CPRMVSERVE['id_parts']]['valid-on'] = methodTriples[CPRMVSERVE['id_parts']]['date']
+                    else:
+                        methodTriples[CPRMVSERVE['id_parts']]['valid-on'] = datetime.now().strftime('%Y-%m-%d')
+                    print(f"searching latest version valid on date: {methodTriples[CPRMVSERVE['id_parts']]['valid-on']}")
+                    version = find_publication_version_valid_on_date(methodTriples[CPRMVSERVE['id_parts']]['valid-on'], methodTriples)
+                    methodTriples[CPRMVSERVE['id_parts']]['date'] = version['date']
+                    methodTriples[CPRMVSERVE['id_parts']]['index'] = version['index']
+                    cprmvid_official = idformat.format_map(methodTriples[CPRMVSERVE['id_parts']])
+                methodTriples[CPRMVSERVE['id_parts']]['cprmvid'] = cprmvid_official
                 result = methodTriples
                 break
         methods = cprmvMethods.value(methods, RDF.rest)
@@ -240,7 +291,7 @@ def detect_cprmv_serve_analysis_method(cprmvid):
 
 def get_cprmv_rule_set_from_publication(g, method):
     cprmvid = method[CPRMVSERVE["id_parts"]]['cprmvid']
-    frbr = str(method[CPRMVSERVE["frbr-repository"]])
+    frbr = str(method[CPRMVSERVE["frbr-repository-publication-location-format"]])
     puburl = frbr.format_map(method[CPRMVSERVE["id_parts"]])
     methodLabel = method[CPRMV.label]
     try:
@@ -249,6 +300,7 @@ def get_cprmv_rule_set_from_publication(g, method):
         response = urlopen(req)
         with tempfile.NamedTemporaryFile(delete=False) as tmp_file:
             shutil.copyfileobj(response, tmp_file)
+            tmp_file.close()
             print(f"opening publication from temp file {tmp_file.name}")
             xml = etree.parse(open(tmp_file.name))
             print(f"transforming {methodLabel} resource into CPRMV RuleSet ...")
@@ -293,6 +345,15 @@ def load_rule_set(method):
 def param_value(pvalue):
     return pvalue
 
+def normalize_ruleset_id(rulesetid):
+    print("normalizing id: "+rulesetid)
+    if rulesetid.find('_') < 0:
+        rulesetid = rulesetid+'_now_latest'
+    splitted = rulesetid.split('_')
+    if len(splitted) == 2:
+        rulesetid = splitted[0]+'_na_'+splitted[1]
+    print("normalizedid: "+rulesetid)
+    return rulesetid
 
 def get_rules(
     rule_id_path="",
@@ -311,6 +372,7 @@ def get_rules(
         method = detect_cprmv_serve_analysis_method(rulesetid)
         if method is not None:
             g = load_rule_set(method)
+            print(f"replacing {rulesetid} with {method[CPRMVSERVE['id_parts']]['cprmvid']} in {rule_id_path}")
             rule_id_path = rule_id_path.replace(rulesetid, method[CPRMVSERVE["id_parts"]]['cprmvid']) # the actual latest rulesetid might have been searched and found
         else:
             raise Exception(
