@@ -16,19 +16,29 @@ The Rule ID Path consisting of the Rule Set ID followed by a comma-separated pat
 **Supported Rule Set Formats:**
         
 1. **BWB (Dutch Law Repository):**
-- Format: `{BWB_ID}_{DATE}_{INDEX}`
+- Format: `{BWB_ID}_{DATE}_{INDEX}` : retrieves the specific indicated version published on the given date with given index number
 - Example: `BWBR0015703_2025-07-01_0`
+- Format: `{BWB_ID}_{DATE}_latest` : Retrieves the version valid on the date specified
+- Example: `BWBR0015703_2025-07-02_latest`
+- Format: `{BWB_ID}` : Retrieves the version valid on the current day
+- Example: `BWBR0015703`
 - Fetches from: https://repository.officiele-overheidspublicaties.nl/bwb/
         
 2. **CVDR (Dutch Municipal Regulations):**
-- Format: `{CVDR_ID}_{INDEX}`
+- Format: `{CVDR_ID}_{INDEX}` : retrieves the specific indicated with the given index number
 - Example: `CVDR712517_1`
+- Format: `{CVDR_ID}_{DATE}_latest` : Retrieves the version valid on the date specified
+- Example: `CVDR712517_2025-07-02_latest`
+- Format: `{CVDR_ID}` : Retrieves the version valid on the current day
+- Example: `CVDR712517`
 - Fetches from: https://repository.officiele-overheidspublicaties.nl/cvdr/
         
 3. **EU CELLAR (European Publications):**
  - Format: `CFMX4{CELLAR_ID}_{ITEM_ID}`
  - Example: `CFMX483e4752e-f2e5-11e8-9982-01aa75ed71a1.0017.02_DOC_2`
  - Fetches from: http://publications.europa.eu/resource/cellar/
+ 
+Note that for CMFX4 finding the version on a specific date is not supported yet.
         
 **Rule Path Navigation:**
         
