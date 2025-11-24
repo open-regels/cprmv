@@ -8,8 +8,10 @@ from ..src.serve import CPRMVMETHODS
 from ..src.serve import CPRMVSERVE
 from ..src.serve import detect_cprmv_serve_analysis_method
 from ..src.serve import load_rule_set
+from ..src.serve import get_rules
 from rdflib import Literal
 from urllib.parse import quote as urlquote
+from datetime import datetime
 
 client = TestClient(app)
 
@@ -17,7 +19,7 @@ client = TestClient(app)
 def test_get_root():
     response = client.get("/")
     assert response.status_code == 200
-    assert response.json() == {"CPRMV Rules Serve API": "0.3.1"}
+    assert response.json() == {"CPRMV Rules Serve API": "0.3.2"}
 
 
 def test_detect_cprmv_serve_analysis_method_unknown_identifier():
@@ -45,18 +47,66 @@ def test_detect_cprmv_serve_analysis_method_BWB_identifier():
     assert method[CPRMV.label] == Literal("BWB (NL)")
     assert method[CPRMVSERVE["publication-format"]] == Literal("xml")
     assert method[CPRMVSERVE["publication-id-format"]] == Literal(
-        "BWB{bwbid}_{date}_{index}"
+        "BWB{rulesetid}_{date}_{index}"
     )
-    assert method[CPRMVSERVE["frbr-repository"]] == Literal(
-        "https://repository.officiele-overheidspublicaties.nl/bwb/BWB{bwbid}/{date}_{index}/xml/BWB{bwbid}_{date}_{index}.xml"
+    assert method[CPRMVSERVE["frbr-repository-publication-location-format"]] == Literal(
+        "https://repository.officiele-overheidspublicaties.nl/bwb/BWB{rulesetid}/{date}_{index}/xml/BWB{rulesetid}_{date}_{index}.xml"
     )
     assert method[CPRMVSERVE["xslt"]] == Literal("data/bwb2cprmv.xsl")
     assert method[CPRMVSERVE["id_parts"]] == {
-        "bwbid": "AA",
+        "rulesetid": "AA",
         "date": "BB",
         "index": "CC",
+        "cprmvid": "BWBAA_BB_CC"
     }
 
+def test_detect_cprmv_serve_analysis_method_BWB_identifier_with_latest():
+    # add extra cprmvmethod knowledge for local testing (using a test frbr repository setting referring to a fixed publication sourcefile)
+    tm = set_CPRMVMETHODSKG("./test/cprmvmethods.ttl")
+    # update relative paths to file:// url with absolute paths
+    path = tm.value(CPRMVMETHODS.test001bwb, CPRMVSERVE["frbr-repository-sru-url"])
+    path = "file://" + urlquote(os.path.abspath(str(path)))
+    tm.set((CPRMVMETHODS.test001bwb, CPRMVSERVE["frbr-repository-sru-url"], Literal(path)))
+    
+    try:
+        method = detect_cprmv_serve_analysis_method("TEST001BWBAA_2025-09-15_latest")
+    except Exception as e:
+        fail(
+            f"detect_cprmv_serve_analysis_method() should not raise any Exception. It did: {e}"
+        )
+        
+    # note that in this test, the index of the publication is set to "Publication"
+    assert method[CPRMVSERVE["id_parts"]] == {
+        "rulesetid": "AA",
+        "date": "2025-07-01",
+        "index": "Publication",
+        "cprmvid": "TEST001BWBAA_2025-07-01_Publication",
+        "valid-on": "2025-09-15"
+    }
+
+def test_detect_cprmv_serve_analysis_method_BWB_identifier_with_implicit_latest():
+    # add extra cprmvmethod knowledge for local testing (using a test frbr repository setting referring to a fixed publication sourcefile)
+    tm = set_CPRMVMETHODSKG("./test/cprmvmethods.ttl")
+    # update relative paths to file:// url with absolute paths
+    path = tm.value(CPRMVMETHODS.test001bwb, CPRMVSERVE["frbr-repository-sru-url"])
+    path = "file://" + urlquote(os.path.abspath(str(path)))
+    tm.set((CPRMVMETHODS.test001bwb, CPRMVSERVE["frbr-repository-sru-url"], Literal(path)))
+    
+    try:
+        method = detect_cprmv_serve_analysis_method("TEST001BWBAA")
+    except Exception as e:
+        fail(
+            f"detect_cprmv_serve_analysis_method() should not raise any Exception. It did: {e}"
+        )
+        
+    # note that in this test, the index of the publication is set to "Publication"
+    assert method[CPRMVSERVE["id_parts"]] == {
+        "rulesetid": "AA",
+        "date": "2025-07-01",
+        "index": "Publication",
+        "cprmvid": "TEST001BWBAA_2025-07-01_Publication",
+        "valid-on": datetime.now().strftime('%Y-%m-%d')
+    }
 
 def test_detect_cprmv_serve_analysis_method_CVDR_identifier():
     try:
@@ -70,17 +120,17 @@ def test_detect_cprmv_serve_analysis_method_CVDR_identifier():
     ), "Passing a syntactically valid CVDR identifier to detect_cprmv_serve_analysis_method() should not return 'None'. It did."
     assert method[CPRMV.label] == Literal("CVDR (NL)")
     assert method[CPRMVSERVE["publication-format"]] == Literal("xml")
-    assert method[CPRMVSERVE["publication-id-format"]] == Literal("CVD{cvdrid}_{index}")
-    assert method[CPRMVSERVE["frbr-repository"]] == Literal(
-        "https://repository.officiele-overheidspublicaties.nl/cvdr/CVD{cvdrid}/{index}/xml/CVD{cvdrid}_{index}.xml"
+    assert method[CPRMVSERVE["publication-id-format"]] == Literal("CVD{rulesetid}_{index}")
+    assert method[CPRMVSERVE["frbr-repository-publication-location-format"]] == Literal(
+        "https://repository.officiele-overheidspublicaties.nl/cvdr/CVD{rulesetid}/{index}/xml/CVD{rulesetid}_{index}.xml"
     )
     assert method[CPRMVSERVE["xslt"]] == Literal("data/cvdr2cprmv.xsl")
-    assert method[CPRMVSERVE["id_parts"]] == {"cvdrid": "AA", "index": "CC"}
+    assert method[CPRMVSERVE["id_parts"]] == {"rulesetid": "AA", "index": "CC", "cprmvid": "CVDAA_CC", "date" : "na"}
 
 
 def test_detect_cprmv_serve_analysis_method_FMX4_identifier():
     try:
-        method = detect_cprmv_serve_analysis_method("CFMX4AA_BB")
+        method = detect_cprmv_serve_analysis_method("CFMX4AA_DOC_2")
     except Exception as e:
         fail(
             f"detect_cprmv_serve_analysis_method() should not raise any Exception. It did: {e}"
@@ -91,36 +141,30 @@ def test_detect_cprmv_serve_analysis_method_FMX4_identifier():
     assert method[CPRMV.label] == Literal("CELLAR Formex v4 (EU)")
     assert method[CPRMVSERVE["publication-format"]] == Literal("xml")
     assert method[CPRMVSERVE["publication-id-format"]] == Literal(
-        "CFMX4{cellarid}_{docid}"
+        "CFMX4{rulesetid}_{docid}"
     )
-    assert method[CPRMVSERVE["frbr-repository"]] == Literal(
-        "https://publications.europa.eu/resource/cellar/{cellarid}/{docid}"
+    assert method[CPRMVSERVE["frbr-repository-publication-location-format"]] == Literal(
+        "https://publications.europa.eu/resource/cellar/{rulesetid}/{docid}"
     )
     assert method[CPRMVSERVE["xslt"]] == Literal("data/fmx4cellar2cprmv.xsl")
-    assert method[CPRMVSERVE["id_parts"]] == {"cellarid": "AA", "docid": "BB"}
+    # note that in the current implementation the api will prepend "na"
+    assert method[CPRMVSERVE["id_parts"]] == {"rulesetid": "AA", "docid": "DOC_2", "cprmvid": "CFMX4AA_DOC_2"}
 
 
-def test_load_rule_set_unknown_method():
-    try:
-        load_rule_set("UNKNOWN")
-    except Exception as e:
-        assert (
-            str(e)
-            == "No supported publication repository use identifiers with the format of the given Ruleset Id."
-        )
-        return
-    fail(
-        "load_rule_set() should raise an exception when passing a identifier that does not syntactically match a supported AnalysisMethod"
-    )
+def test_detect_cprmv_serve_unknown_method():
+    result = get_rules("UNKNOWN")
+    assert result == { "error": "No supported publication repository use identifiers with the format of the given Ruleset Id."}
 
 
 def test_get_rules():
     # add extra cprmvmethod knowledge for local testing (using a test frbr repository setting referring to a fixed publication sourcefile)
     tm = set_CPRMVMETHODSKG("./test/cprmvmethods.ttl")
     # update relative path to file:// url with absolute path
-    path = tm.value(CPRMVMETHODS.test001bwb, CPRMVSERVE["frbr-repository"])
+    path = tm.value(CPRMVMETHODS.test001bwb, CPRMVSERVE["frbr-repository-publication-location-format"])
+    path = path.replace('{index}','Publication')
     path = "file://" + urlquote(os.path.abspath(str(path)))
-    tm.set((CPRMVMETHODS.test001bwb, CPRMVSERVE["frbr-repository"], Literal(path)))
+    print("publoc path set: "+path)
+    tm.set((CPRMVMETHODS.test001bwb, CPRMVSERVE["frbr-repository-publication-location-format"], Literal(path)))
 
     # note that onderdeel a) should match onderdeel a., id's in the path should match looking only
     # at alphanumeric characters (especially ignoring comparing the whitespace character with the
