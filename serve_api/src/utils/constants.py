@@ -10,8 +10,8 @@ The Rule ID Path consisting of the Rule Set ID followed by a comma-separated pat
         
 **Examples:**
 - `BWBR0015703_2025-07-01_0, Artikel 20, onderdeel a.`
-- `CVDR712517_1, Hoofdstuk 2, Artikel 5`
-- `CFMX483e4752e-f2e5-11e8-9982-01aa75ed71a1.0017.02_DOC_2, Article 1`
+- `CVDR677883, Artikel 5`
+- `CFMX483e4752e-f2e5-11e8-9982-01aa75ed71a1.0017.02_DOC_2, Artikel 1`
         
 **Supported Rule Set Formats:**
         
@@ -51,9 +51,9 @@ Note that for CMFX4 finding the version on a specific date is not supported yet.
  **URL Encoding Note:** Remember to URL-encode special characters in the path when making requests.
  """
 
-CPRMV = Namespace("https://cprmv.open-regels.nl/0.3.0/")
-CPRMVSERVE = Namespace("https://cprmv.open-regels.nl/0.3.0/serve-api/")
-CPRMVMETHODS = Namespace("https://cprmv.open-regels.nl/0.3.0/methods/")
+CPRMV = Namespace("https://standaarden.open-regels.nl/standards/cprmv/0.4.0/#")
+CPRMVSERVE = Namespace("https://cprmv.open-regels.nl/0.4.0/serve-api/")
+CPRMVMETHODS = Namespace("https://cprmv.open-regels.nl/0.4.0/methods/")
 
 RULE_ID_PATH: str = Path(
     min_length=10,

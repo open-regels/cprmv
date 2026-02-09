@@ -11,8 +11,8 @@
   
   <xsl:template match="/ACT|/CONS.ACT"><xsl:text xml:space="preserve">@base &lt;http://example.com/&gt; .
 @prefix cpsv: &lt;http://purl.org/vocab/cpsv#&gt; .
-@prefix cprmv: &lt;https://cprmv.open-regels.nl/0.3.0/&gt; .
-@prefix cprmvmethods: &lt;https://cprmv.open-regels.nl/0.3.0/methods/&gt; .
+@prefix cprmv: &lt;https://standaarden.open-regels.nl/standards/cprmv/0.4.0/#&gt; .
+@prefix cprmvmethods: &lt;https://cprmv.open-regels.nl/0.4.0/methods/&gt; .
 &lt;http://publications.europa.eu/resource/celex/</xsl:text><xsl:value-of select="$cprmvid"/><xsl:text xml:space="preserve">&gt; a cprmv:RuleSet;
     cprmv:id "</xsl:text><xsl:value-of select="$cprmvid"/><xsl:text xml:space="preserve">"@nl;
     cprmv:id "3</xsl:text><xsl:value-of select="BIB.INSTANCE/DOCUMENT.REF/YEAR"/><xsl:text xml:space="preserve">R</xsl:text><xsl:value-of select="BIB.INSTANCE/NO.DOC/NO.CURRENT"/><xsl:text xml:space="preserve">.NLD.fmx4.</xsl:text><xsl:value-of select="BIB.INSTANCE/DOCUMENT.REF/@FILE"/><xsl:text xml:space="preserve">"@nl;

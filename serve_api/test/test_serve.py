@@ -19,7 +19,7 @@ client = TestClient(app)
 def test_get_root():
     response = client.get("/")
     assert response.status_code == 200
-    assert response.json() == {"CPRMV Rules Serve API": "0.3.2"}
+    assert response.json() == {"CPRMV Rules Serve API": "0.4.0"}
 
 
 def test_detect_cprmv_serve_analysis_method_unknown_identifier():
@@ -50,7 +50,7 @@ def test_detect_cprmv_serve_analysis_method_BWB_identifier():
         "BWB{rulesetid}_{date}_{index}"
     )
     assert method[CPRMVSERVE["frbr-repository-publication-location-format"]] == Literal(
-        "https://repository.officiele-overheidspublicaties.nl/bwb/BWB{rulesetid}/{date}_{index}/xml/BWB{rulesetid}_{date}_{index}.xml"
+        "https://wetten.overheid.nl/BWB{rulesetid}/{date}/{index}/xml"
     )
     assert method[CPRMVSERVE["xslt"]] == Literal("data/bwb2cprmv.xsl")
     assert method[CPRMVSERVE["id_parts"]] == {
@@ -62,7 +62,8 @@ def test_detect_cprmv_serve_analysis_method_BWB_identifier():
 
 def test_detect_cprmv_serve_analysis_method_BWB_identifier_with_latest():
     # add extra cprmvmethod knowledge for local testing (using a test frbr repository setting referring to a fixed publication sourcefile)
-    tm = set_CPRMVMETHODSKG("./test/cprmvmethods.ttl")
+    tm = set_CPRMVMETHODSKG("./test/cprmvmethods.test.ttl", False)
+    
     # update relative paths to file:// url with absolute paths
     path = tm.value(CPRMVMETHODS.test001bwb, CPRMVSERVE["frbr-repository-sru-url"])
     path = "file://" + urlquote(os.path.abspath(str(path)))
@@ -86,7 +87,7 @@ def test_detect_cprmv_serve_analysis_method_BWB_identifier_with_latest():
 
 def test_detect_cprmv_serve_analysis_method_BWB_identifier_with_implicit_latest():
     # add extra cprmvmethod knowledge for local testing (using a test frbr repository setting referring to a fixed publication sourcefile)
-    tm = set_CPRMVMETHODSKG("./test/cprmvmethods.ttl")
+    tm = set_CPRMVMETHODSKG("./test/cprmvmethods.test.ttl", False)
     # update relative paths to file:// url with absolute paths
     path = tm.value(CPRMVMETHODS.test001bwb, CPRMVSERVE["frbr-repository-sru-url"])
     path = "file://" + urlquote(os.path.abspath(str(path)))
@@ -158,7 +159,7 @@ def test_detect_cprmv_serve_unknown_method():
 
 def test_get_rules():
     # add extra cprmvmethod knowledge for local testing (using a test frbr repository setting referring to a fixed publication sourcefile)
-    tm = set_CPRMVMETHODSKG("./test/cprmvmethods.ttl")
+    tm = set_CPRMVMETHODSKG("./test/cprmvmethods.test.ttl", False)
     # update relative path to file:// url with absolute path
     path = tm.value(CPRMVMETHODS.test001bwb, CPRMVSERVE["frbr-repository-publication-location-format"])
     path = path.replace('{index}','Publication')
@@ -176,9 +177,9 @@ def test_get_rules():
     )
     assert response.status_code == 200
     assert response.json() == {
-        "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "https://cprmv.open-regels.nl/0.3.0/Rule",
-        "https://cprmv.open-regels.nl/0.3.0/definition": "een alleenstaande of een alleenstaande ouder zonder kostendelende medebewoners: €\xa01.369,06;",
-        "https://cprmv.open-regels.nl/0.3.0/id": "onderdeel a.",
+        "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "https://standaarden.open-regels.nl/standards/cprmv/0.4.0/#Rule",
+        "https://standaarden.open-regels.nl/standards/cprmv/0.4.0/#definition": "een alleenstaande of een alleenstaande ouder zonder kostendelende medebewoners: €\xa01.369,06;",
+        "https://standaarden.open-regels.nl/standards/cprmv/0.4.0/#id": "onderdeel a.",
         "norm": "1.369,06",
         "rule_id_path": "TEST001BWBR0015703_2025-07-01_0, Artikel\xa021, onderdeel\xa0a)",
         "rulesetid": "TEST001BWBR0015703_2025-07-01_0",

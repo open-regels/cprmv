@@ -46,7 +46,7 @@ except locale.Error:
 app = FastAPI(
     title="CPRMV Rules Serve API",
     description="This experimental API allows fetching single CPRMV Rules from locally provided CPRMV RuleSets in a desired RDF format",
-    version="0.3.2",
+    version="0.4.0",
     contact={
         "name": "Bas Kaptijn",
         "url": "http://git.open-regels.nl/standards/cprmv",
@@ -59,15 +59,18 @@ app = FastAPI(
 )
 
 
-def set_CPRMVMETHODSKG(path):
+def set_CPRMVMETHODSKG(path, additive=True):
     print("loading cprmvmethods.ttl from path: "+path)
-    _cprmvMethods = Graph()
+    if not additive:
+        _cprmvMethods = Graph()
+    else:
+        _cprmvMethods = app.cprmvsettings["CPRMVMETHODS_KG"]
     _cprmvMethods.parse(path, format="turtle")
     app.cprmvsettings = {"CPRMVMETHODS_KG": _cprmvMethods}
     return app.cprmvsettings["CPRMVMETHODS_KG"]
 
 
-set_CPRMVMETHODSKG("./data/cprmvmethods.ttl")
+set_CPRMVMETHODSKG("./data/cprmvmethods.ttl", False)
 
 
 @app.get("/")

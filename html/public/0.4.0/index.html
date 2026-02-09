@@ -1,7 +1,7 @@
 <!DOCTYPE html><html lang="en"><head>
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <meta content="text/html; charset=utf-8" http-equiv="content-type">
-<meta name="generator" content="ReSpec 35.3.0">
+<meta name="generator" content="ReSpec 35.4.1">
 <style>
 dfn{cursor:pointer}
 .dfn-panel{position:absolute;z-index:35;min-width:300px;max-width:500px;padding:.5em .75em;margin-top:.6em;font-family:"Helvetica Neue",sans-serif;font-size:small;background:#fff;background:var(--indextable-hover-bg,#fff);color:#000;color:var(--text,#000);box-shadow:0 1em 3em -.4em rgba(0,0,0,.3),0 0 1px 1px rgba(0,0,0,.05);box-shadow:0 1em 3em -.4em var(--tocsidebar-shadow,rgba(0,0,0,.3)),0 0 1px 1px var(--tocsidebar-shadow,rgba(0,0,0,.05));border-radius:2px}
@@ -30,7 +30,7 @@ dfn{cursor:pointer}
   
   
 <script>document.title = respecConfig.title</script>
-<title>CPRMV 0.3.0</title>
+<title>CPRMV 0.4.0</title>
   
 <title>Default</title>
   
@@ -448,9 +448,9 @@ ul.index code{color:inherit}
   "specType": "ST",
   "pubDomain": "ronl",
   "shortName": "cprmv",
-  "publishDate": "2025-06-27",
-  "publishVersion": "0.3.0",
-  "previousPublishVersion": "0.2.0",
+  "publishDate": "2026-02-09",
+  "publishVersion": "0.4.0",
+  "previousPublishVersion": "0.3.0",
   "previousPublishDate": "2025-03-27",
   "previousMaturity": "fpwd",
   "title": "CPRMV",
@@ -493,7 +493,7 @@ ul.index code{color:inherit}
   "alternateFormats": [
     {
       "label": "pdf",
-      "uri": "https://www.open-regels.nl/cprmv/0.3.0/snapshot.pdf"
+      "uri": "https://standaarden.open-regels.nl/standards/cprmv/0.4.0/cprmv.pdf"
     }
   ]
 }</script>
@@ -501,16 +501,16 @@ ul.index code{color:inherit}
 
 <body class="h-entry toc-inline"><div class="head">
     <a class="logo" href="https://www.logius.nl/standaarden"><img alt="Logius" height="77" id="Logius" src="https://gitdocumentatie.logius.nl/publicatie/respec/style/logos/figure-logius.svg" width="44">
-  </a> <h1 id="title" class="title">CPRMV 0.3.0</h1>
+  </a> <h1 id="title" class="title">CPRMV 0.4.0</h1>
     <h2 id="subtitle" class="subtitle">Core Public Rule Management Vocabulary (CPRMV), extending the Interoperable Europe standards towards a standard for Public Rule Management</h2>
     <h2>
       MinBZK - Dutch Ministry of Internal Affairs Standard<br>
       First public working draft
-      <time class="dt-published" datetime="2025-06-27">June 27, 2025</time>
+      <time class="dt-published" datetime="2026-02-09">February 09, 2026</time>
     </h2>
     <dl>
       <dt>This version:</dt><dd class="status">
-              <a class="u-url status" href="https://regels.overheid.nl/publicaties/cprmv/v0.3.0">https://regels.overheid.nl/publicaties/cprmv/v0.3.0</a>
+              <a class="u-url status" href="https://regels.overheid.nl/publicaties/cprmv/v0.4.0">https://regels.overheid.nl/publicaties/cprmv/v0.4.0</a>
             </dd>
       <dt>Latest published version:</dt><dd>
               <a href="https://regels.overheid.nl/publicaties/cprmv">https://regels.overheid.nl/publicaties/cprmv</a>
@@ -519,7 +519,7 @@ ul.index code{color:inherit}
       
       
       
-      <dt>Previous version:</dt><dd><a href="https://regels.overheid.nl/publicaties/cprmv/v0.2.0">https://regels.overheid.nl/publicaties/cprmv/v0.2.0</a></dd>
+      <dt>Previous version:</dt><dd><a href="https://regels.overheid.nl/publicaties/cprmv/v0.3.0">https://regels.overheid.nl/publicaties/cprmv/v0.3.0</a></dd>
       
       <dt>Editors:</dt>
       <dd class="editor p-author h-card vcard">
@@ -549,7 +549,7 @@ ul.index code{color:inherit}
     
     <p>
           This document is also available in these non-normative format:
-          <a rel="alternate" href="https://www.open-regels.nl/cprmv/0.3.0/snapshot.pdf">pdf</a>
+          <a rel="alternate" href="https://standaarden.open-regels.nl/standards/cprmv/0.4.0/cprmv.pdf">pdf</a>
         </p>
     <p class="copyright">
             This document is licensed under 
@@ -564,16 +564,17 @@ ul.index code{color:inherit}
 <p>The <cite><a data-matched-text="[[[CPRMV]]]" href="https://regels.overheid.nl">Core Public Rule Management Vocabulary (CPRMV)</a></cite> extends the <cite><a data-matched-text="[[[CPSV-AP]]]" href="https://semiceu.github.io/CPSV-AP/releases/3.2.0/">Core Public Service Vocabulary Application Profile (CPSV-AP)</a></cite> standard to conform to a proposed standard for public rule management.</p>
 <p>Whereas in general, public organisations in some way utilize business rules to operationalize government services, this is almost only done within the organisation. Often they are based on agreements, like policies that also are not publicly shared and often: rules fill gaps in the details in the interpretation of all agreements (laws, policies, standards, architecture, decisions and so on) into an operationalized service themselves. </p>
 <p>It is necessary to understand that rules, whether formal or non formal, are agreements also, just like the rules denoted in the form of natural language in laws and decisions and that they need to be openly shared with end users of the services that operate on them to support these end users properly.</p>
-<p>Moreover, rules often formalize on agreements published by other organisations too. When rules are only made within the scope of a single organisation, this prohibits effective reuse of rules. A single formalisation of a rule might get reinvented for thousands of times adding to the risc the formalisations interprets agreements differently where this should not be the case and can not be attributed to different context. By not openly sharing rules, effective reuse and feedback processes are prohibited.</p>
+<p>Moreover, rules often formalize on agreements published by other organisations too. When rules are only made within the scope of a single organisation, this prohibits effective reuse of rules. A single formalisation of a rule might get reinvented for thousands of times adding to the risc the formalisations interprets agreements differently where this should not be the case and can not be attributed to a difference in context. By not openly sharing rules such that they can be easily found in relation to serice descriptions, transparency lacks and effective reuse and feedback processes are prohibited.</p>
 <p>The <cite><a data-matched-text="[[[CPSV-AP]]]" href="https://semiceu.github.io/CPSV-AP/releases/3.2.0/">Core Public Service Vocabulary Application Profile (CPSV-AP)</a></cite> defines a standard for describing services, optionally up until the concept of a "Rule" in relation to the agreements it formalizes. But the <cite><a data-matched-text="[[[CPSV-AP]]]" href="https://semiceu.github.io/CPSV-AP/releases/3.2.0/">Core Public Service Vocabulary Application Profile (CPSV-AP)</a></cite> leaves much of this undefined as it is more focused on specifying a single set of rules that describe the requirements for end users to be eligible to use a service, whereas services and rules can be more complicated than that as rules often have many sources of agreements across many organisations that when effectively managed for reuse should include other rules also.</p>
 <p>To overcome all this the <cite><a data-matched-text="[[[CPRMV]]]" href="https://regels.overheid.nl">Core Public Rule Management Vocabulary (CPRMV)</a></cite> extends the <cite><a data-matched-text="[[[CPSV-AP]]]" href="https://semiceu.github.io/CPSV-AP/releases/3.2.0/">Core Public Service Vocabulary Application Profile (CPSV-AP)</a></cite> standard to conform to a proposed standard for Public Rule Mangement in which:</p>
 <ul>
 <li>all bundled agreements are formalized as a set of similarily bundled rules</li>
 <li>all bundled rules are published in public as agreements</li>
-<li>like other published agreements, bundled rules are identifiable and therefor referrable through <cite><a data-matched-text="[[[ELI]]]" href="https://eur-lex.europa.eu/eli-register/about.html">European Legislation Identifier (ELI)</a></cite></li>
+<li>like other published agreements, bundled rules are identifiable and therefor referrable through some acknowledged method of reference like <cite><a data-matched-text="[[[ELI]]]" href="https://eur-lex.europa.eu/eli-register/about.html">European Legislation Identifier (ELI)</a></cite></li>
 <li>like other published agreements such as laws, rules can refer to other bundled agreements both being a reference to some part of a bundled rules source and therefor automaticly the sources it formalizes.</li>
 <li>a CPSV-AP PublicService follows the set of rules in a single most specific bundled rules source</li>
 <li>a separate CPSV-AP PublicService is defined in which bundled rules conforming to the <cite><a data-matched-text="[[[CPRMV]]]" href="https://regels.overheid.nl">Core Public Rule Management Vocabulary (CPRMV)</a></cite> are being defined and supported and have a bundled set of rules as its output</li>
+<li>CPRMV does not enforce specific methods for analysis, formalization, testing, codification, execuction, publication or referencing of rules but allows for identifying these methods</li>
 </ul>
 <p>A standard for Public Rule Management can than elaborate on how to operationalize services based on rules that include not only the development and execution of a specific set of rules but also services to correct errors, change the rules as well as continuously improve them in interaction with all stakeholders, including the people and companies that have to make use of the services. </p>
 </section><section id="about-the-cprmv"><div class="header-wrapper"><h3 id="x1-2-about-the-cprmv"><bdi class="secno">1.2 </bdi>About the CPRMV</h3><a class="self-link" href="#about-the-cprmv" aria-label="Permalink for Section 1.2"></a></div>
@@ -588,24 +589,24 @@ and how they relate to the <cite><a data-matched-text="[[[CPSV-AP]]]" href="http
 </figure>
 
 <section id="rules-structured-in-rulesets-as-legal-resources"><div class="header-wrapper"><h3 id="x2-1-rules-structured-in-rulesets-as-legal-resources"><bdi class="secno">2.1 </bdi>Rules structured in RuleSets as legal resources</h3><a class="self-link" href="#rules-structured-in-rulesets-as-legal-resources" aria-label="Permalink for Section 2.1"></a></div>
-<p>Where the CPSV-AP associates a service with zero to many Rules (the Rule concept in the CPSV-AP), stating the service "follows" these Rules, and such a Rule implements a Legal Resource (<cite><a data-matched-text="[[[ELI]]]" href="https://eur-lex.europa.eu/eli-register/about.html">European Legislation Identifier (ELI)</a></cite>) which can be related to many other Legal Resources, the CPRMV denotes Legal Resources to be formalised by a single RuleSet, that are sets of Rules (the Rule concept in the CPRMV) that together "implement" (formalises) the related Legal Resource to a certain extent. </p>
-<p>Where two Legal Resources relate, also the RuleSets that implement these Legal Resources will relate in the same way to each other. Rules may however refer to specific concepts within other Rules in the same or related RuleSets though by design only in a certain limited way.</p>
-<p>Moreover, a RuleSet is to be seen and published as a Legal Resource too which can be formalised even further through a single other RuleSet. </p>
-<p>When using the CPRMV, a Service (CPSV-AP) can implicitly follow the Rules from a single RuleSet, and therefor all the Rules a service follows refer to the same legal resource that is the most specific legally binding agreement that defines the service. Such legal resources currently are often not defined and published as such.</p>
+<p>Where the CPSV-AP associates a service with zero to many Rules (the Rule concept in the CPSV-AP), stating the service "follows" these Rules, and such a Rule "implements" a Legal Resource (<cite><a data-matched-text="[[[ELI]]]" href="https://eur-lex.europa.eu/eli-register/about.html">European Legislation Identifier (ELI)</a></cite>) which can be related to many other Legal Resources, the CPRMV denotes a Legal Resource to be formalised by a single RuleSet, that are sets of Rules (the Rule concept in the CPRMV) that together "implement" (formalises) the related Legal Resource to a certain extent. In CPRMV we do not call this a "implements" relation but a "extend" relation which is equivalent to eli:based_on.</p>
+<p>Where two Legal Resources relate, also the RuleSets that implement these Legal Resources will relate in the same way to each other. Rules may however refer to specific concepts within other Rules in the same or related RuleSets.
+Moreover, a RuleSet is to be seen and published as a Legal Resource too which can be formalised even further through a single other RuleSet. </p>
+<p>When using the CPRMV, a Public Service (CPSV-AP) can implicitly follow the Rules from a single RuleSet, and therefor all the Rules a service follows refer to the same legal resource that is the most specific legally binding agreement that defines the service. Such legal resources currently are often not defined and if they are often not published as such. CPRMV denotes all RuleSet's as referenceable LegalResources and as output of a Public Service (though note Government to Government services included). Output produced with regard to contract management proces of the Public Service and therefor by the organization delivering this service.</p>
 </section><section id="rule-methods"><div class="header-wrapper"><h3 id="x2-2-rule-methods"><bdi class="secno">2.2 </bdi>Rule Methods</h3><a class="self-link" href="#rule-methods" aria-label="Permalink for Section 2.2"></a></div>
-<p>The CPRMV allows for specifying the method with which Rules in a RuleSet are implemented. There are four general types of such RuleMethods for formalising agreements: Analysis Methods, Formalisation Methods, Codification Methods and Test Methods.</p>
-<p>Analysis Methods do not yet entirely formalize knowledge in a legal resource such that you get rules that can be seen as deterministic enough for use in the operationalisation of services that then need to be able to follow these rules. Typically these methods involve annotating legal resources, structured as a set of rules with expert knowledge towards full formalisation.</p>
+<p>The CPRMV allows for specifying the method with which Rules in a RuleSet are defined. There are four general types of such RuleMethods for formalising agreements: Analysis Methods, Formalisation Methods, Codification Methods and Test Methods. Also there are some more abstract RuleMethods that come into play as being able to find all information about how rules are formalized all the way up until case's with the decisions being made by following rules within service operations is essential, both for people working in governments as citizens and companies. These other types of RuleMethods are: Publication-, Execution-, Test- and Reference Methods.</p>
+<p>Analysis Methods do not yet entirely formalize knowledge in a legal resource such that you get rules that can be seen as deterministic enough for use in the operationalisation of services that then need to be able to follow these rules. Typically these methods involve annotating legal resources, structured as a set of rules with expert knowledge towards full formalisation. Adding metadata, sometimes also done within a method for publication is also a form of a Analysis.</p>
 <p>Formalisation Methods are methods for interpretation of knowledge, describing them as rules in a way that make them suitable and interoperable enough for operationalisation by systems that conform to the [<cite><a class="bibref" data-link-type="biblio" href="#bib-cprmv" title="Core Public Rule Management Vocabulary (CPRMV)">CPRMV</a></cite>] within the processes with which a Public Service is delivered..</p>
-<p>Codification Methods are methods for transforming formalised rules into a code language that can be executed by specific systems within the processes with which a Public Service is delivered. </p>
-<p>Note that services may be defined in which these methods are applied by multidisciplinary expert teams who are guided by these services. These teams will consist of representatives from different disciplines of the competent authority organisations that also specify the legal agreements and publish them as resource that impact the services that follow the rules in the rulesets that implement these legal resources. These services do operationalize on rules as goal artifacts and probably can consume them for that goal. In such services, a RuleSet is the Ouput of the service in terms of the <cite><a data-matched-text="[[[CPSV-AP]]]" href="https://semiceu.github.io/CPSV-AP/releases/3.2.0/">Core Public Service Vocabulary Application Profile (CPSV-AP)</a></cite>. This makes all Rules, even those only containing the extra knowledge through applying Analysis Methods machine consumable, not to be mistaken for machine executable. </p>
-<p>Typically, RuleMethods also allow for testing Rules using test datasets which contain testcases (sometimes also called test scenario's). Just like the Rule concept in the <cite><a data-matched-text="[[[CPRMV]]]" href="https://regels.overheid.nl">Core Public Rule Management Vocabulary (CPRMV)</a></cite>, a test case only add extra very specific rules to rules to see, whether all the rules together including the extra ones of the test case still hold or not. Therefor a dataset with test cases, a TestSet, is a RuleSet that contains one or more TestCase's which are Rule's themselves. TestCases are developed and evaluated through Test Methods which is a fourth kind of a RuleMethod.</p>
+<p>Codification Methods are methods for transforming formalised rules into a code language that can be executed by specific systems within the processes with which a Public Service is delivered. Normally these are quite technical, can be defined in a very sound way and less important just like programmers do not usually should have to look at te level of machine language.</p>
+<p>Note that services may be defined in which these methods are applied by multidisciplinary expert teams who are guided by these services. These teams will consist of representatives from different disciplines of the competent authority organisations that also specify the legal agreements and publish them as resource that impact the services that follow the rules in the rulesets that are based on these legal resources. These services do operationalize on rules as goal artifacts and probably can consume them for that goal. In such services, a RuleSet is the Ouput of the service in terms of the <cite><a data-matched-text="[[[CPSV-AP]]]" href="https://semiceu.github.io/CPSV-AP/releases/3.2.0/">Core Public Service Vocabulary Application Profile (CPSV-AP)</a></cite>. This makes all Rules, even those only containing the extra knowledge through applying Analysis Methods machine consumable, not to be mistaken for machine executable. </p>
+<p>Typically, RuleMethods also allow for testing Rules using test datasets which contain testcases (sometimes also called test scenario's). Just like the Rule concept in the <cite><a data-matched-text="[[[CPRMV]]]" href="https://regels.overheid.nl">Core Public Rule Management Vocabulary (CPRMV)</a></cite>, a test case only add extra very specific rules to rules to see, whether all the rules together including the extra ones of the test case still hold or not. Therefor a dataset with test cases, a TestSet, is a RuleSet that contains one or more TestCase's which are Rule's themselves. TestCases are developed and evaluated through Test Methods.</p>
 <p>The standard for Public Rule Management the CPRMV is part of also includes a governed list of acknowledged Rule Methods. RuleMethods may include many things, including a prescribed way of utilizing the RuleMethod, or using prescribed tooling etcetera. Besides the obvious well known RuleMethods related to established Business Rule Management methods with related standards and tooling such as SBVR, DMN, some localised adoption of RuleSpeak, OpenFisca, Law Analysis (Wetsanalyse), Calculemus/FLINT and so on, also standards for describing architecture such as Archimate could actually be seen as a RuleMethod, or in the future maybe even methods utilising Universal Meaning Representations with some new type of AI that then probably will have to need to include symbolic AI reasoners to become reliable enough. Even this very document, the CPRMV vocabulary can be formalized as a RuleSet conforming to itself and becoming a potential standard as a legal resource that other Rules in other RuleSets can refer to.</p>
 <p>Allowing all these kinds of RuleMethods mixed together does not fully solve interoperability on its own, but it allows for getting all information already put into practice yet kept hidden, published openly from which point it is more easy to get to see how things correlate and to collaborate on traceability, explainability and interoperability resulting in more transparency, trust and efficiency. This is an important first step. All Rules express knowledge that needs to be known and explainable. Rules expressing the same knowledge with different RuleMethods that formalize to a comparable extent, should actually not differ that much semantically, and it should be fairly possible to work on rule interchange once the benefits of public rule management become clear. The more RuleMethods are in use, the more systems will need to be able to support them all. To enforce a single RuleMethod at current times is unrealistic however and probably not favorable in the future too, as none single RuleMethod will suffice for all in all cases. It will however become evident where stacking different interpretation steps using different methods on top of each other will only increase riscs and work if not part of a methodological approach.</p>
 </section><section id="traceability-and-explainability"><div class="header-wrapper"><h3 id="x2-3-traceability-and-explainability"><bdi class="secno">2.3 </bdi>Traceability and Explainability</h3><a class="self-link" href="#traceability-and-explainability" aria-label="Permalink for Section 2.3"></a></div>
 <p>All Rules must cite and/or refer to their specific sources they form an analyis/formalization of. This can be done through a AnalysisMethod that just chunks a legal resource in identifiable Rules and subparts, citing the legal resources that often are crafted in natural language and published as such.</p>
 <p>Rules refer to explanations where possible, for any specific stakeholder group requiring specific explanation of the Rule on its own (context independent), given a certain natural language and level of language that matches the group of stakeholders as intended audience. Note that these explanations may also contain parts of explanations in a way such that context dependent (personalized) explanations can be made by services that operationalize on rules. It depends on the type of an Explanation object what content to expect. The CPRMV does not prescribe anything for this yet.</p>
-<p>The idea not to rely on services utilizing machines to generate explanations on formalized rules (without explanatory content) in its entirety is to have more unification and deliberation on how rules are to be explained to (and therefor interpreted by) any stakeholder). Automation of explanatory content based on Rules is possible but resembles the possibility of automation of formalisation of Rules from legal resources in natural language both of which will always need human oversight before and during services that operationalize on them. Also, automation requires all agreements to be available in a machine consumable form which currenlty seems not to be the case for details in the interpretation of agreements that are published and for example policies for edge cases solved only locally in an ad hoc way.</p>
-<p>These Explanations are also to be defined at the level of a whole RuleSet (which can specify a public service). Again, these may be automaticly generated through the explanations of the rules in the ruleset, but not entirely and without proper human oversight.</p>
+<p>The idea not to rely on services utilizing machines to generate explanations on formalized rules (without explanatory content) in its entirety is to have more unification and deliberation on how rules are to be explained to (and therefor interpreted by) any stakeholder. Automation of explanatory content based on Rules is possible but resembles the possibility of automation of formalisation of Rules from legal resources in natural language both of which will always need human oversight before and during services that operationalize on them. Also, automation requires all agreements to be available in a machine consumable form which currenlty seems not to be the case for details in the interpretation of agreements that are published and for example policies for edge cases solved only locally in an ad hoc way.</p>
+<p>These Explanations are also to be defined at the level of a whole RuleSet (which can specify a public service). Again, these may be automaticly generated through the explanations of the rules in the ruleset, but not entirely and not without proper human oversight.</p>
 </section><section id="transparency-open-government"><div class="header-wrapper"><h3 id="x2-4-transparency-open-government"><bdi class="secno">2.4 </bdi>Transparency - Open Government</h3><a class="self-link" href="#transparency-open-government" aria-label="Permalink for Section 2.4"></a></div>
 <p>The CPRMV is part of a standard for public rule management that will guide organisations to publish their RuleSet's (bundled sets of Rules) as legal resources in relation to the legal resources they implement.</p>
 </section><section id="extendability"><div class="header-wrapper"><h3 id="x2-5-extendability"><bdi class="secno">2.5 </bdi>Extendability</h3><a class="self-link" href="#extendability" aria-label="Permalink for Section 2.5"></a></div>
@@ -615,11 +616,11 @@ and how they relate to the <cite><a data-matched-text="[[[CPSV-AP]]]" href="http
     let content = "";
 
     const getClass = function(key) {
-      if (respecConfig.content[key]!==""){return <code> class="${respecConfig.content[key]}"</code>}
+      if (respecConfig.content[key]!==""){return ` class="${respecConfig.content[key]}"`}
     }
 
     for (let contentKey in respecConfig.content) {
-      content += <code>&lt;section data-include-format="markdown" data-include="${contentKey}.md" ${getClass(contentKey)||""}&gt;&lt;/section&gt;</code>
+      content += `<section data-include-format="markdown" data-include="${contentKey}.md" ${getClass(contentKey)||""}></section>`
     }
 
     document.getElementById("sotd").insertAdjacentHTML('afterend', content);

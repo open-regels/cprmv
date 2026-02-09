@@ -1,7 +1,7 @@
 @base <http://example.com/> .
 @prefix cpsv: <http://purl.org/vocab/cpsv#> .
-@prefix cprmv: <https://cprmv.open-regels.nl/0.3.0/> .
-@prefix cprmvmethods: <https://cprmv.open-regels.nl/0.3.0/methods/> .
+@prefix cprmv: <https://standaarden.open-regels.nl/standards/cprmv/0.4.0/#> .
+@prefix cprmvmethods: <https://cprmv.open-regels.nl/0.4.0/methods/> .
 <http://publications.europa.eu/resource/celex/32018R1805.NLD.fmx4.L_2018303NL.01000101.doc.xml> a cprmv:RuleSet;
     cprmv:id "32018R1805.NLD.fmx4.L_2018303NL.01000101.doc.xml"@nl;
     cprmv:method cprmvmethods:cellarfmx4;

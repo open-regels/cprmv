@@ -12,8 +12,8 @@
   <xsl:template match="/cvdr:cvdr">
     <xsl:text xml:space="preserve">@base &lt;http://example.com/&gt; .
 @prefix cpsv: &lt;http://purl.org/vocab/cpsv#&gt; .
-@prefix cprmv: &lt;https://cprmv.open-regels.nl/0.3.0/&gt; .
-@prefix cprmvmethods: &lt;https://cprmv.open-regels.nl/0.3.0/methods/&gt; .
+@prefix cprmv: &lt;https://standaarden.open-regels.nl/standards/cprmv/0.4.0/#&gt; .
+@prefix cprmvmethods: &lt;https://cprmv.open-regels.nl/0.4.0/methods/&gt; .
 @prefix overheid: &lt;http://standaarden.overheid.nl/owms/terms/&gt; .
 @prefix tooicvdr: &lt;https://identifier.overheid.nl/tooi/thes/cvdr&gt; .
 &lt;http://opencatalogi.open-regels.nl/</xsl:text><xsl:value-of select="./cvdr:meta/cvdr:owmskern/dcterms:identifier"/><xsl:text xml:space="preserve">&gt; a cprmv:RuleSet;
