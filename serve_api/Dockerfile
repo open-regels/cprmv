@@ -24,11 +24,12 @@ RUN python -m pip install --no-cache-dir --upgrade pip setuptools wheel && \
 # Copy the entire src directory including any subdirectories like utils
 COPY src/ ./src/
 COPY data/ ./data/
+COPY respec/ ./respec/
 
 # Add labels for better Docker Hub integration
 LABEL maintainer="Bas.Kaptijn@ictu.nl"
 LABEL description="CPRMV Rules Serve API - Experimental API for fetching CPRMV Rules from RuleSets"
-LABEL version="0.3.0"
+LABEL version="0.4.0"
 LABEL org.opencontainers.image.source="https://git.open-regels.nl/standards/cprmv"
 
 # Create non-root user for security

@@ -3,6 +3,7 @@ from rdflib.term import Literal
 from rdflib.namespace import RDF
 from typing import Union
 from fastapi import FastAPI
+from fastapi.staticfiles import StaticFiles
 from fastapi.responses import RedirectResponse
 from parse import parse, search, with_pattern, Result, Match
 from urllib.request import Request, urlopen
@@ -81,6 +82,8 @@ def cprmv_info():
     return {app.title: app.version}
 
 
+app.mount("/respec", StaticFiles(directory="respec", html=True, follow_symlink=True), name="respec")
+
 @app.get("/methods")
 def methods(format: str = "json-ld"):
     if format in ["json-ld", "xml", "turtle", "ttl", "n3", "turtle2"]:
@@ -107,23 +110,28 @@ def rules(
     return get_rules(rule_id_path, path_delimiter, format, unformat)
 
 
-@app.get("/jci13/{jciuri}")
-def jci13(
-    jciuri: str = "jci1.3:c:BWBR0015703&hoofdstuk=3&paragraaf=3.2&artikel=20&z=2025-07-01&g=2025-07-01",
-):
+@app.get("/ref/{referencemethod}/{reference}")
+def ref(referencemethod: str = "Juriconnect", reference : str = ""):
     """
-    Not yet implemented in full. Returns a fixed example URL given a corresponding fixed example Juriconnect URI: "jci1.3:c:BWBR0015703&hoofdstuk=3&paragraaf=3.2&artikel=20&z=2025-07-01&g=2025-07-01"
+    Supported reference methods
+    
+    eli
+    
+    Not yet supported
+    
+    juriconnect
+    
+    Supports both jci version 1.3 as 1.31. The usage of sighting date is not (yet) supported (it can be included in the URL but it won't have any effect as the cprmv api does not yet support it as part of the rule id path). The sighting date therefor always implicitly defaults to today (which is the default in the Juriconnect standard too).
+    Also, only references to single consolidations are supported. Note that what the juriconnect standard supports within the CPRMV API might not yet be supported in the BWB support implementation within the CPRMV API. For instance some types of items can not yet be referenced. Currently supported of the juriconnect standard therefor is: "artikel", "hoofdstuk", "paragraaf", "onderdeel", "lid".
     """
-    # todo : actually implement this properly
-    if (
-        jciuri
-        == "jci1.3:c:BWBR0015703&hoofdstuk=3&paragraaf=3.2&artikel=20&z=2025-07-01&g=2025-07-01"
-    ):
+    
+    redirect_url = detect_cprmv_serve_reference_method_and_transform(reference)
+    if redirect_url is not None:
         response = RedirectResponse(
-            url="/rules/BWBR0015703_2025-07-01_0%2C%20Artikel%2020"
+            url=redirect_url
         )
         return response
-    return {"error": "not implemented"}
+    return {"error": "not a valid or supported reference..."}
 
 
 @app.get("/cellar-by-celex/{celexid}/{language}/{format}")
@@ -173,7 +181,8 @@ FILTER(str(?langCode)="NLD" && str(?format)="fmx4")
 } LIMIT 100
 """
 
-def find_publication_version_valid_on_date(date, method):
+# as_seen_on (zichtdatum) argument not implemented. Always defaults to default used in SRU service which is "today"
+def find_publication_version_valid_on_date(date, method, as_seen_on=datetime.now().strftime('%Y-%m-%d')):
     date_ts = ciso8601.parse_datetime(date)
     frbr_sru_url_format = str(method[CPRMVSERVE["frbr-repository-sru-url"]])
     frbr_valid_from_term_ns = str(method[CPRMVSERVE["frbr-repository-sru-response-from-date-term-namespace"]])
@@ -254,6 +263,92 @@ def valid_date(datestr):
     except:
         return False
     return True
+
+def get_mapping(referencemethod):
+    cprmvMethods = app.cprmvsettings["CPRMVMETHODS_KG"]
+    result = {}
+    mapping = cprmvMethods.value(predicate=CPRMVSERVE["reference-mapping"], subject=referencemethod, any=False)
+    while mapping is not None and mapping != RDF.nil:
+        try:
+            item = cprmvMethods.value(mapping, RDF.first)
+            key = cprmvMethods.value(item, RDF.first)
+            value = cprmvMethods.value(cprmvMethods.value(item, RDF.rest), RDF.first)
+        except:
+            print("unexpected structure in reference mapping knowledge for reference method id:"+str(cprmvMethods.value(referencemethod, CPRMVSERVE["id"])))
+            return {}
+        result[str(key)] = str(value)
+        mapping = cprmvMethods.value(mapping, RDF.rest)
+    return result
+
+def transform_jci_reference(method_config, reference_parts):
+    if 'subversion' not in reference_parts:
+        print("Invalid call to transform_jci_reference. No subversion part in reference parts...")
+        return None
+    if reference_parts['subversion'] not in ('3','31'):
+        return None
+    path = '/rules/'
+    cprmvMethods = app.cprmvsettings["CPRMVMETHODS_KG"]
+    id_format = str(cprmvMethods.value(CPRMVMETHODS.bwb, CPRMVSERVE['normalized-id-format']))
+    id_parts = {}
+    mapping = get_mapping(method_config)
+    if len(reference_parts['bwbid']) != 8:
+        return None
+    locstr = reference_parts['locatie-string']
+    locstr_path = ''
+    delim = ''
+    for part in locstr.split('&'):
+        kv = part.split('=')
+        if len(kv) != 2:
+            return None
+        if kv[0] == mapping[str(CPRMVSERVE['reference-mapping-valid-on'])]:
+            id_parts['date'] = kv[1]
+        elif kv[0] == mapping[str(CPRMVSERVE['reference-mapping-seen-on'])]:
+            id_parts['sightdate'] = kv[1]
+        else:
+            locstr_path = locstr_path+delim+mapping[kv[0]]+'%20'+kv[1]
+            delim = '%2C'
+    id_parts['rulesetid'] = reference_parts['bwbid'].upper()
+    if 'date' not in id_parts:
+        return None
+    id_parts['index'] = 'latest'
+    return path+id_format.format_map(id_parts)+'/'+locstr_path
+
+# not implemented yet
+def transform_eli_reference(method_config, reference_parts):
+    return None
+    
+# not implemented yet
+def transform_cprmvapi_reference(method_config, reference_parts):
+    return None
+
+def detect_cprmv_serve_reference_method_and_transform(reference):
+    cprmvMethods = app.cprmvsettings["CPRMVMETHODS_KG"]
+    result = None
+    methods = cprmvMethods.value(CPRMVMETHODS.referencemethods, CPRMV.acknowledged)
+    while methods != RDF.nil:
+        method_config = cprmvMethods.value(methods, RDF.first)
+        print(method_config)
+        reference_method_id = str(cprmvMethods.value(method_config , CPRMV["id"]))
+        print(reference_method_id)
+        referenceformat = str(cprmvMethods.value(method_config , CPRMVSERVE["reference-format"]))
+        print("---")
+        print(referenceformat)
+        print(reference)
+        result = parse(referenceformat, reference)
+        print(result)
+        if result is not None:
+            if reference_method_id == 'Juriconnect':
+                result = transform_jci_reference(method_config , result)
+            elif reference_method_id == 'ELI':
+                result = transform_eli_reference(method_config , result)
+            elif reference_method_id == 'cprmvapi':
+                result = transform_cprmvapi_reference(method_config , result)
+            if result is not None:
+                break
+        methods = cprmvMethods.value(methods, RDF.rest)
+    if result is None:
+        print('Could not detect reference: invalid, unknown or unsupported reference type')
+    return result
 
 # finds the first acknowledged AnalysisMethod supported by CPRMV Serve for which the given cprmvid matches the id format defined in the cprmvmethods value lists
 # returns all the information on the matching method as a Dictionary in which also the unformatted cprmvid (one or more key/values) is added under the CPRMV.id key

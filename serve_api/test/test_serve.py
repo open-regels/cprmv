@@ -9,6 +9,9 @@ from ..src.serve import CPRMVSERVE
 from ..src.serve import detect_cprmv_serve_analysis_method
 from ..src.serve import load_rule_set
 from ..src.serve import get_rules
+from ..src.serve import get_mapping
+from ..src.serve import transform_jci_reference
+from ..src.serve import detect_cprmv_serve_reference_method_and_transform
 from rdflib import Literal
 from urllib.parse import quote as urlquote
 from datetime import datetime
@@ -21,6 +24,23 @@ def test_get_root():
     assert response.status_code == 200
     assert response.json() == {"CPRMV Rules Serve API": "0.4.0"}
 
+def test_get_mapping():
+    result = get_mapping(CPRMVMETHODS.juriconnect)
+    expected = {'aanwijzing': 'Aanwijzing', 'afdeling': 'Afdeling', 'artikel': 'Artikel', 'bijlage': 'Bijlage', 'boek': 'Boek', 'deel': 'Deel', 'enig': 'enig', 'hoofdstuk': 'Hoofdstuk', 'inhoudsopgave': 'Inhoudsopgave', 'nummer': 'nummer', 'paragraaf': 'Paragraaf', 'sub-paragraaf': 'Paragraaf', 'titeldeel': 'Titeldeel', 'taal': 'taal', 'verdragsonderdeel': 'Verdragsonderdeel', 'lid': 'lid', 'o': 'onderdeel', 'volzin': 'volzin', 'https://cprmv.open-regels.nl/0.4.0/serve-api/reference-mapping-valid-on': 'g', 'https://cprmv.open-regels.nl/0.4.0/serve-api/reference-mapping-seen-on': 'z'}
+    assert result == expected
+    assert get_mapping(CPRMVMETHODS.eli) == {}
+    assert get_mapping(CPRMVMETHODS.cprmvapi) == {}
+    assert get_mapping(CPRMVMETHODS.bwb) == {}
+
+def test_transform_jci_reference():
+    assert transform_jci_reference(CPRMVMETHODS.juriconnect, {'subversion' : '2', 'bwbid' : 'R1234567', 'locatie-string' : 'hoofdstuk=5&artikel=20&g=2026-01-01&z=2026-01-01'}) == None
+    assert transform_jci_reference(CPRMVMETHODS.juriconnect, {'subversion' : '31', 'bwbid' : 'R1234567', 'locatie-string' : 'hoofdstuk=5&artikel=20&g=2026-01-01&z=2026-01-01'}) == '/rules/BWBR1234567_2026-01-01_latest/Hoofdstuk%205%2CArtikel%2020'
+    assert transform_jci_reference(CPRMVMETHODS.juriconnect, {'subversion' : '3', 'bwbid' : 'R1234567', 'locatie-string' : 'hoofdstuk=5&artikel=20&g=2026-01-01'}) == '/rules/BWBR1234567_2026-01-01_latest/Hoofdstuk%205%2CArtikel%2020'
+
+def test_detect_cprmv_serve_reference_method_and_transform():
+    assert detect_cprmv_serve_reference_method_and_transform('') == None
+    assert detect_cprmv_serve_reference_method_and_transform('jci1.31:c:BWBR0015703&hoofdstuk=3&paragraaf=3.2&artikel=20&z=2025-07-01&g=2025-07-01') == '/rules/BWBR0015703_2025-07-01_latest/Hoofdstuk%203%2CParagraaf%203.2%2CArtikel%2020'
+    assert detect_cprmv_serve_reference_method_and_transform('jci1.3:c:BWBR0015703&hoofdstuk=3&paragraaf=3.2&artikel=20&g=2025-07-01') == '/rules/BWBR0015703_2025-07-01_latest/Hoofdstuk%203%2CParagraaf%203.2%2CArtikel%2020'
 
 def test_detect_cprmv_serve_analysis_method_unknown_identifier():
     try:
@@ -32,7 +52,6 @@ def test_detect_cprmv_serve_analysis_method_unknown_identifier():
     assert (
         method is None
     ), f"Passing an unknown identifier to detect_cprmv_serve_analysis_method() not matching any AnalysisMethods should return 'None'. It did not: {method}"
-
 
 def test_detect_cprmv_serve_analysis_method_BWB_identifier():
     try:
