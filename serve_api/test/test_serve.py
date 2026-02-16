@@ -69,7 +69,7 @@ def test_detect_cprmv_serve_analysis_method_BWB_identifier():
         "BWB{rulesetid}_{date}_{index}"
     )
     assert method[CPRMVSERVE["frbr-repository-publication-location-format"]] == Literal(
-        "https://wetten.overheid.nl/BWB{rulesetid}/{date}/{index}/xml"
+        "https://repository.officiele-overheidspublicaties.nl/bwb/BWB{rulesetid}/{date}_{index}/xml/BWB{rulesetid}_{date}_{index}.xml"
     )
     assert method[CPRMVSERVE["xslt"]] == Literal("data/bwb2cprmv.xsl")
     assert method[CPRMVSERVE["id_parts"]] == {
