@@ -6,7 +6,7 @@ from ..src.serve import app
 from ..src.serve import CPRMV
 from ..src.serve import CPRMVMETHODS
 from ..src.serve import CPRMVSERVE
-from ..src.serve import detect_cprmv_serve_analysis_method
+from ..src.serve import detect_cprmv_serve_acknowledged_method
 from ..src.serve import load_rule_set
 from ..src.serve import get_rules
 from ..src.serve import get_mapping
@@ -42,33 +42,59 @@ def test_detect_cprmv_serve_reference_method_and_transform():
     assert detect_cprmv_serve_reference_method_and_transform('jci1.31:c:BWBR0015703&hoofdstuk=3&paragraaf=3.2&artikel=20&z=2025-07-01&g=2025-07-01') == '/rules/BWBR0015703_2025-07-01_latest/Hoofdstuk%203%2CParagraaf%203.2%2CArtikel%2020'
     assert detect_cprmv_serve_reference_method_and_transform('jci1.3:c:BWBR0015703&hoofdstuk=3&paragraaf=3.2&artikel=20&g=2025-07-01') == '/rules/BWBR0015703_2025-07-01_latest/Hoofdstuk%203%2CParagraaf%203.2%2CArtikel%2020'
 
-def test_detect_cprmv_serve_analysis_method_unknown_identifier():
+def test_detect_cprmv_serve_acknowledged_method_unknown_identifier():
     try:
-        method = detect_cprmv_serve_analysis_method("UNKNOWN")
+        method = detect_cprmv_serve_acknowledged_method("UNKNOWN")
     except Exception as e:
         fail(
-            f"detect_cprmv_serve_analysis_method() should not raise any Exception. It did: {e}"
+            f"detect_cprmv_serve_acknowledged_method() should not raise any Exception. It did: {e}"
         )
     assert (
         method is None
-    ), f"Passing an unknown identifier to detect_cprmv_serve_analysis_method() not matching any AnalysisMethods should return 'None'. It did not: {method}"
+    ), f"Passing an unknown identifier to detect_cprmv_serve_acknowledged_method() not matching any AnalysisMethods (default) should return 'None'. It did not: {method}"
 
-def test_detect_cprmv_serve_analysis_method_BWB_identifier():
+def test_detect_cprmv_serve_acknowledged_method_DMN_identifier():
     try:
-        method = detect_cprmv_serve_analysis_method("BWBAA_BB_CC")
+        method = detect_cprmv_serve_acknowledged_method("DMN1.3_A_B_C", CPRMVMETHODS.formalisationmethods)
     except Exception as e:
         fail(
-            f"detect_cprmv_serve_analysis_method() should not raise any Exception. It did: {e}"
+            f"detect_cprmv_serve_acknowledged_method() should not raise any Exception. It did: {e}"
         )
     assert (
         method is not None
-    ), "Passing a syntactically valid BWB identifier to detect_cprmv_serve_analysis_method() should not return 'None'. It did."
+    ), "Passing a syntactically valid DMN1.3 identifier to detect_cprmv_serve_acknowledged_method() should not return 'None'. It did."
+    assert method[CPRMV.label] == Literal("DMN 1.3 on operaton.open-regels.nl (experimental)")
+    assert method[CPRMVSERVE["publication-format"]] == Literal("xml")
+    assert method[CPRMVSERVE["publication-id-format"]] == Literal(
+        "DMN1.3_{deploymentid}R{resourceid}_{date}_{index}"
+    )
+    assert method[CPRMVSERVE["repository-publication-location-format"]] == Literal(
+        "https://operaton.open-regels.nl/engine-rest/deployment/{deploymentid}/resources/{resourceid}/data"
+    )
+    assert method[CPRMVSERVE["xslt"]] == Literal("data/dmn13operaton2cprmv.xsl")
+    assert method[CPRMVSERVE["id_parts"]] == {
+        "rulesetid": "A",
+        "date": "B",
+        "index": "C",
+        "cprmvid": "DMN1.3_A_B_C"
+    }
+
+def test_detect_cprmv_serve_acknowledged_method_BWB_identifier():
+    try:
+        method = detect_cprmv_serve_acknowledged_method("BWBAA_BB_CC")
+    except Exception as e:
+        fail(
+            f"detect_cprmv_serve_acknowledged_method() should not raise any Exception. It did: {e}"
+        )
+    assert (
+        method is not None
+    ), "Passing a syntactically valid BWB identifier to detect_cprmv_serve_acknowledged_method() should not return 'None'. It did."
     assert method[CPRMV.label] == Literal("BWB (NL)")
     assert method[CPRMVSERVE["publication-format"]] == Literal("xml")
     assert method[CPRMVSERVE["publication-id-format"]] == Literal(
         "BWB{rulesetid}_{date}_{index}"
     )
-    assert method[CPRMVSERVE["frbr-repository-publication-location-format"]] == Literal(
+    assert method[CPRMVSERVE["repository-publication-location-format"]] == Literal(
         "https://repository.officiele-overheidspublicaties.nl/bwb/BWB{rulesetid}/{date}_{index}/xml/BWB{rulesetid}_{date}_{index}.xml"
     )
     assert method[CPRMVSERVE["xslt"]] == Literal("data/bwb2cprmv.xsl")
@@ -79,7 +105,7 @@ def test_detect_cprmv_serve_analysis_method_BWB_identifier():
         "cprmvid": "BWBAA_BB_CC"
     }
 
-def test_detect_cprmv_serve_analysis_method_BWB_identifier_with_latest():
+def test_detect_cprmv_serve_acknowledged_method_BWB_identifier_with_latest():
     # add extra cprmvmethod knowledge for local testing (using a test frbr repository setting referring to a fixed publication sourcefile)
     tm = set_CPRMVMETHODSKG("./test/cprmvmethods.test.ttl", False)
     
@@ -89,10 +115,10 @@ def test_detect_cprmv_serve_analysis_method_BWB_identifier_with_latest():
     tm.set((CPRMVMETHODS.test001bwb, CPRMVSERVE["frbr-repository-sru-url"], Literal(path)))
     
     try:
-        method = detect_cprmv_serve_analysis_method("TEST001BWBAA_2025-09-15_latest")
+        method = detect_cprmv_serve_acknowledged_method("TEST001BWBAA_2025-09-15_latest")
     except Exception as e:
         fail(
-            f"detect_cprmv_serve_analysis_method() should not raise any Exception. It did: {e}"
+            f"detect_cprmv_serve_acknowledged_method() should not raise any Exception. It did: {e}"
         )
         
     # note that in this test, the index of the publication is set to "Publication"
@@ -104,7 +130,7 @@ def test_detect_cprmv_serve_analysis_method_BWB_identifier_with_latest():
         "valid-on": "2025-09-15"
     }
 
-def test_detect_cprmv_serve_analysis_method_BWB_identifier_with_implicit_latest():
+def test_detect_cprmv_serve_acknowledged_method_BWB_identifier_with_implicit_latest():
     # add extra cprmvmethod knowledge for local testing (using a test frbr repository setting referring to a fixed publication sourcefile)
     tm = set_CPRMVMETHODSKG("./test/cprmvmethods.test.ttl", False)
     # update relative paths to file:// url with absolute paths
@@ -113,10 +139,10 @@ def test_detect_cprmv_serve_analysis_method_BWB_identifier_with_implicit_latest(
     tm.set((CPRMVMETHODS.test001bwb, CPRMVSERVE["frbr-repository-sru-url"], Literal(path)))
     
     try:
-        method = detect_cprmv_serve_analysis_method("TEST001BWBAA")
+        method = detect_cprmv_serve_acknowledged_method("TEST001BWBAA")
     except Exception as e:
         fail(
-            f"detect_cprmv_serve_analysis_method() should not raise any Exception. It did: {e}"
+            f"detect_cprmv_serve_acknowledged_method() should not raise any Exception. It did: {e}"
         )
         
     # note that in this test, the index of the publication is set to "Publication"
@@ -128,12 +154,12 @@ def test_detect_cprmv_serve_analysis_method_BWB_identifier_with_implicit_latest(
         "valid-on": datetime.now().strftime('%Y-%m-%d')
     }
 
-def test_detect_cprmv_serve_analysis_method_CVDR_identifier():
+def test_detect_cprmv_serve_acknowledged_method_CVDR_identifier():
     try:
-        method = detect_cprmv_serve_analysis_method("CVDAA_CC")
+        method = detect_cprmv_serve_acknowledged_method("CVDAA_CC")
     except Exception as e:
         fail(
-            f"detect_cprmv_serve_analysis_method() should not raise any Exception. It did: {e}"
+            f"detect_cprmv_serve_acknowledged_method() should not raise any Exception. It did: {e}"
         )
     assert (
         method is not None
@@ -141,19 +167,19 @@ def test_detect_cprmv_serve_analysis_method_CVDR_identifier():
     assert method[CPRMV.label] == Literal("CVDR (NL)")
     assert method[CPRMVSERVE["publication-format"]] == Literal("xml")
     assert method[CPRMVSERVE["publication-id-format"]] == Literal("CVD{rulesetid}_{index}")
-    assert method[CPRMVSERVE["frbr-repository-publication-location-format"]] == Literal(
+    assert method[CPRMVSERVE["repository-publication-location-format"]] == Literal(
         "https://repository.officiele-overheidspublicaties.nl/cvdr/CVD{rulesetid}/{index}/xml/CVD{rulesetid}_{index}.xml"
     )
     assert method[CPRMVSERVE["xslt"]] == Literal("data/cvdr2cprmv.xsl")
     assert method[CPRMVSERVE["id_parts"]] == {"rulesetid": "AA", "index": "CC", "cprmvid": "CVDAA_CC", "date" : "na"}
 
 
-def test_detect_cprmv_serve_analysis_method_FMX4_identifier():
+def test_detect_cprmv_serve_acknowledged_method_FMX4_identifier():
     try:
-        method = detect_cprmv_serve_analysis_method("CFMX4AA_DOC_2")
+        method = detect_cprmv_serve_acknowledged_method("CFMX4AA_DOC_2")
     except Exception as e:
         fail(
-            f"detect_cprmv_serve_analysis_method() should not raise any Exception. It did: {e}"
+            f"detect_cprmv_serve_acknowledged_method() should not raise any Exception. It did: {e}"
         )
     assert (
         method is not None
@@ -163,7 +189,7 @@ def test_detect_cprmv_serve_analysis_method_FMX4_identifier():
     assert method[CPRMVSERVE["publication-id-format"]] == Literal(
         "CFMX4{rulesetid}_{docid}"
     )
-    assert method[CPRMVSERVE["frbr-repository-publication-location-format"]] == Literal(
+    assert method[CPRMVSERVE["repository-publication-location-format"]] == Literal(
         "https://publications.europa.eu/resource/cellar/{rulesetid}/{docid}"
     )
     assert method[CPRMVSERVE["xslt"]] == Literal("data/fmx4cellar2cprmv.xsl")
@@ -173,18 +199,18 @@ def test_detect_cprmv_serve_analysis_method_FMX4_identifier():
 
 def test_detect_cprmv_serve_unknown_method():
     result = get_rules("UNKNOWN")
-    assert result == { "error": "No supported publication repository use identifiers with the format of the given Ruleset Id."}
+    assert result == '{"error": "No supported publication repository use identifiers with the format of the given Ruleset Id."}'
 
 
 def test_get_rules():
     # add extra cprmvmethod knowledge for local testing (using a test frbr repository setting referring to a fixed publication sourcefile)
     tm = set_CPRMVMETHODSKG("./test/cprmvmethods.test.ttl", False)
     # update relative path to file:// url with absolute path
-    path = tm.value(CPRMVMETHODS.test001bwb, CPRMVSERVE["frbr-repository-publication-location-format"])
+    path = tm.value(CPRMVMETHODS.test001bwb, CPRMVSERVE["repository-publication-location-format"])
     path = path.replace('{index}','Publication')
     path = "file://" + urlquote(os.path.abspath(str(path)))
     print("publoc path set: "+path)
-    tm.set((CPRMVMETHODS.test001bwb, CPRMVSERVE["frbr-repository-publication-location-format"], Literal(path)))
+    tm.set((CPRMVMETHODS.test001bwb, CPRMVSERVE["repository-publication-location-format"], Literal(path)))
 
     # note that onderdeel a) should match onderdeel a., id's in the path should match looking only
     # at alphanumeric characters (especially ignoring comparing the whitespace character with the

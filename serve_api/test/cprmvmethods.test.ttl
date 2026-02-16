@@ -40,7 +40,7 @@ cprmvmethods:bwb a cprmv:AnalysisMethod;
     cprmv-serve:publication-format "xml";
     cprmv-serve:publication-id-format "BWB{rulesetid}_{date}_{index}";
     cprmv-serve:normalized-id-format "BWB{rulesetid}_{date}_{index}";
-    cprmv-serve:frbr-repository-publication-location-format "https://repository.officiele-overheidspublicaties.nl/bwb/BWB{rulesetid}/{date}_{index}/xml/BWB{rulesetid}_{date}_{index}.xml";
+    cprmv-serve:repository-publication-location-format "https://repository.officiele-overheidspublicaties.nl/bwb/BWB{rulesetid}/{date}_{index}/xml/BWB{rulesetid}_{date}_{index}.xml";
     cprmv-serve:frbr-repository-sru-url "https://zoekservice.overheid.nl/sru/Search?x-connection=BWB&operation=searchRetrieve&version=2.0&maximumRecords=1&query=dcterms.identifier=BWB{rulesetid}%20and%20overheidbwb.geldigheidsdatum={valid-on}";
     cprmv-serve:frbr-repository-sru-response-publication-location-term-namespace
         "http://standaarden.overheid.nl/bwb/terms/";
@@ -60,7 +60,7 @@ cprmvmethods:cvdr a cprmv:AnalysisMethod;
     cprmv-serve:publication-format "xml";
     cprmv-serve:publication-id-format "CVD{rulesetid}_{index}";
     cprmv-serve:normalized-id-format "CVD{rulesetid}_{date}_{index}";
-    cprmv-serve:frbr-repository-publication-location-format "https://repository.officiele-overheidspublicaties.nl/cvdr/CVD{rulesetid}/{index}/xml/CVD{rulesetid}_{index}.xml";
+    cprmv-serve:repository-publication-location-format "https://repository.officiele-overheidspublicaties.nl/cvdr/CVD{rulesetid}/{index}/xml/CVD{rulesetid}_{index}.xml";
     cprmv-serve:frbr-repository-sru-url "https://zoekservice.overheid.nl/sru/Search?x-connection=cvdr&operation=searchRetrieve&version=2.0&maximumRecords=1&query=dcterms.identifier=CVD{rulesetid}_*%20and%20overheidrg.inwerkingtredingDatum%3C={valid-on}%20sortby%20overheidrg.inwerkingtredingDatum/descending";
     cprmv-serve:frbr-repository-sru-response-publication-location-term-namespace
         "http://standaarden.overheid.nl/sru";
@@ -79,16 +79,23 @@ cprmvmethods:cellarfmx4 a cprmv:AnalysisMethod;
     cprmv:label "CELLAR Formex v4 (EU)";
     cprmv:comment "see: ... "@en;
     cprmv-serve:publication-format "xml";
-    cprmv-serve:publication-id-format "CFMX4{rulesetid}_{docid}";
+    cprmv-serve:publication-id-format "CFMX4{rulesetid}_{docid}"; # TODO link this to publication method
     cprmv-serve:normalized-id-format "CFMX4{rulesetid}_{docid}";
-    cprmv-serve:frbr-repository-publication-location-format "https://publications.europa.eu/resource/cellar/{rulesetid}/{docid}";
+    cprmv-serve:repository-publication-location-format "https://publications.europa.eu/resource/cellar/{rulesetid}/{docid}";
     cprmv-serve:frbr-repository-sru-url "https://publications.europa.eu/resource/cellar/{rulesetid}";
     cprmv-serve:xslt "data/fmx4cellar2cprmv.xsl".
 
 cprmvmethods:dmn13 a cprmv:FormalisationMethod;
+    a cprmv:PublicationMethod;
     cprmv:id "DMN 1.3"@en;
     cprmv:id "DMN 1.3"@nl;
-    cprmv:comment "see https://www.omg.org/spec/DMN/1.3/About-DMN".
+    cprmv:label "DMN 1.3 on operaton.open-regels.nl (experimental)";
+    cprmv:comment "see https://www.omg.org/spec/DMN/1.3/About-DMN";
+    cprmv-serve:publication-format "xml";
+    cprmv-serve:publication-id-format "DMN1.3_{deploymentid}R{resourceid}_{date}_{index}";
+    cprmv-serve:normalized-id-format "DMN1.3_{rulesetid}_{date}_{index}";
+    cprmv-serve:repository-publication-location-format "https://operaton.open-regels.nl/engine-rest/deployment/{deploymentid}/resources/{resourceid}/data"; # TODO link this to separate publication / exection method
+    cprmv-serve:xslt "data/dmn13operaton2cprmv.xsl".
 
 cprmvmethods:operaton a cprmv:ExecutionMethod;
     a cprmv:PublicationMethod;
@@ -100,7 +107,6 @@ cprmvmethods:cprmvapi a cprmv:ReferenceMethod;
     cprmv:id "CPRMV API - rule id path"@en;
     cprmv:id "CPRMV API - rule id path"@nl;
     cprmv:comment "CPRMV API functions as a Reference resolver but to enable this harbours it's own way of referencing (rule id path). Also it allows for additional functionality on top of what methods like juriconnect and eli offer".
-    
     
 cprmvmethods:juriconnect a cprmv:ReferenceMethod;
     cprmv:id "Juriconnect"@en;
@@ -198,7 +204,7 @@ cprmvmethods:test001bwb a cprmv:AnalysisMethod;
     cprmv-serve:publication-format "xml";
     cprmv-serve:publication-id-format "TEST001BWB{rulesetid}_{date}_{index}";
     cprmv-serve:normalized-id-format "TEST001BWB{rulesetid}_{date}_{index}";
-    cprmv-serve:frbr-repository-publication-location-format "./test/TEST001BWB_{index}.xml";
+    cprmv-serve:repository-publication-location-format "./test/TEST001BWB_{index}.xml";
     cprmv-serve:frbr-repository-sru-url "./test/TEST001BWB_Publication_Versioning.xml";
     cprmv-serve:frbr-repository-sru-response-publication-location-term-namespace
         "http://standaarden.overheid.nl/bwb/terms/";
@@ -209,4 +215,3 @@ cprmvmethods:test001bwb a cprmv:AnalysisMethod;
     cprmv-serve:frbr-repository-sru-response-from-date-term
         "geldigheidsperiode_startdatum";
     cprmv-serve:xslt "data/bwb2cprmv.xsl".
-

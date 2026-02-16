@@ -183,7 +183,7 @@ FILTER(str(?langCode)="NLD" && str(?format)="fmx4")
 } LIMIT 100
 """
 
-# as_seen_on (zichtdatum) argument not implemented. Always defaults to default used in SRU service which is "today"
+# as_seen_on (zichtdatum) argument not implemented. Always defaults to default used in SRU service which is "today" .. only implemented for AnalysisMethods, not the non-FRBR methods
 def find_publication_version_valid_on_date(date, method, as_seen_on=datetime.now().strftime('%Y-%m-%d')):
     date_ts = ciso8601.parse_datetime(date)
     frbr_sru_url_format = str(method[CPRMVSERVE["frbr-repository-sru-url"]])
@@ -194,7 +194,7 @@ def find_publication_version_valid_on_date(date, method, as_seen_on=datetime.now
     frbr_sru_response_publoc_term_ns = str(method[CPRMVSERVE["frbr-repository-sru-response-publication-location-term-namespace"]])
     frbr_sru_response_publoc_term = str(method[CPRMVSERVE["frbr-repository-sru-response-publication-location-term"]])
     fsrpt_prefix = 'fsrpt'
-    frbr_publoc_format = str(method[CPRMVSERVE["frbr-repository-publication-location-format"]])
+    frbr_publoc_format = str(method[CPRMVSERVE["repository-publication-location-format"]])
     frbr_publoc_xpath = '//'+fsrpt_prefix+':'+frbr_sru_response_publoc_term 
     sru_url = frbr_sru_url_format.format_map(method[CPRMVSERVE["id_parts"]])
     methodLabel = method[CPRMV.label]
@@ -225,7 +225,7 @@ def find_publication_version_valid_on_date(date, method, as_seen_on=datetime.now
                 print('publication valid-from date found: '+found_date)
                 for expr in xml.xpath(frbr_publoc_xpath, namespaces={fsrpt_prefix : frbr_sru_response_publoc_term_ns}):
                     publoc = expr.text
-                    print(f"Parsing frbr-repository-publication-location-format ({frbr_publoc_format}) on value from SRU response: {publoc}")
+                    print(f"Parsing (frbr) repository-publication-location-format ({frbr_publoc_format}) on value from SRU response: {publoc}")
                     result = parse(frbr_publoc_format, publoc)
                     if result is not None:
                         parts = result.named
@@ -329,13 +329,8 @@ def detect_cprmv_serve_reference_method_and_transform(reference):
     methods = cprmvMethods.value(CPRMVMETHODS.referencemethods, CPRMV.acknowledged)
     while methods != RDF.nil:
         method_config = cprmvMethods.value(methods, RDF.first)
-        print(method_config)
         reference_method_id = str(cprmvMethods.value(method_config , CPRMV["id"]))
-        print(reference_method_id)
         referenceformat = str(cprmvMethods.value(method_config , CPRMVSERVE["reference-format"]))
-        print("---")
-        print(referenceformat)
-        print(reference)
         result = parse(referenceformat, reference)
         print(result)
         if result is not None:
@@ -352,18 +347,19 @@ def detect_cprmv_serve_reference_method_and_transform(reference):
         print('Could not detect reference: invalid, unknown or unsupported reference type')
     return result
 
-# finds the first acknowledged AnalysisMethod supported by CPRMV Serve for which the given cprmvid matches the id format defined in the cprmvmethods value lists
+# finds the first acknowledged RuleMethod of given category (AnalysisMethod (default) / FormalisationMethod uri's) supported by CPRMV Serve for which the given cprmvid matches the id format defined in the cprmvmethods value lists
 # returns all the information on the matching method as a Dictionary in which also the unformatted cprmvid (one or more key/values) is added under the CPRMV.id key
-def detect_cprmv_serve_analysis_method(cprmvid):
+def detect_cprmv_serve_acknowledged_method(cprmvid, category = CPRMVMETHODS.analysismethods):
     cprmvMethods = app.cprmvsettings["CPRMVMETHODS_KG"]
     result = None
-    methods = cprmvMethods.value(CPRMVMETHODS.analysismethods, CPRMV.acknowledged)
+    methods = cprmvMethods.value(category, CPRMV.acknowledged)
     while methods != RDF.nil:
         method = cprmvMethods.value(methods, RDF.first)
         idformat = cprmvMethods.value(method, CPRMVSERVE["publication-id-format"])
         normalized_idformat = cprmvMethods.value(method, CPRMVSERVE["normalized-id-format"])
         if idformat is not None and normalized_idformat is not None:
             cprmvid_official = cprmvid
+            print(f"detect for {cprmvid}")
             cprmvid_normalized = normalize_ruleset_id(cprmvid)
             print(f"Parsing {normalized_idformat} on value {cprmvid_normalized}")
             result = parse(normalized_idformat, cprmvid_normalized)
@@ -388,11 +384,10 @@ def detect_cprmv_serve_analysis_method(cprmvid):
         methods = cprmvMethods.value(methods, RDF.rest)
     return result
 
-
 def get_cprmv_rule_set_from_publication(g, method):
     cprmvid = method[CPRMVSERVE["id_parts"]]['cprmvid']
-    frbr = str(method[CPRMVSERVE["frbr-repository-publication-location-format"]])
-    puburl = frbr.format_map(method[CPRMVSERVE["id_parts"]])
+    puburlformat = str(method[CPRMVSERVE["repository-publication-location-format"]])
+    puburl = puburlformat.format_map(method[CPRMVSERVE["id_parts"]])
     methodLabel = method[CPRMV.label]
     try:
         print(f"downloading publication: {puburl}")
@@ -455,6 +450,27 @@ def normalize_ruleset_id(rulesetid):
     print("normalizedid: "+rulesetid)
     return rulesetid
 
+# detect any supported type of method (either Analysis and or Formalisation methods)
+def detect_cprmv_serve_method(cprmvid):
+    method = detect_cprmv_serve_acknowledged_method(cprmvid, CPRMVMETHODS.analysismethods)
+    print('A method detected')
+    if method is None:
+        # currently this implies dmn13 method which needs to split up the rulesetid in a deployment and resource id. TODO This should be supported in a better way than the quick hack below
+        originalId = cprmvid
+        deploymentid = ''
+        resourceid = ''
+        cprmvid = cprmvid.split('_')
+        if len(cprmvid) == 4:
+            operatonids = cprmvid[1].split('R')
+            if len(operatonids) == 2:
+                deploymentid = operatonids[0]
+                resourceid = operatonids[1]
+        method = detect_cprmv_serve_acknowledged_method(originalId, CPRMVMETHODS.formalisationmethods)
+        if method is not None:
+            method[CPRMVSERVE["id_parts"]]['deploymentid'] = deploymentid
+            method[CPRMVSERVE["id_parts"]]['resourceid'] = resourceid
+    return method
+
 def get_rules(
     rule_id_path="",
     path_delimiter: str = ",",
@@ -472,7 +488,7 @@ def get_rules(
         else:
             rulesetid = rule_id_path.strip()
         print(f"Info: retrieving info for cprmv:RuleSet : {rulesetid}")
-        method = detect_cprmv_serve_analysis_method(rulesetid)
+        method = detect_cprmv_serve_method(rulesetid)
         if method is not None:
             g = load_rule_set(method)
             print(f"replacing {rulesetid} with {method[CPRMVSERVE['id_parts']]['cprmvid']} in {rule_id_path}")
@@ -482,7 +498,7 @@ def get_rules(
                 "No supported publication repository use identifiers with the format of the given Ruleset Id."
             )
     except Exception as e:
-        return {"error": str(e)}
+        return json.dumps({"error": str(e)})
     print(f"processing starts at first rule in path {rule_id_path}")
     r = get_first_rule_by_id_path(g, rule_id_path, path_delimiter)
     if r is None:
