@@ -75,6 +75,6 @@ LANGUAGE: Union[str, None] = Query(
 )
 UNFORMAT: str = Query(
     default="",
-    description="Pattern for extracting specific values from rule definitions using parse syntax (e.g., '{situatie:param_value}: € {norm:param_value}')",
+    description="If specified will imply format=cprmv-json. Pattern for extracting specific values from rule definitions using parse syntax (e.g., '{situatie:param_value}: € {norm:param_value}')",
     examples="{situatie:param_value}: € {norm:param_value}",
 )

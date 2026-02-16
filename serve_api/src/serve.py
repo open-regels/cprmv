@@ -5,6 +5,7 @@ from typing import Union
 from fastapi import FastAPI
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import RedirectResponse
+from fastapi.responses import PlainTextResponse
 from parse import parse, search, with_pattern, Result, Match
 from urllib.request import Request, urlopen
 from urllib.error import URLError
@@ -13,6 +14,7 @@ import shutil
 import tempfile
 import os
 import ciso8601
+import json
 from datetime import datetime
 import time
 
@@ -107,7 +109,7 @@ def rules(
     The API downloads the source publication on-the-fly, transforms it using XSLT, and serves the resulting
     CPRMV-formatted rules. You can request individual rules within a rule set by specifying their path.
     """
-    return get_rules(rule_id_path, path_delimiter, format, unformat)
+    return PlainTextResponse(get_rules(rule_id_path, path_delimiter, format, unformat))
 
 
 @app.get("/ref/{referencemethod}/{reference}")
@@ -459,6 +461,9 @@ def get_rules(
     formatarg: str = "cprmv-json",
     unformat: str = "",
 ):
+    if (unformat != "") or (formatarg not in ['cprmv-json', 'json-ld', 'turtle', 'n3', 'xml', 'ttl', 'turtle2']):
+        print('Info: using default format cprmv-json...')
+        formatarg = "cprmv-json"
     try:
         delimindex = rule_id_path.find(path_delimiter)
         print(delimindex)
@@ -501,6 +506,8 @@ def get_rules(
             named_definition["rulesetid"] = rulesetid
             named_definition["rule_id_path"] = rule_id_path
             result.update(named_definition)
+    if (type(result) != str):
+        result = json.dumps(result, indent=4)
     return result
 
 
