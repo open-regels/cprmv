@@ -108,6 +108,7 @@ def test_detect_cprmv_serve_acknowledged_method_BWB_identifier():
 def test_detect_cprmv_serve_acknowledged_method_BWB_identifier_with_latest():
     # add extra cprmvmethod knowledge for local testing (using a test frbr repository setting referring to a fixed publication sourcefile)
     tm = set_CPRMVMETHODSKG("./test/cprmvmethods.test.ttl", False)
+    tm = set_CPRMVMETHODSKG("./data/cprmv.ttl", True)
     
     # update relative paths to file:// url with absolute paths
     path = tm.value(CPRMVMETHODS.test001bwb, CPRMVSERVE["frbr-repository-sru-url"])
