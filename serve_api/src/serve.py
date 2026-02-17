@@ -101,7 +101,7 @@ def rules(
     unformat: str = UNFORMAT,
 ):
     """
-    Returns the Rule(Set) including all Rules it contains and that can be found as indicated in the given Rule Id Path.
+    Returns the Rule(Set) including all Rules that are part of it and that can be found as indicated in the given Rule Id Path.
 
     This endpoint retrieves a specific rule or rule set from various official publication repositories
     and transforms it into CPRMV format. It supports BWB, CVDR, and EU CELLAR repositories.
@@ -542,7 +542,7 @@ def get_first_rule_by_id_path(g, path, path_delimiter: str = ","):
 def get_first_rule_by_Id_path_split_from_rule_as_root(g, rootrule, pathsplit):
     if len(pathsplit) == 0:
         return rootrule
-    rulelist = g.value(rootrule, CPRMV.contains)
+    rulelist = g.value(rootrule, CPRMV.hasPart)
     if rulelist is None:
         return None
     while rulelist != RDF.nil:
@@ -575,11 +575,11 @@ def get_first_rule_by_Id_path_split_from_rule_as_root(g, rootrule, pathsplit):
 
 
 # retrieves all info of the given rule (and all its subrules from the given graph).
-# Note that rule structures over CPRMV.contains relations should be trees, so no cyclic graphs, otherwise this method will not stop.
+# Note that rule structures over CPRMV.hasPart relations should be trees, so no cyclic graphs, otherwise this method will not stop.
 def get_rule(g, rule):
     r = {}
     for p, o in g.predicate_objects(rule):
-        if p == CPRMV.contains:
+        if p == CPRMV.hasPart:
             r[p] = {}
             item = o
             while item != RDF.nil:

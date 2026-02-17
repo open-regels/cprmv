@@ -12,14 +12,14 @@
 &lt;</xsl:text><xsl:value-of select="$cprmvid"/><xsl:text xml:space="preserve">&gt; a cprmv:RuleSet;
     cprmv:id "</xsl:text><xsl:value-of select="$cprmvid"/><xsl:text xml:space="preserve">"@nl;
     cprmv:method cprmvmethods:dmn13;
-    cprmv:contains (</xsl:text><xsl:apply-templates select="./*"/><xsl:text xml:space="preserve">).
+    cprmv:hasPart (</xsl:text><xsl:apply-templates select="./*"/><xsl:text xml:space="preserve">).
 </xsl:text>
   </xsl:template>
 
   <xsl:template match="*" priority="1"><xsl:text xml:space="preserve">[
         a cprmv:Rule;
         cprmv:id "</xsl:text><xsl:value-of select="@id"/><xsl:text xml:space="preserve">"@nl</xsl:text><xsl:choose><xsl:when test="./*[@id]"><xsl:text xml:space="preserve">;
-        cprmv:contains (</xsl:text><xsl:apply-templates select="./*"/><xsl:text xml:space="preserve">)</xsl:text></xsl:when><xsl:otherwise><xsl:text xml:space="preserve">;
+        cprmv:hasPart (</xsl:text><xsl:apply-templates select="./*"/><xsl:text xml:space="preserve">)</xsl:text></xsl:when><xsl:otherwise><xsl:text xml:space="preserve">;
         cprmv:definition "</xsl:text><xsl:call-template name="verbatim"><xsl:with-param name="quote" select="*"/></xsl:call-template><xsl:text xml:space="preserve">";</xsl:text></xsl:otherwise></xsl:choose><xsl:text xml:space="preserve">
     ]</xsl:text>
   </xsl:template>

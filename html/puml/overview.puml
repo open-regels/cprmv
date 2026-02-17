@@ -29,10 +29,17 @@ package cprmv {
     object RuleSet {
         id
         comment
+	validFrom
+	validUntil
+	publishedOn
     }
     object TestSet
     TestSet -u-|> RuleSet
     RuleSet --|> legalresource
+    object DecisionModel
+    DecisionModel --|> RuleSet
+    object Analysis
+    Analysis --|> RuleSet
     object Rule {
         id
         comment
@@ -40,16 +47,18 @@ package cprmv {
         definition
         postDefinition
     }
+    object Parameter
+    Parameter --|> Rule
     object TestCase
-    Object Case
+    object Case
     TestCase -u-|> Rule
-    RuleSet *-- Rule : contains
-    TestSet *-- TestCase : contains
-    Rule "0..*" --> Rule : extends
-    object Case -u-|> RuleSet
+    RuleSet *-- Rule : hasPart
+    TestSet *-- TestCase : hasPart
+    Rule "0..*" --> Rule : isBasedOn
+    Case -u-|> RuleSet
     object Decision 
     Decision -u-|> Rule 
-    Case *-- Decision : contains
+    Case *-- Decision : hasPart
 
     object Explanation {
         id
@@ -64,7 +73,7 @@ package cprmv {
         id
         comment
     }
-    Rule --> "1..1" RuleMethod : method
+    Rule --> "1..1" RuleMethod : hasMethod
     RuleMethod <-l- Explanation : explains
 
     object AnalysisMethod
@@ -79,18 +88,19 @@ package cprmv {
     RuleMethod <|-- ExecutionMethod
     RuleMethod <|-- PublicationMethod
     RuleMethod <|-- ReferenceMethod
+    DecisionModel --> Analysis : hasAnalysis
     
     package cprmvmethods {
         object rulemethods
         RuleMethod <-- rulemethods : acknowledged
     }
     
-    TestCase "1..1" --> TestMethod : method
-    D "1..1" --> ExecutionMethod : method
+    TestCase "1..1" --> TestMethod : hasMethod
+    Decision "1..1" --> ExecutionMethod : hasMethod
     
 }
 
-RuleSet --> "1..1" legalresource : extends
+RuleSet --> "1..1" legalresource : isBasedOn
 RuleSet  -[dotted]-> service : "output-of"
 output <|--  RuleSet
 

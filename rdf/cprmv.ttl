@@ -29,16 +29,34 @@ cprmv:RuleSet a owl:Class;
     skos:definition "A set of Rule's. Which is produced as cv:Ouput within a cpsv:Publicservice while also always becoming a eli:LegalResource implemented by a cpsv:Rule followed by cpsv:Publicservice. Note however that with CPRMV, the resources a cpsv:Rule represent possibly are cprmv:RuleSet's themselves. Also, being a cv:Ouput, a cprmv:RuleSet cprmv:is_part_of a dcat.Dataset "@en;
     rdfs:subClassOf eli:LegalResource;
     rdfs:subClassOf cv:Output.
+    
+cprmv:Analysis a owl:Class;
+    skos:prefLabel "Analysis"@en;
+    skos:definition "A Rule Set that has been produced by following a Analysis Method."@en;
+    rdfs:subClassOf cprmv:RuleSet.
+
+cprmv:DecisionModel a owl:Class;
+    skos:prefLabel "Decision Model"@en;
+    skos:definition "A Rule Set that has been produced by following a Formalisation Method."@en;
+    rdfs:subClassOf cprmv:RuleSet.
+
+cprmv:hasAnalysis a owl:ObjectProperty;
+    skos:prefLabel "hasAnalysis"@en;
+    skos:definition "denotes the Analysis a DecisionModel is based on."@en;
+    rdfs:isSubPropertyOf cprmv:isBasedOn;
+    rdfs:domain cprmv:DecisionModel;
+    rdfs:range cprmv:Analysis.
 
 cprmv:id a owl:ObjectProperty;
     skos:prefLabel "id"@en;
     skos:definition "denotes a universal unique id with which to refer to what the cprmv object like RuleMethod's Explanation's, RuleSet's and Rule's represents."@en;
     rdfs:domain (owl:unionOf (cprmv:Rule cprmv:RuleSet cprmv:RuleMethod)).
     
-cprmv:extends a owl:ObjectProperty;
-    skos:prefLabel "extends"@en;
-    skos:definition "In the case of a RuleSet this property states the RuleSet to be eli:based_on an eli:LegalResource (which includes any cprmv:RuleSet) the RuleSet extends in its entirety (all cprmv:Rules contained in the cprmv:RuleSet that is extended, depending on whether they are defined with the same cprmv:method or not, can or must have matching ones in the cprmv:RuleSet that extends) possibly aggregated by analysis or formalisation (not codification). In the case of a cprmv:Rule it refers to the matching cprmv:Rule contained in a cprmv:RuleSet that is extended by the RuleSet that contains the extending cprmv:Rule (this must be the case). A cprmv:Rule in the cprmv:RuleSet that is extended does not have to be referred by a cprmv:Rule contained in the extending cprmv:RuleSet if both RuleSet's contain only cprmv:Rule's defined with the same cprmv:method, in which case this implies the cprmv:Rule implicitly becomes part of the extending cprmv:RuleSet as is. Multiple cprmv:Rule's / cprmv:RuleSet's can be extended within the same cprmv:Rule / cprmv:RuleSet"@en;
+cprmv:isBasedOn a owl:ObjectProperty;
+    skos:prefLabel "isBasedOn"@en;
+    skos:definition "In the case of a RuleSet this property states the RuleSet to be eli:based_on an eli:LegalResource (which includes any cprmv:RuleSet) the RuleSet is based on in its entirety (all cprmv:Rules contained in the cprmv:RuleSet that is extended, depending on whether they are defined with the same cprmv:hasMethod or not, can or must have matching ones in the cprmv:RuleSet that extends) possibly aggregated by analysis or formalisation (not codification). In the case of a cprmv:Rule it refers to the matching cprmv:Rule contained in a cprmv:RuleSet that is extended by the RuleSet that contains the extending cprmv:Rule (this must be the case). A cprmv:Rule in the cprmv:RuleSet that is extended does not have to be referred by a cprmv:Rule contained in the extending cprmv:RuleSet if both RuleSet's contain only cprmv:Rule's defined with the same cprmv:method, in which case this implies the cprmv:Rule implicitly becomes part of the extending cprmv:RuleSet as is. Multiple cprmv:Rule's / cprmv:RuleSet's can be extended within the same cprmv:Rule / cprmv:RuleSet"@en;
     rdfs:isSubPropertyOf eli:based_on;
+    rdfs:isSubPropertyOf prov:wasDerivedFrom;
     rdfs:domain (owl:unionOf (cprmv:Rule cprmv:RuleSet));
     rdfs:range (owl:unionOf (cprmv:Rule cprmv:RuleSet)).
 
@@ -50,15 +68,31 @@ cprmv:is_output_of a owl:ObjectProperty;
     rdfs:domain cprmv:RuleSet;
     rdfs:range cpsv:PublicService.
 
-cprmv:method a owl:Class;
+cprmv:hasMethod a owl:ObjectProperty;
     skos:prefLabel "method"@en;
     skos:definition "denotes the cprmv:RuleMethod used to define the cprmv:RuleSet"@en;
     rdfs:domain cprmv:RuleSet;
     rdfs:range cprmv:RuleMethod.
-  
-cprmv:contains a owl:ObjectProperty;
-    skos:prefLabel "contains"@en;
-    skos:definition "denotes the ordered list of Rule's a Rule(Set) can contain and together with the cprmv:definition and cprmv:postDefinition properties (in case of Rule's') define the Rule(Set) by concatenating the definition, the definitions of the cprmv:Rule's it contains (in order) and the postDefinition"@en;
+
+cprmv:validFrom a owl:ObjectProperty;
+    skos:prefLabel "validFrom"@en;
+    skos:definition "denotes the date from which day on the RuleSet is to be held valid."@en;
+    rdfs:domain cprmv:RuleSet.
+    
+cprmv:validUntil a owl:ObjectProperty;
+    skos:prefLabel "validUntil"@en;
+    skos:definition "denotes the date until which day on the RuleSet is to be held valid. On the day of this date, the RuleSet is no longer valid. If no date value is set, this means the RuleSet is valid until further notice."@en;
+    rdfs:domain cprmv:RuleSet.
+
+cprmv:publishedOn a owl:ObjectProperty;
+    skos:prefLabel "publishedOn"@en;
+    skos:definition "denotes the date at which day the RuleSet has been officially published. Note that the RuleSet may denote to be valid from a date before this date of publishing."@en;
+    rdfs:domain cprmv:RuleSet.
+
+cprmv:hasPart a owl:ObjectProperty;
+    a dct:hasPart;
+    skos:prefLabel "hasPart"@en;
+    skos:definition "denotes the ordered list of Rule's as the parts a Rule(Set) can have and together with the cprmv:definition and cprmv:postDefinition properties (in case of Rule's') define the Rule(Set) by concatenating the definition, the definitions of the cprmv:Rule's that are part of it (recursively in order) and their postDefinition's"@en;
     rdfs:domain (owl:unionOf (cprmv:Rule cprmv:RuleSet));
     rdfs:range (owl:unionOf (cprmv:Rule cprmv:RuleSet)).
     
@@ -88,6 +122,11 @@ cprmv:sourcequote a owl:ObjectProperty;
 cprmv:Rule a owl:Class;
     skos:prefLabel "Rule"@en;
     skos:definition "A Rule denotes a official expression of an agreement which can both be expressed in natural language like articles in laws as well as more formal business rules for automation of decisions"@en.
+    
+cprmv:Parameter a owl:Class;
+    skos:prefLabel "Parameter"@en;
+    skos:definition "A Rule that forms a parameter. Normally these are specific small parts of a Rule Set that are changed more often than the rest of a Rule Set. They normally have a definition holding information that is of a simple type like a number, date etc."@en;
+    rdfs:subClassOf cprmv:Rule.
 
 cprmv:RuleMethod a owl:Class;
     skos:prefLabel "Rule Method"@en;
@@ -140,7 +179,7 @@ cprmv:ReferencenMethod a owl:Class;
 
 cprmv:Explanation a owl:Class;
     skos:prefLabel "TestCase"@en;
-    skos:definition "A cprmv:Explanation is a cprmv:Rule defined with a cprmv:ExplanationMethod. Thile Rule contains a concise explanation of one or multiple Rule's or RuleSet's."@en;
+    skos:definition "A cprmv:Explanation is a cprmv:Rule defined with a cprmv:ExplanationMethod. This Rule contains a concise explanation of one or multiple Rule's or RuleSet's."@en;
     rdfs:subClassOf cprmv:Rule.
 
 cprmv:TestCase a owl:Class;
