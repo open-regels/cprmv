@@ -205,5 +205,5 @@ cprmv:Case a owl:Class;
 cprmv:explains a owl:ObjectProperty;
     skos:prefLabel "explains"@en;
     skos:definition "denotes the cprmv:Rule(Set) a cprmv:Eplanation holds explanatory content of for the use of explaining them in the systems that use them for delivering Public Services"@en;
-    rdfs:domain cprmv:Explanation
-    rdfs:range (owl:unionOf (cprmv:Rule cprmv:RuleSet));
+    rdfs:domain cprmv:Explanation;
+    rdfs:range (owl:unionOf (cprmv:Rule cprmv:RuleSet)).
