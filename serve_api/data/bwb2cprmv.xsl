@@ -24,7 +24,7 @@
     ];
     tooibwb:id "</xsl:text><xsl:value-of select="./@bwb-id"/><xsl:text xml:space="preserve">";
     tooibwb:inwerkingtreding "</xsl:text><xsl:value-of select="./@inwerkingtreding"/><xsl:text xml:space="preserve">";
-    cprmv:hasPart (</xsl:text><xsl:apply-templates select="./wetgeving/wet-besluit/wettekst/*|./wetgeving/regeling/regeling-tekst/*"/><xsl:text xml:space="preserve">).
+    cprmv:hasPart (</xsl:text><xsl:apply-templates select="./wetgeving/wet-besluit/wettekst/*|./wetgeving/regeling/regeling-tekst/*|./wetgeving/circulaire/circulaire-tekst/*"/><xsl:text xml:space="preserve">).
 </xsl:text>
   </xsl:template>
 
@@ -44,7 +44,14 @@
         ]</xsl:text>
   </xsl:template>
       
-  
+  <xsl:template match="circulaire.divisie"><xsl:text xml:space="preserve">[
+            a cprmv:Rule;
+            cprmv:id "</xsl:text><xsl:value-of select="@label"/><xsl:text xml:space="preserve">"@nl</xsl:text><xsl:if test="./kop/titel"><xsl:text xml:space="preserve">;
+            cprmv:definition "</xsl:text><xsl:value-of select="translate(./kop/titel, '&#xA;', '')"/><xsl:text xml:space="preserve">"@nl</xsl:text></xsl:if><xsl:if test="./tekst|./circulaire.divisie"><xsl:text xml:space="preserve">;
+            cprmv:hasPart (</xsl:text><xsl:apply-templates select="tekst|circulaire.divisie"><xsl:with-param name="indent" select="true()"/></xsl:apply-templates><xsl:text xml:space="preserve">)</xsl:text></xsl:if><xsl:text xml:space="preserve">
+        ]</xsl:text>
+  </xsl:template>
+      
   <xsl:template match="paragraaf"><xsl:text xml:space="preserve">[
             a cprmv:Rule;
             cprmv:id "</xsl:text><xsl:value-of select="@label"/><xsl:text xml:space="preserve">"@nl</xsl:text><xsl:if test="./al"><xsl:text xml:space="preserve">;
@@ -53,7 +60,7 @@
         ]</xsl:text>
   </xsl:template>
   
-<xsl:template match="artikel">
+<xsl:template match="artikel|tekst">
     <xsl:param name="indent" select="false"/>
     <xsl:text xml:space="preserve">[
             </xsl:text><xsl:if test="$indent=true()"><xsl:text xml:space="preserve">    </xsl:text></xsl:if><xsl:text xml:space="preserve">a cprmv:Rule;
