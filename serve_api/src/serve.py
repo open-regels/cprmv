@@ -74,7 +74,7 @@ def set_CPRMVMETHODSKG(path, additive=True):
 
 
 set_CPRMVMETHODSKG("./data/cprmvmethods.ttl", False)
-
+set_CPRMVMETHODSKG("./data/cprmv.ttl", True)
 
 @app.get("/")
 def cprmv_info():
