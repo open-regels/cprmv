@@ -89,7 +89,7 @@ app.mount("/respec", StaticFiles(directory="respec", html=True, follow_symlink=T
 @app.get("/methods")
 def methods(format: str = "json-ld"):
     if format in ["json-ld", "xml", "turtle", "ttl", "n3", "turtle2"]:
-        return app.cprmvsettings["CPRMVMETHODS_KG"].serialize(format=format)
+        return PlainTextResponse(app.cprmvsettings["CPRMVMETHODS_KG"].serialize(format=format))
 
 
 @app.get("/rules/{rule_id_path}")
