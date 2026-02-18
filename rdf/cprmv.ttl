@@ -60,7 +60,7 @@ cprmv:isBasedOn a owl:ObjectProperty;
     rdfs:domain (owl:unionOf (cprmv:Rule cprmv:RuleSet));
     rdfs:range (owl:unionOf (cprmv:Rule cprmv:RuleSet)).
 
-cprmv:is_output_of a owl:ObjectProperty;
+cprmv:isOutputOf a owl:ObjectProperty;
     skos:prefLabel "output of"@en;
     skos:definition "denotes a cprmv:RuleSet to be produced as cv:Ouput of a cpsv:PublicService"@en;
     rdfs:isSubPropertyOf [ owl:inverseOf schema:serviceOutput ];
@@ -99,25 +99,26 @@ cprmv:hasPart a owl:ObjectProperty;
 cprmv:definition a owl:ObjectProperty;
     skos:prefLabel "definition"@en;
     skos:definition "denotes the head part of the definition of a cprmv:Rule which is either a rdfs:text or any representation of knowledge in the form of rdf"@en;
+    rdfs:domain cprmv:Rule;
     rdfs:range rdfs:Resource.
 
 cprmv:postDefinition a owl:ObjectProperty;
     skos:prefLabel "postDefinition"@en;
     skos:definition "denotes the tail part of the definition of a cprmv:Rule which is either a rdfs:text or any representation of knowledge in the form of rdf. This property is only to be used when there are one or more cprmv:Rule's contained by the cprmv:Rule this property belongs to"@en;
-    rdfs:domain cprmv:Rule;
-    rdfs:range rdfs:Resource.
+    rdfs:domain cprmv:Rule ;
+    rdfs:range rdfs:Resource .
        
 cprmv:comment a owl:ObjectProperty;
     skos:prefLabel "comment"@en;
     skos:definition "denotes information as comment for a cprmv:Rule, cprmv:RuleSet or cprmv:RuleMethod"@en;
     rdfs:domain (owl:unionOf (cprmv:Rule cprmv:RuleSet cprmv:RuleMethod));
-    rdfs:range rdfs:Resource.
+    rdfs:range rdfs:Resource .
 
 cprmv:sourcequote a owl:ObjectProperty;
     skos:prefLabel "source quote"@en;
     skos:definition "replicates (a part of) the definition of the cprmv:Rule that is being extended"@en;
     rdfs:domain cprmv:Rule;
-    rdfs:range rdfs:Resource.
+    rdfs:range rdfs:Resource .
     
 cprmv:Rule a owl:Class;
     skos:prefLabel "Rule"@en;
@@ -160,11 +161,6 @@ cprmv:ExplanationMethod a owl:Class;
 cprmv:TestMethod a owl:Class;
     skos:prefLabel "TestMethod"@en;
     skos:definition "A Rule Method with which Rule's are defined that describe test scenario's defined in cprmv:TestSet's containing cprmv:TestCase's, which are specialised cprmv:RuleSet's and cprmv:Rule's and that can be tested in the context of a cprmv:RuleSet's."@en;
-    rdfs:subClassOf cprmv:RuleMethod.
-
-cprmv:AnalysisMethod a owl:Class;
-    skos:prefLabel "Analysis Method"@en;
-    skos:definition "A Rule Method with which an existing Rule is extended through analysis, which does not yet entirely formalises a Rule semantically but only defines what is to be seen as a separate Rule and adds metadata to it or normalises its form etcetera."@en;
     rdfs:subClassOf cprmv:RuleMethod.
 
 cprmv:PublicationMethod a owl:Class;
