@@ -16,6 +16,7 @@ cprmv:RuleSetShape
         sh:path cprmv:comment ;
         sh:minCount 0 ;
         sh:maxCount 1 ;
+        sh:datatype xsd:string ;
     ] ;
     sh:property [
         sh:path cprmv:isBasedOn ;
