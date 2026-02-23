@@ -1,5 +1,90 @@
+```puml
 @startuml
 left to right direction
+
+package cprmv {
+    object "RuleSet" as RuleSet {
+        id
+        isOutputOf
+        validFrom : xsd:date
+        validUntil : xsd:date
+        publishedOn : xsd:date
+        comment : xsd:string
+    }
+    object "Analysis" as Analysis {
+    }
+    object "DecisionModel" as DecisionModel {
+    }
+    object "Rule" as Rule {
+        id
+        definition
+        postDefinition
+        comment : xsd:string
+        sourcequote
+    }
+    object "Parameter" as Parameter {
+    }
+    object "RuleMethod" as RuleMethod {
+        id
+        comment : xsd:string
+    }
+    object "AnalysisMethod" as AnalysisMethod {
+    }
+    object "FormalisationMethod" as FormalisationMethod {
+    }
+    object "CodificationMethod" as CodificationMethod {
+    }
+    object "ExecutionMethod" as ExecutionMethod {
+    }
+    object "ExplanationMethod" as ExplanationMethod {
+    }
+    object "TestMethod" as TestMethod {
+    }
+    object "PublicationMethod" as PublicationMethod {
+    }
+    object "ReferencenMethod" as ReferencenMethod {
+    }
+    object "Explanation" as Explanation {
+    }
+    object "TestCase" as TestCase {
+    }
+    object "TestSet" as TestSet {
+    }
+    object "Decision" as Decision {
+    }
+    object "Case" as Case {
+    }
+    RuleSet --> "0..*" RuleSet : isBasedOn
+    RuleSet --> "0..*" Rule : isBasedOn
+    RuleSet --> "1..*" RuleMethod : hasMethod
+    RuleSet --> "1..1" RuleSet : hasPart
+    RuleSet --> "1..1" Rule : hasPart
+    Analysis --|> RuleSet
+    DecisionModel --> "0..*" Analysis : hasAnalysis
+    DecisionModel --|> RuleSet
+    Rule --> "0..*" RuleSet : isBasedOn
+    Rule --> "0..*" Rule : isBasedOn
+    Rule --> "0..1" RuleSet : hasPart
+    Rule --> "0..1" Rule : hasPart
+    Parameter --|> Rule
+    AnalysisMethod --|> RuleMethod
+    FormalisationMethod --|> RuleMethod
+    CodificationMethod --|> RuleMethod
+    ExecutionMethod --|> RuleMethod
+    ExplanationMethod --|> RuleMethod
+    TestMethod --|> RuleMethod
+    PublicationMethod --|> RuleMethod
+    ReferencenMethod --|> RuleMethod
+    Explanation --> "1..1" RuleSet : explains
+    Explanation --> "1..1" Rule : explains
+    Explanation --|> Rule
+    TestCase --|> Case
+    TestSet --|> RuleSet
+    Decision --|> Rule
+    Case --|> Rule
+
+}
+
 
 package "cpsv-ap v3.2.0 (relevant part)" as cpsv-ap {
     object "cpsv-ap:Rule" as cpsvrule
@@ -25,61 +110,13 @@ package "cpsv-ap v3.2.0 (relevant part)" as cpsv-ap {
     service "0..*" --> service : related
 }
 
-package cprmv {
-    object RuleSet {
-        id
-        comment
-    }
-    object TestSet
-    TestSet -u-|> RuleSet
-    RuleSet --|> legalresource
-    object Rule {
-        id
-        comment
-        sourcequote
-        definition
-        postDefinition
-    }
-    object TestCase
-    TestCase -u-|> Rule
-    RuleSet *-- Rule : contains
-    TestSet *-- TestCase : contains
-    Rule "0..*" --> Rule : extends
 
-    object Explanation {
-        id
-        type
-        comment
-    }
 
-    RuleSet <-l- Explanation : explains
-    Rule <-l- Explanation : explains
 
-    object RuleMethod {
-        id
-        comment
-    }
-    Rule --> "1..1" RuleMethod : method
-    RuleMethod <-l- Explanation : explains
-
-    object AnalysisMethod
-    object FormalisationMethod
-    object TestMethod
-    RuleMethod <|-- AnalysisMethod
-    RuleMethod <|-- FormalisationMethod
-    RuleMethod <|-- TestMethod
-    
-    package cprmvmethods {
-        object rulemethods
-        RuleMethod <-- rulemethods : acknowledged
-    }
-    
-    TestCase "1..1" --> TestMethod : method
-    
-}
-
-RuleSet --> "1..1" legalresource : extends
+RuleSet --> "1..1" legalresource : isBasedOn
 RuleSet  -[dotted]-> service : "output-of"
 output <|--  RuleSet
 
+
 @enduml
+```

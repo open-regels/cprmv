@@ -9,10 +9,10 @@ let respecConfig = {
 
   // shortName = Repository name
   shortName: "cprmv",
-  publishDate: "2025-06-27",
-  publishVersion: "0.3.0",
+  publishDate: "2026-02-09",
+  publishVersion: "0.4.0",
 
-  previousPublishVersion: "0.2.0",
+  previousPublishVersion: "0.3.0",
   previousPublishDate: "2025-03-27",
   previousMaturity: "fpwd",
   title: "CPRMV",
@@ -20,7 +20,7 @@ let respecConfig = {
     "Core Public Rule Management Vocabulary (CPRMV), extending the Interoperable Europe standards towards a standard for Public Rule Management",
 
   // Content
-  content: { ch01: "informative", ch02: "informative" },
+  content: { ch01: "informative", ch02: "informative", ch03: "conformance"},
   editors: [
     {
       name: "Steven Gort",
@@ -56,7 +56,7 @@ let respecConfig = {
   alternateFormats: [
     {
       label: "pdf",
-      uri: "https://www.open-regels.nl/cprmv/0.3.0/snapshot.pdf",
+      uri: "https://standaarden.open-regels.nl/standards/cprmv/0.4.0/cprmv.pdf",
     },
   ],
 };
