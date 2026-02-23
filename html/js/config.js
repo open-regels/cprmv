@@ -20,7 +20,7 @@ let respecConfig = {
     "Core Public Rule Management Vocabulary (CPRMV), extending the Interoperable Europe standards towards a standard for Public Rule Management",
 
   // Content
-  content: { ch01: "informative", ch02: "informative" },
+  content: { ch01: "informative", ch02: "informative", ch03: "conformance"},
   editors: [
     {
       name: "Steven Gort",

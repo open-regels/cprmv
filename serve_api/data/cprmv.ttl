@@ -43,7 +43,7 @@ cprmv:DecisionModel a owl:Class;
 cprmv:hasAnalysis a owl:ObjectProperty;
     skos:prefLabel "hasAnalysis"@en;
     skos:definition "denotes the Analysis a DecisionModel is based on."@en;
-    rdfs:isSubPropertyOf cprmv:isBasedOn;
+    rdfs:subPropertyOf cprmv:isBasedOn;
     rdfs:domain cprmv:DecisionModel;
     rdfs:range cprmv:Analysis.
 
@@ -55,16 +55,16 @@ cprmv:id a owl:ObjectProperty;
 cprmv:isBasedOn a owl:ObjectProperty;
     skos:prefLabel "isBasedOn"@en;
     skos:definition "In the case of a RuleSet this property states the RuleSet to be eli:based_on an eli:LegalResource (which includes any cprmv:RuleSet) the RuleSet is based on in its entirety (all cprmv:Rules contained in the cprmv:RuleSet that is extended, depending on whether they are defined with the same cprmv:hasMethod or not, can or must have matching ones in the cprmv:RuleSet that extends) possibly aggregated by analysis or formalisation (not codification). In the case of a cprmv:Rule it refers to the matching cprmv:Rule contained in a cprmv:RuleSet that is extended by the RuleSet that contains the extending cprmv:Rule (this must be the case). A cprmv:Rule in the cprmv:RuleSet that is extended does not have to be referred by a cprmv:Rule contained in the extending cprmv:RuleSet if both RuleSet's contain only cprmv:Rule's defined with the same cprmv:method, in which case this implies the cprmv:Rule implicitly becomes part of the extending cprmv:RuleSet as is. Multiple cprmv:Rule's / cprmv:RuleSet's can be extended within the same cprmv:Rule / cprmv:RuleSet"@en;
-    rdfs:isSubPropertyOf eli:based_on;
-    rdfs:isSubPropertyOf prov:wasDerivedFrom;
+    rdfs:subPropertyOf eli:based_on;
+    rdfs:subPropertyOf prov:wasDerivedFrom;
     rdfs:domain (owl:unionOf (cprmv:Rule cprmv:RuleSet));
     rdfs:range (owl:unionOf (cprmv:Rule cprmv:RuleSet)).
 
 cprmv:isOutputOf a owl:ObjectProperty;
     skos:prefLabel "output of"@en;
     skos:definition "denotes a cprmv:RuleSet to be produced as cv:Ouput of a cpsv:PublicService"@en;
-    rdfs:isSubPropertyOf [ owl:inverseOf schema:serviceOutput ];
-    rdfs:isSubPropertyOf prov:wasGeneratedBy;
+    rdfs:subPropertyOf [ owl:inverseOf schema:serviceOutput ];
+    rdfs:subPropertyOf prov:wasGeneratedBy;
     rdfs:domain cprmv:RuleSet;
     rdfs:range cpsv:PublicService.
 

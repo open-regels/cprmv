@@ -1,5 +1,6 @@
 @prefix ex: <http://example.com/> .
 @prefix cpsv: <http://purl.org/vocab/cpsv#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 @prefix cprmv: <https://standaarden.open-regels.nl/standards/cprmv/0.4.0#> .
 
 ex:myRuleMethod a cprmv:RuleMethod ;
@@ -34,20 +35,23 @@ ex:myRuleSet a cprmv:RuleSet ;
     cprmv:id "test" ;
     cprmv:isOutputOf [a cpsv:PublicService] ;
     cprmv:hasMethod ex:myRuleMethod ;
-    cprmv:hasPart ( ex:myRuleA ).
+    cprmv:hasPart ( ex:myRuleA ) ;
+    cprmv:validFrom "2026-01-01"^^xsd:date .
 
 ex:myAnalysis a cprmv:Analysis ;
     cprmv:id "test" ;
     cprmv:isOutputOf [a cpsv:PublicService] ;
     cprmv:hasMethod ex:myRuleMethod ;
-    cprmv:hasPart ( ex:myRuleA ) .
+    cprmv:hasPart ( ex:myRuleA ) ;
+    cprmv:validFrom "2026-01-01"^^xsd:date .
 
 ex:myDecisionModel a cprmv:DecisionModel ;
     cprmv:id "test" ;
     cprmv:hasAnalysis ex:myAnalysis ;
     cprmv:isOutputOf [a cpsv:PublicService] ;
     cprmv:hasMethod ex:myRuleMethod ;
-    cprmv:hasPart ( ex:myRuleA ) .
+    cprmv:hasPart ( ex:myRuleA ) ;
+    cprmv:validFrom "2026-01-01"^^xsd:date .
 
 ex:myRuleA a cprmv:Rule ;
     cprmv:id "test" .
