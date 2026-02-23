@@ -457,7 +457,8 @@ ul.index code{color:inherit}
   "subtitle": "Core Public Rule Management Vocabulary (CPRMV), extending the Interoperable Europe standards towards a standard for Public Rule Management",
   "content": {
     "ch01": "informative",
-    "ch02": "informative"
+    "ch02": "informative",
+    "ch03": "conformance"
   },
   "editors": [
     {
@@ -612,8 +613,571 @@ Moreover, a RuleSet is to be seen and published as a Legal Resource too which ca
 <p>The CPRMV is part of a standard for public rule management that will guide organisations to publish their RuleSet's (bundled sets of Rules) as legal resources in relation to the legal resources they implement.</p>
 </section><section id="extendability"><div class="header-wrapper"><h3 id="x2-5-extendability"><bdi class="secno">2.5 </bdi>Extendability</h3><a class="self-link" href="#extendability" aria-label="Permalink for Section 2.5"></a></div>
 <p>Note that it might be persuasive to extend this vocabulary with metadata on the operationalisation of sercices that follow the rules. Where this metadata has its origin in some specific Rule or legal resource it cites or refers to this might be plausible but then it might be best to introduce a RuleMethod for formalising the metadata at that level. Where the metadata is not dependent on Rules or Legal Resources (not affecting the outcome of a service), or form explanations, it is better not to include this in RuleSets. This kind of metadata might however be bundled with RuleSets and the explanatory content in relation to the same legal resources too to keep all relevant things together in relation to services.</p>
-</section></section>
-  <script>
+</section></section><section class="conformance"><p><dfn id="dfn-ruleset" tabindex="0" aria-haspopup="dialog">RuleSet</dfn>: A set of Rule's. Which is produced as cv:Ouput within a cpsv:Publicservice while also always becoming a eli:LegalResource implemented by a cpsv:Rule followed by cpsv:Publicservice. Note however that with CPRMV, the resources a cpsv:Rule represent possibly are cprmv:RuleSet's themselves. Also, being a cv:Ouput, a cprmv:RuleSet cprmv:is_part_of a dcat.Dataset </p>
+<p>subclass of: <a href="http://data.europa.eu/m8g/Output">http://data.europa.eu/m8g/Output</a></p>
+<p>properties (excluding inherited):</p>
+<table>
+<thead>
+<tr>
+<th>Property</th>
+<th>Type/Range</th>
+<th>Cardinality</th>
+<th>Definition</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>id</td>
+<td></td>
+<td>1..1</td>
+<td>id</td>
+</tr>
+<tr>
+<td>isBasedOn</td>
+<td>Rule Set, Rule</td>
+<td>0..*</td>
+<td>isBasedOn</td>
+</tr>
+<tr>
+<td>output of</td>
+<td></td>
+<td>1..1</td>
+<td>output of</td>
+</tr>
+<tr>
+<td>method</td>
+<td>Rule Method</td>
+<td>1..*</td>
+<td>method</td>
+</tr>
+<tr>
+<td>validFrom</td>
+<td>xsd:date</td>
+<td>1..1</td>
+<td>validFrom</td>
+</tr>
+<tr>
+<td>validUntil</td>
+<td>xsd:date</td>
+<td>0..1</td>
+<td>validUntil</td>
+</tr>
+<tr>
+<td>publishedOn</td>
+<td>xsd:date</td>
+<td>0..1</td>
+<td>publishedOn</td>
+</tr>
+<tr>
+<td>hasPart</td>
+<td>Rule Set, Rule</td>
+<td>1..1</td>
+<td>hasPart</td>
+</tr>
+<tr>
+<td>comment</td>
+<td>xsd:string</td>
+<td>0..1</td>
+<td>comment</td>
+</tr>
+</tbody></table>
+<p><dfn id="dfn-analysis" tabindex="0" aria-haspopup="dialog">Analysis</dfn>: A Rule Set that has been produced by following a Analysis Method.</p>
+<p>subclass of: <a href="#dfn-ruleset" class="internalDFN" data-link-type="dfn" id="ref-for-dfn-ruleset-1">RuleSet</a></p>
+<p>properties (excluding inherited):</p>
+<table>
+<thead>
+<tr>
+<th>Property</th>
+<th>Type/Range</th>
+<th>Cardinality</th>
+<th>Definition</th>
+</tr>
+</thead>
+</table>
+<p><dfn id="dfn-decisionmodel" tabindex="0" aria-haspopup="dialog">DecisionModel</dfn>: A Rule Set that has been produced by following a Formalisation Method.</p>
+<p>subclass of: <a href="#dfn-ruleset" class="internalDFN" data-link-type="dfn" id="ref-for-dfn-ruleset-2">RuleSet</a></p>
+<p>properties (excluding inherited):</p>
+<table>
+<thead>
+<tr>
+<th>Property</th>
+<th>Type/Range</th>
+<th>Cardinality</th>
+<th>Definition</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>hasAnalysis</td>
+<td>Analysis</td>
+<td>0..*</td>
+<td>hasAnalysis</td>
+</tr>
+</tbody></table>
+<p><dfn id="dfn-rule" tabindex="0" aria-haspopup="dialog">Rule</dfn>: A Rule denotes a official expression of an agreement which can both be expressed in natural language like articles in laws as well as more formal business rules for automation of decisions</p>
+<p>properties (excluding inherited):</p>
+<table>
+<thead>
+<tr>
+<th>Property</th>
+<th>Type/Range</th>
+<th>Cardinality</th>
+<th>Definition</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>id</td>
+<td></td>
+<td>1..1</td>
+<td>id</td>
+</tr>
+<tr>
+<td>isBasedOn</td>
+<td>Rule Set, Rule</td>
+<td>0..*</td>
+<td>isBasedOn</td>
+</tr>
+<tr>
+<td>hasPart</td>
+<td>Rule Set, Rule</td>
+<td>0..1</td>
+<td>hasPart</td>
+</tr>
+<tr>
+<td>definition</td>
+<td></td>
+<td>0..1</td>
+<td>definition</td>
+</tr>
+<tr>
+<td>postDefinition</td>
+<td></td>
+<td>0..1</td>
+<td>postDefinition</td>
+</tr>
+<tr>
+<td>comment</td>
+<td>xsd:string</td>
+<td>0..1</td>
+<td>comment</td>
+</tr>
+<tr>
+<td>source quote</td>
+<td></td>
+<td>0..1</td>
+<td>source quote</td>
+</tr>
+</tbody></table>
+<p><dfn id="dfn-parameter" tabindex="0" aria-haspopup="dialog">Parameter</dfn>: A Rule that forms a parameter. Normally these are specific small parts of a Rule Set that are changed more often than the rest of a Rule Set. They normally have a definition holding information that is of a simple type like a number, date etc.</p>
+<p>subclass of: <a href="#dfn-rule" class="internalDFN" data-link-type="dfn" id="ref-for-dfn-rule-1">Rule</a></p>
+<p>properties (excluding inherited):</p>
+<table>
+<thead>
+<tr>
+<th>Property</th>
+<th>Type/Range</th>
+<th>Cardinality</th>
+<th>Definition</th>
+</tr>
+</thead>
+</table>
+<p><dfn id="dfn-rulemethod" tabindex="0" aria-haspopup="dialog">RuleMethod</dfn>: A Rule Method is a acknowledged known method for defining Rule's, either from scratch through deliberation and / or based on existing Rule's.</p>
+<p>properties (excluding inherited):</p>
+<table>
+<thead>
+<tr>
+<th>Property</th>
+<th>Type/Range</th>
+<th>Cardinality</th>
+<th>Definition</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>id</td>
+<td></td>
+<td>1..1</td>
+<td>id</td>
+</tr>
+<tr>
+<td>comment</td>
+<td>xsd:string</td>
+<td>0..1</td>
+<td>comment</td>
+</tr>
+</tbody></table>
+<p><dfn id="dfn-analysismethod" tabindex="0" aria-haspopup="dialog">AnalysisMethod</dfn>: A Rule Method with which an existing Rule is extended through analysis, which does not yet entirely formalises a Rule semantically but only defines what is to be seen as a separate Rule and adds metadata to it or normalises its form etcetera.</p>
+<p>subclass of: <a href="#dfn-rulemethod" class="internalDFN" data-link-type="dfn" id="ref-for-dfn-rulemethod-1">RuleMethod</a></p>
+<p>properties (excluding inherited):</p>
+<table>
+<thead>
+<tr>
+<th>Property</th>
+<th>Type/Range</th>
+<th>Cardinality</th>
+<th>Definition</th>
+</tr>
+</thead>
+</table>
+<p><dfn id="dfn-formalisationmethod" tabindex="0" aria-haspopup="dialog">FormalisationMethod</dfn>: A Rule Method with which an existing Rule is extended through formalisation, which entirely formalises a Rule semantically as far as possible and makes it represented in a interoperable way to the point cprmv compatible systems can comsume them within processes for delivering Public Services.</p>
+<p>subclass of: <a href="#dfn-rulemethod" class="internalDFN" data-link-type="dfn" id="ref-for-dfn-rulemethod-2">RuleMethod</a></p>
+<p>properties (excluding inherited):</p>
+<table>
+<thead>
+<tr>
+<th>Property</th>
+<th>Type/Range</th>
+<th>Cardinality</th>
+<th>Definition</th>
+</tr>
+</thead>
+</table>
+<p><dfn id="dfn-codificationmethod" tabindex="0" aria-haspopup="dialog">CodificationMethod</dfn>: A Rule Method with which an existing Rule is extended through codification, which entirely formalises a Rule semantically if necesary as well as codifies them into an executable form that can be utilised by specific systems within processes for delivering Public Services.</p>
+<p>subclass of: <a href="#dfn-rulemethod" class="internalDFN" data-link-type="dfn" id="ref-for-dfn-rulemethod-3">RuleMethod</a></p>
+<p>properties (excluding inherited):</p>
+<table>
+<thead>
+<tr>
+<th>Property</th>
+<th>Type/Range</th>
+<th>Cardinality</th>
+<th>Definition</th>
+</tr>
+</thead>
+</table>
+<p><dfn id="dfn-executionmethod" tabindex="0" aria-haspopup="dialog">ExecutionMethod</dfn>: A Rule Method with which an existing Rule is executed in the context of delivering a Public Service.</p>
+<p>subclass of: <a href="#dfn-rulemethod" class="internalDFN" data-link-type="dfn" id="ref-for-dfn-rulemethod-4">RuleMethod</a></p>
+<p>properties (excluding inherited):</p>
+<table>
+<thead>
+<tr>
+<th>Property</th>
+<th>Type/Range</th>
+<th>Cardinality</th>
+<th>Definition</th>
+</tr>
+</thead>
+</table>
+<p><dfn id="dfn-explanationmethod" tabindex="0" aria-haspopup="dialog">ExplanationMethod</dfn>: An explanation method defines the method for producing Explanations in relation to cprmv:Rule(Set)'s'</p>
+<p>subclass of: <a href="#dfn-rulemethod" class="internalDFN" data-link-type="dfn" id="ref-for-dfn-rulemethod-5">RuleMethod</a></p>
+<p>properties (excluding inherited):</p>
+<table>
+<thead>
+<tr>
+<th>Property</th>
+<th>Type/Range</th>
+<th>Cardinality</th>
+<th>Definition</th>
+</tr>
+</thead>
+</table>
+<p><dfn id="dfn-testmethod" tabindex="0" aria-haspopup="dialog">TestMethod</dfn>: A Rule Method with which Rule's are defined that describe test scenario's defined in cprmv:TestSet's containing cprmv:TestCase's, which are specialised cprmv:RuleSet's and cprmv:Rule's and that can be tested in the context of a cprmv:RuleSet's.</p>
+<p>subclass of: <a href="#dfn-rulemethod" class="internalDFN" data-link-type="dfn" id="ref-for-dfn-rulemethod-6">RuleMethod</a></p>
+<p>properties (excluding inherited):</p>
+<table>
+<thead>
+<tr>
+<th>Property</th>
+<th>Type/Range</th>
+<th>Cardinality</th>
+<th>Definition</th>
+</tr>
+</thead>
+</table>
+<p><dfn id="dfn-publicationmethod" tabindex="0" aria-haspopup="dialog">PublicationMethod</dfn>: A Rule Method for publication of the definition of Rule(Set)'s apart from the Execution of them...</p>
+<p>subclass of: <a href="#dfn-rulemethod" class="internalDFN" data-link-type="dfn" id="ref-for-dfn-rulemethod-7">RuleMethod</a></p>
+<p>properties (excluding inherited):</p>
+<table>
+<thead>
+<tr>
+<th>Property</th>
+<th>Type/Range</th>
+<th>Cardinality</th>
+<th>Definition</th>
+</tr>
+</thead>
+</table>
+<p><dfn id="dfn-referencenmethod" tabindex="0" aria-haspopup="dialog">ReferencenMethod</dfn>: A Rule Method for the referencing of Rule(Set)'s apart from the Execution of them...</p>
+<p>subclass of: <a href="#dfn-rulemethod" class="internalDFN" data-link-type="dfn" id="ref-for-dfn-rulemethod-8">RuleMethod</a></p>
+<p>properties (excluding inherited):</p>
+<table>
+<thead>
+<tr>
+<th>Property</th>
+<th>Type/Range</th>
+<th>Cardinality</th>
+<th>Definition</th>
+</tr>
+</thead>
+</table>
+<p><dfn id="dfn-explanation" tabindex="0" aria-haspopup="dialog">Explanation</dfn>: A cprmv:Explanation is a cprmv:Rule defined with a cprmv:ExplanationMethod. This Rule contains a concise explanation of one or multiple Rule's or RuleSet's.</p>
+<p>subclass of: <a href="#dfn-rule" class="internalDFN" data-link-type="dfn" id="ref-for-dfn-rule-2">Rule</a></p>
+<p>properties (excluding inherited):</p>
+<table>
+<thead>
+<tr>
+<th>Property</th>
+<th>Type/Range</th>
+<th>Cardinality</th>
+<th>Definition</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>explains</td>
+<td>Rule Set, Rule</td>
+<td>1..1</td>
+<td>explains</td>
+</tr>
+</tbody></table>
+<p><dfn id="dfn-testcase" tabindex="0" aria-haspopup="dialog">TestCase</dfn>: A TestCase is a cprmv:Case defined for and following a TestMethod</p>
+<p>subclass of: <a href="#dfn-case" class="internalDFN" data-link-type="dfn" id="ref-for-dfn-case-1">Case</a></p>
+<p>properties (excluding inherited):</p>
+<table>
+<thead>
+<tr>
+<th>Property</th>
+<th>Type/Range</th>
+<th>Cardinality</th>
+<th>Definition</th>
+</tr>
+</thead>
+</table>
+<p><dfn id="dfn-testset" tabindex="0" aria-haspopup="dialog">TestSet</dfn>: A TestSet is a cprmv:RuleSet containing cprmv:TestCase's defined for following a TestMethod</p>
+<p>subclass of: <a href="#dfn-ruleset" class="internalDFN" data-link-type="dfn" id="ref-for-dfn-ruleset-3">RuleSet</a></p>
+<p>properties (excluding inherited):</p>
+<table>
+<thead>
+<tr>
+<th>Property</th>
+<th>Type/Range</th>
+<th>Cardinality</th>
+<th>Definition</th>
+</tr>
+</thead>
+</table>
+<p><dfn id="dfn-decision" tabindex="0" aria-haspopup="dialog">Decision</dfn>: A Decision is a cprmv:Rule defined following a ExecutionMethod</p>
+<p>subclass of: <a href="#dfn-rule" class="internalDFN" data-link-type="dfn" id="ref-for-dfn-rule-3">Rule</a></p>
+<p>properties (excluding inherited):</p>
+<table>
+<thead>
+<tr>
+<th>Property</th>
+<th>Type/Range</th>
+<th>Cardinality</th>
+<th>Definition</th>
+</tr>
+</thead>
+</table>
+<p><dfn id="dfn-case" tabindex="0" aria-haspopup="dialog">Case</dfn>: A Case is a cprmv:Rule containing a list of Decisions defined following a ExecutionMethod</p>
+<p>subclass of: <a href="#dfn-rule" class="internalDFN" data-link-type="dfn" id="ref-for-dfn-rule-4">Rule</a></p>
+<p>properties (excluding inherited):</p>
+<table>
+<thead>
+<tr>
+<th>Property</th>
+<th>Type/Range</th>
+<th>Cardinality</th>
+<th>Definition</th>
+</tr>
+</thead>
+</table>
+</section>
+  <div class="dfn-panel" hidden="" role="dialog" aria-modal="true" id="dfn-panel-for-dfn-ruleset" aria-label="Links in this document to definition: RuleSet">
+      <span class="caret"></span>
+      <div>
+        <a class="self-link" href="#dfn-ruleset" aria-label="Permalink for definition: RuleSet. Activate to close this dialog.">Permalink</a>
+         
+      </div>
+      <p><b>Referenced in:</b></p>
+      <ul>
+    <li>
+      <a href="#ref-for-dfn-ruleset-1" class="respec-offending-element" title="Can't expand &quot;#ref-for-dfn-ruleset-1&quot;." id="respec-offender-can-t-expand-ref-for-dfn-ruleset-1">#ref-for-dfn-ruleset-1</a> <a href="#ref-for-dfn-ruleset-2" title="Reference 2">(2)</a> <a href="#ref-for-dfn-ruleset-3" title="Reference 3">(3)</a> 
+    </li>
+  </ul>
+    </div><div class="dfn-panel" hidden="" role="dialog" aria-modal="true" id="dfn-panel-for-dfn-analysis" aria-label="Links in this document to definition: Analysis">
+      <span class="caret"></span>
+      <div>
+        <a class="self-link" href="#dfn-analysis" aria-label="Permalink for definition: Analysis. Activate to close this dialog.">Permalink</a>
+         
+      </div>
+      <p><b>Referenced in:</b></p>
+      <ul>
+      <li>Not referenced in this document.</li>
+    </ul>
+    </div><div class="dfn-panel" hidden="" role="dialog" aria-modal="true" id="dfn-panel-for-dfn-decisionmodel" aria-label="Links in this document to definition: DecisionModel">
+      <span class="caret"></span>
+      <div>
+        <a class="self-link" href="#dfn-decisionmodel" aria-label="Permalink for definition: DecisionModel. Activate to close this dialog.">Permalink</a>
+         
+      </div>
+      <p><b>Referenced in:</b></p>
+      <ul>
+      <li>Not referenced in this document.</li>
+    </ul>
+    </div><div class="dfn-panel" hidden="" role="dialog" aria-modal="true" id="dfn-panel-for-dfn-rule" aria-label="Links in this document to definition: Rule">
+      <span class="caret"></span>
+      <div>
+        <a class="self-link" href="#dfn-rule" aria-label="Permalink for definition: Rule. Activate to close this dialog.">Permalink</a>
+         
+      </div>
+      <p><b>Referenced in:</b></p>
+      <ul>
+    <li>
+      <a href="#ref-for-dfn-rule-1" class="respec-offending-element" title="Can't expand &quot;#ref-for-dfn-rule-1&quot;." id="respec-offender-can-t-expand-ref-for-dfn-rule-1">#ref-for-dfn-rule-1</a> <a href="#ref-for-dfn-rule-2" title="Reference 2">(2)</a> <a href="#ref-for-dfn-rule-3" title="Reference 3">(3)</a> <a href="#ref-for-dfn-rule-4" title="Reference 4">(4)</a> 
+    </li>
+  </ul>
+    </div><div class="dfn-panel" hidden="" role="dialog" aria-modal="true" id="dfn-panel-for-dfn-parameter" aria-label="Links in this document to definition: Parameter">
+      <span class="caret"></span>
+      <div>
+        <a class="self-link" href="#dfn-parameter" aria-label="Permalink for definition: Parameter. Activate to close this dialog.">Permalink</a>
+         
+      </div>
+      <p><b>Referenced in:</b></p>
+      <ul>
+      <li>Not referenced in this document.</li>
+    </ul>
+    </div><div class="dfn-panel" hidden="" role="dialog" aria-modal="true" id="dfn-panel-for-dfn-rulemethod" aria-label="Links in this document to definition: RuleMethod">
+      <span class="caret"></span>
+      <div>
+        <a class="self-link" href="#dfn-rulemethod" aria-label="Permalink for definition: RuleMethod. Activate to close this dialog.">Permalink</a>
+         
+      </div>
+      <p><b>Referenced in:</b></p>
+      <ul>
+    <li>
+      <a href="#ref-for-dfn-rulemethod-1" class="respec-offending-element" title="Can't expand &quot;#ref-for-dfn-rulemethod-1&quot;." id="respec-offender-can-t-expand-ref-for-dfn-rulemethod-1">#ref-for-dfn-rulemethod-1</a> <a href="#ref-for-dfn-rulemethod-2" title="Reference 2">(2)</a> <a href="#ref-for-dfn-rulemethod-3" title="Reference 3">(3)</a> <a href="#ref-for-dfn-rulemethod-4" title="Reference 4">(4)</a> <a href="#ref-for-dfn-rulemethod-5" title="Reference 5">(5)</a> <a href="#ref-for-dfn-rulemethod-6" title="Reference 6">(6)</a> <a href="#ref-for-dfn-rulemethod-7" title="Reference 7">(7)</a> <a href="#ref-for-dfn-rulemethod-8" title="Reference 8">(8)</a> 
+    </li>
+  </ul>
+    </div><div class="dfn-panel" hidden="" role="dialog" aria-modal="true" id="dfn-panel-for-dfn-analysismethod" aria-label="Links in this document to definition: AnalysisMethod">
+      <span class="caret"></span>
+      <div>
+        <a class="self-link" href="#dfn-analysismethod" aria-label="Permalink for definition: AnalysisMethod. Activate to close this dialog.">Permalink</a>
+         
+      </div>
+      <p><b>Referenced in:</b></p>
+      <ul>
+      <li>Not referenced in this document.</li>
+    </ul>
+    </div><div class="dfn-panel" hidden="" role="dialog" aria-modal="true" id="dfn-panel-for-dfn-formalisationmethod" aria-label="Links in this document to definition: FormalisationMethod">
+      <span class="caret"></span>
+      <div>
+        <a class="self-link" href="#dfn-formalisationmethod" aria-label="Permalink for definition: FormalisationMethod. Activate to close this dialog.">Permalink</a>
+         
+      </div>
+      <p><b>Referenced in:</b></p>
+      <ul>
+      <li>Not referenced in this document.</li>
+    </ul>
+    </div><div class="dfn-panel" hidden="" role="dialog" aria-modal="true" id="dfn-panel-for-dfn-codificationmethod" aria-label="Links in this document to definition: CodificationMethod">
+      <span class="caret"></span>
+      <div>
+        <a class="self-link" href="#dfn-codificationmethod" aria-label="Permalink for definition: CodificationMethod. Activate to close this dialog.">Permalink</a>
+         
+      </div>
+      <p><b>Referenced in:</b></p>
+      <ul>
+      <li>Not referenced in this document.</li>
+    </ul>
+    </div><div class="dfn-panel" hidden="" role="dialog" aria-modal="true" id="dfn-panel-for-dfn-executionmethod" aria-label="Links in this document to definition: ExecutionMethod">
+      <span class="caret"></span>
+      <div>
+        <a class="self-link" href="#dfn-executionmethod" aria-label="Permalink for definition: ExecutionMethod. Activate to close this dialog.">Permalink</a>
+         
+      </div>
+      <p><b>Referenced in:</b></p>
+      <ul>
+      <li>Not referenced in this document.</li>
+    </ul>
+    </div><div class="dfn-panel" hidden="" role="dialog" aria-modal="true" id="dfn-panel-for-dfn-explanationmethod" aria-label="Links in this document to definition: ExplanationMethod">
+      <span class="caret"></span>
+      <div>
+        <a class="self-link" href="#dfn-explanationmethod" aria-label="Permalink for definition: ExplanationMethod. Activate to close this dialog.">Permalink</a>
+         
+      </div>
+      <p><b>Referenced in:</b></p>
+      <ul>
+      <li>Not referenced in this document.</li>
+    </ul>
+    </div><div class="dfn-panel" hidden="" role="dialog" aria-modal="true" id="dfn-panel-for-dfn-testmethod" aria-label="Links in this document to definition: TestMethod">
+      <span class="caret"></span>
+      <div>
+        <a class="self-link" href="#dfn-testmethod" aria-label="Permalink for definition: TestMethod. Activate to close this dialog.">Permalink</a>
+         
+      </div>
+      <p><b>Referenced in:</b></p>
+      <ul>
+      <li>Not referenced in this document.</li>
+    </ul>
+    </div><div class="dfn-panel" hidden="" role="dialog" aria-modal="true" id="dfn-panel-for-dfn-publicationmethod" aria-label="Links in this document to definition: PublicationMethod">
+      <span class="caret"></span>
+      <div>
+        <a class="self-link" href="#dfn-publicationmethod" aria-label="Permalink for definition: PublicationMethod. Activate to close this dialog.">Permalink</a>
+         
+      </div>
+      <p><b>Referenced in:</b></p>
+      <ul>
+      <li>Not referenced in this document.</li>
+    </ul>
+    </div><div class="dfn-panel" hidden="" role="dialog" aria-modal="true" id="dfn-panel-for-dfn-referencenmethod" aria-label="Links in this document to definition: ReferencenMethod">
+      <span class="caret"></span>
+      <div>
+        <a class="self-link" href="#dfn-referencenmethod" aria-label="Permalink for definition: ReferencenMethod. Activate to close this dialog.">Permalink</a>
+         
+      </div>
+      <p><b>Referenced in:</b></p>
+      <ul>
+      <li>Not referenced in this document.</li>
+    </ul>
+    </div><div class="dfn-panel" hidden="" role="dialog" aria-modal="true" id="dfn-panel-for-dfn-explanation" aria-label="Links in this document to definition: Explanation">
+      <span class="caret"></span>
+      <div>
+        <a class="self-link" href="#dfn-explanation" aria-label="Permalink for definition: Explanation. Activate to close this dialog.">Permalink</a>
+         
+      </div>
+      <p><b>Referenced in:</b></p>
+      <ul>
+      <li>Not referenced in this document.</li>
+    </ul>
+    </div><div class="dfn-panel" hidden="" role="dialog" aria-modal="true" id="dfn-panel-for-dfn-testcase" aria-label="Links in this document to definition: TestCase">
+      <span class="caret"></span>
+      <div>
+        <a class="self-link" href="#dfn-testcase" aria-label="Permalink for definition: TestCase. Activate to close this dialog.">Permalink</a>
+         
+      </div>
+      <p><b>Referenced in:</b></p>
+      <ul>
+      <li>Not referenced in this document.</li>
+    </ul>
+    </div><div class="dfn-panel" hidden="" role="dialog" aria-modal="true" id="dfn-panel-for-dfn-testset" aria-label="Links in this document to definition: TestSet">
+      <span class="caret"></span>
+      <div>
+        <a class="self-link" href="#dfn-testset" aria-label="Permalink for definition: TestSet. Activate to close this dialog.">Permalink</a>
+         
+      </div>
+      <p><b>Referenced in:</b></p>
+      <ul>
+      <li>Not referenced in this document.</li>
+    </ul>
+    </div><div class="dfn-panel" hidden="" role="dialog" aria-modal="true" id="dfn-panel-for-dfn-decision" aria-label="Links in this document to definition: Decision">
+      <span class="caret"></span>
+      <div>
+        <a class="self-link" href="#dfn-decision" aria-label="Permalink for definition: Decision. Activate to close this dialog.">Permalink</a>
+         
+      </div>
+      <p><b>Referenced in:</b></p>
+      <ul>
+      <li>Not referenced in this document.</li>
+    </ul>
+    </div><div class="dfn-panel" hidden="" role="dialog" aria-modal="true" id="dfn-panel-for-dfn-case" aria-label="Links in this document to definition: Case">
+      <span class="caret"></span>
+      <div>
+        <a class="self-link" href="#dfn-case" aria-label="Permalink for definition: Case. Activate to close this dialog.">Permalink</a>
+         
+      </div>
+      <p><b>Referenced in:</b></p>
+      <ul>
+    <li>
+      <a href="#ref-for-dfn-case-1" class="respec-offending-element" title="Can't expand &quot;#ref-for-dfn-case-1&quot;." id="respec-offender-can-t-expand-ref-for-dfn-case-1">#ref-for-dfn-case-1</a> 
+    </li>
+  </ul>
+    </div><script>
     let content = "";
 
     const getClass = function(key) {
@@ -635,7 +1199,45 @@ Moreover, a RuleSet is to be seen and published as a Legal Resource too which ca
   <section id="index" class="appendix"><div class="header-wrapper"><h2 id="a-index"><bdi class="secno">A. </bdi>Index</h2><a class="self-link" href="#index" aria-label="Permalink for Appendix A."></a></div><section id="index-defined-here">
     <div class="header-wrapper"><h3 id="a-1-terms-defined-by-this-specification"><bdi class="secno">A.1 </bdi>Terms defined by this specification</h3><a class="self-link" href="#index-defined-here" aria-label="Permalink for Appendix A.1"></a></div>
     <ul class="index">
-    
+    <li>
+      <a class="index-term" href="#dfn-analysis">Analysis</a> 
+    </li><li>
+      <a class="index-term" href="#dfn-analysismethod">AnalysisMethod</a> 
+    </li><li>
+      <a class="index-term" href="#dfn-case">Case</a> 
+    </li><li>
+      <a class="index-term" href="#dfn-codificationmethod">CodificationMethod</a> 
+    </li><li>
+      <a class="index-term" href="#dfn-decision">Decision</a> 
+    </li><li>
+      <a class="index-term" href="#dfn-decisionmodel">DecisionModel</a> 
+    </li><li>
+      <a class="index-term" href="#dfn-executionmethod">ExecutionMethod</a> 
+    </li><li>
+      <a class="index-term" href="#dfn-explanation">Explanation</a> 
+    </li><li>
+      <a class="index-term" href="#dfn-explanationmethod">ExplanationMethod</a> 
+    </li><li>
+      <a class="index-term" href="#dfn-formalisationmethod">FormalisationMethod</a> 
+    </li><li>
+      <a class="index-term" href="#dfn-parameter">Parameter</a> 
+    </li><li>
+      <a class="index-term" href="#dfn-publicationmethod">PublicationMethod</a> 
+    </li><li>
+      <a class="index-term" href="#dfn-referencenmethod">ReferencenMethod</a> 
+    </li><li>
+      <a class="index-term" href="#dfn-rule">Rule</a> 
+    </li><li>
+      <a class="index-term" href="#dfn-rulemethod">RuleMethod</a> 
+    </li><li>
+      <a class="index-term" href="#dfn-ruleset">RuleSet</a> 
+    </li><li>
+      <a class="index-term" href="#dfn-testcase">TestCase</a> 
+    </li><li>
+      <a class="index-term" href="#dfn-testmethod">TestMethod</a> 
+    </li><li>
+      <a class="index-term" href="#dfn-testset">TestSet</a> 
+    </li>
   </ul>
   </section><section id="index-defined-elsewhere">
     <div class="header-wrapper"><h3 id="a-2-terms-defined-by-reference"><bdi class="secno">A.2 </bdi>Terms defined by reference</h3><a class="self-link" href="#index-defined-elsewhere" aria-label="Permalink for Appendix A.2"></a></div>
