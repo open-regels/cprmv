@@ -59,7 +59,7 @@ RULE_ID_PATH: str = Path(
     min_length=10,
     max_length=500,
     description=RULE_ID_PATH_DESCRIPTION,
-    examples="BWBR0015703_2025-07-01_0, Artikel 20, onderdeel a.",
+    examples=["BWBR0015703_2025-07-01_0, Artikel 20, onderdeel a."],
 )
 PATH_DELIMITER: str = Query(
     default=",",
@@ -76,5 +76,5 @@ LANGUAGE: Union[str, None] = Query(
 UNFORMAT: str = Query(
     default="",
     description="If specified will imply format=cprmv-json. Pattern for extracting specific values from rule definitions using parse syntax (e.g., '{situatie:param_value}: € {norm:param_value}')",
-    examples="{situatie:param_value}: € {norm:param_value}",
+    examples=["{situatie:param_value}: € {norm:param_value}"],
 )
