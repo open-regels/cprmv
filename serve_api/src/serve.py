@@ -1,3 +1,4 @@
+from fastapi_mcp import FastApiMCP
 from rdflib import Graph
 from rdflib.term import Literal
 from rdflib.namespace import RDF
@@ -668,3 +669,7 @@ def get_rule(g, rule):
         else:
             r[p] = o
     return r
+
+
+mcp = FastApiMCP(app)
+mcp.mount_http()

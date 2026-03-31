@@ -1,1 +1,1486 @@
-0.4.0/index.html
+<!DOCTYPE html><html lang="en"><head>
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta content="text/html; charset=utf-8" http-equiv="content-type">
+<meta name="generator" content="ReSpec 35.4.1">
+<style>
+dfn{cursor:pointer}
+.dfn-panel{position:absolute;z-index:35;min-width:300px;max-width:500px;padding:.5em .75em;margin-top:.6em;font-family:"Helvetica Neue",sans-serif;font-size:small;background:#fff;background:var(--indextable-hover-bg,#fff);color:#000;color:var(--text,#000);box-shadow:0 1em 3em -.4em rgba(0,0,0,.3),0 0 1px 1px rgba(0,0,0,.05);box-shadow:0 1em 3em -.4em var(--tocsidebar-shadow,rgba(0,0,0,.3)),0 0 1px 1px var(--tocsidebar-shadow,rgba(0,0,0,.05));border-radius:2px}
+.dfn-panel:not(.docked)>.caret{position:absolute;top:-9px}
+.dfn-panel:not(.docked)>.caret::after,.dfn-panel:not(.docked)>.caret::before{content:"";position:absolute;border:10px solid transparent;border-top:0;border-bottom:10px solid #fff;border-bottom-color:var(--indextable-hover-bg,#fff);top:0}
+.dfn-panel:not(.docked)>.caret::before{border-bottom:9px solid #a2a9b1;border-bottom-color:var(--indextable-hover-bg,#a2a9b1)}
+.dfn-panel *{margin:0}
+.dfn-panel b{display:block;color:#000;color:var(--text,#000);margin-top:.25em}
+.dfn-panel ul a[href]{color:#333;color:var(--text,#333)}
+.dfn-panel>div{display:flex}
+.dfn-panel a.self-link{font-weight:700;margin-right:auto}
+.dfn-panel .marker{padding:.1em;margin-left:.5em;border-radius:.2em;text-align:center;white-space:nowrap;font-size:90%;color:#040b1c}
+.dfn-panel .marker.dfn-exported{background:#d1edfd;box-shadow:0 0 0 .125em #1ca5f940}
+.dfn-panel .marker.idl-block{background:#8ccbf2;box-shadow:0 0 0 .125em #0670b161}
+.dfn-panel a:not(:hover){text-decoration:none!important;border-bottom:none!important}
+.dfn-panel a[href]:hover{border-bottom-width:1px}
+.dfn-panel ul{padding:0}
+.dfn-panel li{margin-left:1em}
+.dfn-panel.docked{position:fixed;left:.5em;top:unset;bottom:2em;margin:0 auto;max-width:calc(100vw - .75em * 2 - .5em - .2em * 2);max-height:30vh;overflow:auto}
+</style>
+  
+  
+  
+  
+  
+  
+  
+<script>document.title = respecConfig.title</script>
+<title>CPRMV 0.4.0</title>
+  
+<title>Default</title>
+  
+<link rel="shortcut icon" type="image/x-icon" href="./style/logos/logius.ico">
+  
+
+<style id="respec-mainstyle">
+@keyframes pop{
+0%{transform:scale(1,1)}
+25%{transform:scale(1.25,1.25);opacity:.75}
+100%{transform:scale(1,1)}
+}
+a.internalDFN{color:inherit;border-bottom:1px solid #99c;text-decoration:none}
+a.externalDFN{color:inherit;border-bottom:1px dotted #ccc;text-decoration:none}
+a.bibref{text-decoration:none}
+.respec-offending-element:target{animation:pop .25s ease-in-out 0s 1}
+.respec-offending-element,a[href].respec-offending-element{text-decoration:red wavy underline}
+@supports not (text-decoration:red wavy underline){
+.respec-offending-element:not(pre){display:inline-block}
+.respec-offending-element{background:url(data:image/gif;base64,R0lGODdhBAADAPEAANv///8AAP///wAAACwAAAAABAADAEACBZQjmIAFADs=) bottom repeat-x}
+}
+#references :target{background:#eaf3ff;animation:pop .4s ease-in-out 0s 1}
+cite .bibref{font-style:italic}
+a[href].orcid{padding-left:4px;padding-right:4px}
+a[href].orcid>svg{margin-bottom:-2px}
+ol.tof,ul.tof{list-style:none outside none}
+.caption{margin-top:.5em;font-style:italic}
+#issue-summary>ul{column-count:2}
+#issue-summary li{list-style:none;display:inline-block}
+details.respec-tests-details{margin-left:1em;display:inline-block;vertical-align:top}
+details.respec-tests-details>*{padding-right:2em}
+details.respec-tests-details[open]{z-index:999999;position:absolute;border:thin solid #cad3e2;border-radius:.3em;background-color:#fff;padding-bottom:.5em}
+details.respec-tests-details[open]>summary{border-bottom:thin solid #cad3e2;padding-left:1em;margin-bottom:1em;line-height:2em}
+details.respec-tests-details>ul{width:100%;margin-top:-.3em}
+details.respec-tests-details>li{padding-left:1em}
+.self-link:hover{opacity:1;text-decoration:none;background-color:transparent}
+aside.example .marker>a.self-link{color:inherit}
+.header-wrapper{display:flex;align-items:baseline;position:relative;left:-.5em}
+:is(h2,h3,h4,h5,h6):not(#toch2)+a.self-link{color:inherit;order:-1;position:relative;left:-.7em;font-size:1rem;opacity:.5}
+:is(h2,h3,h4,h5,h6)+a.self-link::before{content:"§";text-decoration:none;color:var(--heading-text)}
+:is(h2,h3)+a.self-link{top:-.2em}
+:is(h4,h5,h6)+a.self-link::before{color:#000}
+@media (max-width:767px){
+dd{margin-left:0}
+}
+@media print{
+.removeOnSave{display:none}
+}
+</style>
+<style id="respec-nlgov">
+img.license{float:left;padding-right:5px;background:0 0}
+</style>
+<meta name="color-scheme" content="light">
+<style>
+ul.index{columns:30ch;column-gap:1.5em}
+ul.index li{list-style:inherit}
+ul.index li span{color:inherit;cursor:pointer;white-space:normal}
+#index-defined-here ul.index li{font-size:.9rem}
+ul.index code{color:inherit}
+#index-defined-here .print-only{display:none}
+@media print{
+#index-defined-here .print-only{display:initial}
+}
+</style>
+<meta name="description" content="This specification defines the Core Public Rule Management Vocabulary (CPRMV). The Core Public Rule Management Vocabulary (CPRMV) is the basis for a standard for public rule management for which the regels.overheid.nl is the (Dutch) portal for all related knowledge and tooling for now.">
+<link rel="canonical" href="https://regels.overheid.nl/publicaties/cprmv">
+<style>
+
+  .sidelabel {
+    position: fixed;
+    -webkit-transform-origin: top right;
+    right: 100%;
+    top: 0;
+    -webkit-transform: rotate(-90deg);
+    padding: 4px 50px 4px 10px;
+    color: white;
+    white-space: nowrap;
+    z-index: 1;
+    background-color: #39870c;
+  }
+</style>
+<script type="text/javascript">
+   /* Any custom mermaid.js scripts will go here. */
+  </script>
+<style>
+
+  /* Any custom mermaid.js scripts will go here. */
+  }
+</style>
+<script id="initialUserConfig" type="application/json">{
+  "nl_organisationName": "MinBZK - Dutch Ministry of Internal Affairs",
+  "nl_organisationStylesURL": "./style/",
+  "nl_organisationPublishURL": "https://regels.overheid.nl/publicaties/",
+  "logos": [
+    {
+      "src": "./style/logos/figure-logius.svg",
+      "alt": "Logius",
+      "id": "Logius",
+      "height": 77,
+      "width": 44,
+      "url": "https://www.logius.nl/standaarden"
+    }
+  ],
+  "postProcess": [
+    null,
+    null
+  ],
+  "latestVersion": [
+    "nl_organisationPublishURL",
+    "shortName"
+  ],
+  "thisVersion": [
+    "nl_organisationPublishURL",
+    "shortName",
+    "/v",
+    "publishVersion"
+  ],
+  "prevVersion": [
+    "nl_organisationPublishURL",
+    "shortName",
+    "/v",
+    "previousPublishVersion"
+  ],
+  "useLogo": true,
+  "useLabel": true,
+  "license": "CC0",
+  "addSectionLinks": true,
+  "localizationStrings": {
+    "en": {
+      "wv": "Draft",
+      "cv": "Recommendation",
+      "vv": "Proposed recommendation",
+      "def": "Definitive version",
+      "basis": "Document",
+      "eo": "Outdated version",
+      "tg": "Rescinded version",
+      "no": "Norm",
+      "st": "Standard",
+      "im": "Information model",
+      "pr": "Guideline",
+      "hr": "Guide",
+      "wa": "Proposed recommendation",
+      "al": "General",
+      "bd": "Governance documentation",
+      "bp": "Best practice",
+      "fpwd": "First public working draft"
+    },
+    "nl": {
+      "wv": "Werkversie",
+      "cv": "Consultatieversie",
+      "vv": "Versie ter vaststelling",
+      "def": "Vastgestelde versie",
+      "basis": "Document",
+      "eo": "Verouderde versie",
+      "tg": "Teruggetrokken versie",
+      "no": "Norm",
+      "st": "Standaard",
+      "im": "Informatiemodel",
+      "pr": "Praktijkrichtlijn",
+      "hr": "Handreiking",
+      "wa": "Werkafspraak",
+      "al": "Algemeen",
+      "bd": "Beheerdocumentatie",
+      "bp": "Best practice",
+      "fpwd": "Eerste publieke werkversie"
+    }
+  },
+  "sotdText": {
+    "nl": {
+      "sotd": "Status van dit document",
+      "def": "Dit is de definitieve versie van dit document. Wijzigingen naar aanleiding van consultaties zijn doorgevoerd.",
+      "wv": "Dit is een werkversie die op elk moment kan worden gewijzigd, verwijderd of vervangen door andere documenten. Het is geen door het TO goedgekeurde consultatieversie.",
+      "cv": "Dit is een door het TO goedgekeurde consultatieversie. Commentaar over dit document kan gestuurd worden naar ",
+      "vv": "Dit is een definitief concept van de nieuwe versie van dit document. Wijzigingen naar aanleiding van consultaties zijn doorgevoerd.",
+      "basis": "Dit is een document zonder officiële status.",
+      "fpwd": "Dit is een eerste publieke werkversie die op elk moment kan worden gewijzigd, verwijderd of vervangen door andere documenten. Het is geen door het TO goedgekeurde consultatieversie."
+    },
+    "en": {
+      "sotd": "Status of This Document",
+      "def": "This is the definitive version of this document. Edits resulting from consultations have been applied.",
+      "wv": "This is a draft that could be altered, removed or replaced by other documents. It is not a recommendation approved by TO.",
+      "cv": "This is a proposed recommendation approved by TO. Comments regarding this document may be sent to ",
+      "vv": "This is the definitive concept of this document. Edits resulting from consultations have been applied.",
+      "basis": "This document has no official standing.",
+      "fpwd": "This is a draft that could be altered, removed or replaced by other documents. It is not a recommendation approved by TO."
+    }
+  },
+  "labelColor": {
+    "def": "#154273",
+    "wv": "#39870c",
+    "fpwd": "#39870c"
+  },
+  "licenses": {
+    "cc0": {
+      "name": "Creative Commons 0 Public Domain Dedication",
+      "short": "CC0",
+      "url": "https://creativecommons.org/publicdomain/zero/1.0/",
+      "image": "./media/logos/cc-zero.svg"
+    },
+    "cc-by": {
+      "name": "Creative Commons Attribution 4.0 International Public License",
+      "short": "CC-BY",
+      "url": "https://creativecommons.org/licenses/by/4.0/legalcode",
+      "image": "./media/logos/cc-by.svg"
+    },
+    "cc-by-nd": {
+      "name": "Creative Commons Naamsvermelding-GeenAfgeleideWerken 4.0 Internationaal",
+      "short": "CC-BY-ND",
+      "url": "https://creativecommons.org/licenses/by-nd/4.0/legalcode.nl",
+      "image": "./media/logos/cc-by-nd.svg"
+    }
+  },
+  "localBiblio": {
+    "SemVer": {
+      "href": "https://semver.org",
+      "title": "Semantic Versioning 2.0.0",
+      "authors": [
+        "T. Preston-Werner"
+      ],
+      "date": "June 2013"
+    },
+    "DCAT-AP-3.0": {
+      "href": "https://semiceu.github.io//DCAT-AP/releases/3.0.0/",
+      "title": "DCAT-AP-3.0",
+      "authors": [
+        "Bert Van Nuffelen"
+      ],
+      "date": "2024-02-12"
+    },
+    "DCAT-AP-NL-3.0": {
+      "href": "https://docs.geostandaarden.nl/dcat/dcat-ap-nl30/",
+      "title": "DCAT-AP-NL-3.0",
+      "authors": [
+        "Jan Skornsek, Ine de Visser"
+      ],
+      "date": "2024-04-16"
+    },
+    "DCAT-AP-DONL-2.0": {
+      "href": "https://dataoverheid.github.io/dcat-ap-donl/",
+      "title": "DCAT-AP-DONL-2.0",
+      "authors": [
+        "Jan Meijer; Huub van Oers; Kees Trautwein. data.overheid.nl."
+      ],
+      "date": "2022-11-24"
+    },
+    "DCAT-AP-DONL-1.1": {
+      "href": "https://dcat-ap-donl.readthedocs.io/en/latest/",
+      "title": "DCAT-AP-DONL-1.1",
+      "authors": [
+        "Kennis- en exploitatiecentrum voor Officiële Overheidspublicaties."
+      ],
+      "date": "2022-11-24"
+    },
+    "DONL": {
+      "href": "https://data.overheid.nl",
+      "title": "data.overheid.nl",
+      "authors": [
+        "Kennis- en exploitatiecentrum voor Officiële Overheidspublicaties."
+      ],
+      "date": ""
+    },
+    "RONL": {
+      "href": "https://regels.overheid.nl",
+      "title": "regels.overheid.nl",
+      "authors": [
+        "ministerie van Binnenlandse Zaken en Koninkrijksrelaties."
+      ],
+      "date": "",
+      "id": "ronl"
+    },
+    "CPRMV": {
+      "href": "https://regels.overheid.nl",
+      "title": "Core Public Rule Management Vocabulary (CPRMV)",
+      "authors": [
+        "ministerie van Binnenlandse Zaken en Koninkrijksrelaties."
+      ],
+      "date": "",
+      "id": "cprmv"
+    },
+    "LM": {
+      "href": "https://regels.overheid.nl/publicaties/legitimaat",
+      "title": "De LegitiMaat",
+      "authors": [
+        "ministerie van Binnenlandse Zaken en Koninkrijksrelaties."
+      ],
+      "date": "Juli 2022"
+    },
+    "CPSV-AP": {
+      "href": "https://semiceu.github.io/CPSV-AP/releases/3.2.0/",
+      "title": "Core Public Service Vocabulary Application Profile (CPSV-AP)",
+      "authors": [
+        "Core Public Service Vocabulary Working Group."
+      ],
+      "date": "2024-05-06",
+      "id": "cpsv-ap"
+    },
+    "CCCEV": {
+      "href": "https://semiceu.github.io/CCCEV/releases/2.1.0/",
+      "title": "Core Criterion and Core Evidence Vocabulary (CCCEV)",
+      "authors": [
+        "Core Criterion and Core Evidence Vocabulary Working Group."
+      ],
+      "date": "2024-05-06"
+    },
+    "ELI": {
+      "href": "https://eur-lex.europa.eu/eli-register/about.html",
+      "title": "European Legislation Identifier (ELI)",
+      "authors": [
+        "European Legislation Identifier Task Force"
+      ],
+      "date": "2017-11-06",
+      "id": "eli"
+    },
+    "UPL": {
+      "href": "https://standaarden.overheid.nl/upl",
+      "title": "Uniforme Productnamenlijst",
+      "authors": [
+        "Logius."
+      ],
+      "date": ""
+    },
+    "Volledige-UPL": {
+      "href": "https://standaarden.overheid.nl/owms/oquery/UPL-actueel.plain",
+      "title": "Volledige UPL Actueel",
+      "authors": [
+        "Logius."
+      ],
+      "date": ""
+    },
+    "SC": {
+      "href": "https://www.logius.nl/domeinen/interactie/samenwerkende-catalogi/wat-is-het",
+      "title": "Samenwerkende Catalogi (SC)",
+      "authors": [
+        "Logius."
+      ],
+      "date": ""
+    },
+    "SDG": {
+      "href": "https://www.digitaleoverheid.nl/overzicht-van-alle-onderwerpen/europa/single-digitale-gateway/",
+      "title": "Single Digital Gateway (SDG)",
+      "authors": [
+        "Europees Parlement."
+      ],
+      "date": "2 oktober 2018"
+    },
+    "PUC": {
+      "href": "https://puc.overheid.nl/",
+      "title": "Publicatieplatform UitvoeringsContent (PUC)",
+      "authors": [
+        "Logius."
+      ],
+      "date": ""
+    },
+    "DATA_EU": {
+      "href": "https://data.europa.eu/en",
+      "title": "data.europa.eu",
+      "authors": [
+        "The Publications Office of the European Union."
+      ],
+      "date": ""
+    },
+    "DCATAP_21": {
+      "href": "https://joinup.ec.europa.eu/collection/semantic-interoperability-community-semic/solution/dcat-application-profile-data-portals-europe/release/210",
+      "title": "DCAT-AP 2.1",
+      "authors": [
+        "The Publications Office of the European Union."
+      ],
+      "date": ""
+    },
+    "DCAT_20": {
+      "href": "https://www.w3.org/TR/vocab-dcat-2/",
+      "title": "Data Catalog Vocabulary (DCAT) - Version 2",
+      "authors": [
+        "World Wide Web Consortium"
+      ],
+      "date": "February 2020"
+    },
+    "OWMS_TAXONOMIEBELEIDSAGENDA": {
+      "title": "overheid:TaxonomieBeleidsagenda (standaarden.overheid.nl)",
+      "href": "https://standaarden.overheid.nl/owms/4.0/doc/waardelijsten/overheid.taxonomiebeleidsagenda",
+      "publisher": "Kennis- en exploitatiecentrum voor Officiële Overheidspublicaties"
+    },
+    "OWMS_ORGANISATIE": {
+      "title": "overheid:Organisatie (standaarden.overheid.nl)",
+      "href": "https://standaarden.overheid.nl/owms/terms/Organisatie",
+      "publisher": "Kennis- en exploitatiecentrum voor Officiële Overheidspublicaties"
+    },
+    "OWMS_40": {
+      "title": "OWMS 4.0",
+      "href": "https://standaarden.overheid.nl/owms/terms",
+      "publisher": "Kennis- en exploitatiecentrum voor Officiële Overheidspublicaties"
+    },
+    "OWMS_UPL": {
+      "title": "overheid:UPL (standaarden.overheid.nl)",
+      "href": "https://standaarden.overheid.nl/owms/terms/UniformeProductnaam.html",
+      "publisher": "Kennis- en exploitatiecentrum voor Officiële Overheidspublicaties"
+    },
+    "HTTPS_EN_HSTS": {
+      "title": "HTTPS en HSTS",
+      "href": "https://www.forumstandaardisatie.nl/open-standaarden/https-en-hsts",
+      "publisher": "Forum Standaardisatie"
+    },
+    "IANA_MEDIATYPES": {
+      "title": "IANA Mediatypes",
+      "href": "https://www.iana.org/assignments/media-types/media-types.xhtml",
+      "publisher": "Internet Assigned Numbers Authority"
+    },
+    "MDR_FILETYPE": {
+      "title": "mdr:Filetype (publications.europa.eu)",
+      "href": "https://publications.europa.eu/resource/authority/file-type",
+      "publisher": "The Publications Office of the European Union"
+    }
+  },
+  "specStatus": "fpwd",
+  "specType": "ST",
+  "pubDomain": "ronl",
+  "shortName": "cprmv",
+  "publishDate": "2026-02-09",
+  "publishVersion": "0.4.0",
+  "previousPublishVersion": "0.3.0",
+  "previousPublishDate": "2025-03-27",
+  "previousMaturity": "fpwd",
+  "title": "CPRMV",
+  "subtitle": "Core Public Rule Management Vocabulary (CPRMV), extending the Interoperable Europe standards towards a standard for Public Rule Management",
+  "content": {
+    "ch01": "informative",
+    "ch02": "informative",
+    "ch03": "conformance"
+  },
+  "editors": [
+    {
+      "name": "Steven Gort",
+      "mailto": "steven.gort@ictu.nl",
+      "company": "ICTU",
+      "companyURL": "http://www.ictu.nl",
+      "url": "mailto:steven.gort@ictu.nl"
+    },
+    {
+      "name": "Bas Kaptijn",
+      "mailto": "bas.kaptijn@ictu.nl",
+      "company": "ICTU",
+      "companyURL": "http://www.ictu.nl",
+      "url": "mailto:bas.kaptijn@ictu.nl"
+    }
+  ],
+  "authors": [
+    {
+      "name": "Steven Gort",
+      "url": "https://www.ictu.nl"
+    },
+    {
+      "name": "Bas Kaptijn",
+      "url": "https://www.ictu.nl"
+    },
+    {
+      "name": "Andre van Brussel",
+      "url": "https://www.ictu.nl"
+    }
+  ],
+  "github": "https://github.com/standards/cprmv/",
+  "alternateFormats": [
+    {
+      "label": "pdf",
+      "uri": "https://standaarden.open-regels.nl/standards/cprmv/0.4.0/cprmv.pdf"
+    }
+  ]
+}</script>
+<link rel="stylesheet" href="./style/base.css"></head>
+
+<body class="h-entry toc-inline"><div class="head">
+    <a class="logo" href="https://www.logius.nl/standaarden"><img alt="Logius" height="77" id="Logius" src="./style/logos/figure-logius.svg" width="44">
+  </a> <h1 id="title" class="title">CPRMV 0.4.0</h1>
+    <h2 id="subtitle" class="subtitle">Core Public Rule Management Vocabulary (CPRMV), extending the Interoperable Europe standards towards a standard for Public Rule Management</h2>
+    <h2>
+      MinBZK - Dutch Ministry of Internal Affairs Standard<br>
+      First public working draft
+      <time class="dt-published" datetime="2026-02-09">February 09, 2026</time>
+    </h2>
+    <dl>
+      <dt>This version:</dt><dd class="status">
+              <a class="u-url status" href="https://regels.overheid.nl/publicaties/cprmv/v0.4.0">https://regels.overheid.nl/publicaties/cprmv/v0.4.0</a>
+            </dd>
+      <dt>Latest published version:</dt><dd>
+              <a href="https://regels.overheid.nl/publicaties/cprmv">https://regels.overheid.nl/publicaties/cprmv</a>
+            </dd>
+      <dt>Latest editor's draft:</dt><dd><a href="https://standards.github.io/cprmv/">https://standards.github.io/cprmv/</a></dd>
+      
+      
+      
+      <dt>Previous version:</dt><dd><a href="https://regels.overheid.nl/publicaties/cprmv/v0.3.0">https://regels.overheid.nl/publicaties/cprmv/v0.3.0</a></dd>
+      
+      <dt>Editors:</dt>
+      <dd class="editor p-author h-card vcard">
+    <a class="ed_mailto u-email email p-name" href="mailto:steven.gort@ictu.nl">Steven Gort</a> (<a class="p-org org h-org" href="http://www.ictu.nl">ICTU</a>)
+  </dd><dd class="editor p-author h-card vcard">
+    <a class="ed_mailto u-email email p-name" href="mailto:bas.kaptijn@ictu.nl">Bas Kaptijn</a> (<a class="p-org org h-org" href="http://www.ictu.nl">ICTU</a>)
+  </dd>
+      
+      <dt>Authors:</dt><dd class="editor p-author h-card vcard">
+    <a class="u-url url p-name fn" href="https://www.ictu.nl">Steven Gort</a>
+  </dd><dd class="editor p-author h-card vcard">
+    <a class="u-url url p-name fn" href="https://www.ictu.nl">Bas Kaptijn</a>
+  </dd><dd class="editor p-author h-card vcard">
+    <a class="u-url url p-name fn" href="https://www.ictu.nl">Andre van Brussel</a>
+  </dd>
+      <dt>Participate:</dt><dd>
+    <a href="https://github.com/standards/cprmv/">GitHub standards/cprmv</a>
+  </dd><dd>
+    <a href="https://github.com/standards/cprmv/issues/">File an issue</a>
+  </dd><dd>
+    <a href="https://github.com/standards/cprmv/commits/">Commit history</a>
+  </dd><dd>
+    <a href="https://github.com/standards/cprmv/pulls/">Pull requests</a>
+  </dd>
+    </dl>
+    
+    
+    <p>
+          This document is also available in these non-normative format:
+          <a rel="alternate" href="https://standaarden.open-regels.nl/standards/cprmv/0.4.0/cprmv.pdf">pdf</a>
+        </p>
+    <p class="copyright">
+            This document is licensed under 
+            <a rel="license" href="https://creativecommons.org/publicdomain/zero/1.0/" class="subfoot"><img class="license" src="./media/logos/cc-zero.svg" alt="Logo Creative Commons 0 Public Domain Dedication"><br> Creative Commons 0 Public Domain Dedication</a>
+          </p>
+    <hr title="Separator for header">
+  </div>
+  <section id="abstract" class="introductory"><h2>Abstract</h2><p>This specification defines the <cite><a data-matched-text="[[[CPRMV]]]" href="https://regels.overheid.nl">Core Public Rule Management Vocabulary (CPRMV)</a></cite>. The <cite><a data-matched-text="[[[CPRMV]]]" href="https://regels.overheid.nl">Core Public Rule Management Vocabulary (CPRMV)</a></cite> is the basis for a standard for public rule management for which the <cite><a data-matched-text="[[[RONL]]]" href="https://regels.overheid.nl">regels.overheid.nl</a></cite> is the (Dutch) portal for all related knowledge and tooling for now.</p>
+</section>
+  <section id="sotd" class="introductory"><h2>Status of This Document</h2><p>This is a draft that could be altered, removed or replaced by other documents. It is not a recommendation approved by TO.</p></section><nav id="toc"><h2 class="introductory" id="table-of-contents">Table of Contents</h2><ol class="toc"><li class="tocline"><a class="tocxref" href="#abstract">Abstract</a></li><li class="tocline"><a class="tocxref" href="#sotd">Status of This Document</a></li><li class="tocline"><a class="tocxref" href="#non-normative-section"><bdi class="secno">1. </bdi>Non normative section</a><ol class="toc"><li class="tocline"><a class="tocxref" href="#introduction"><bdi class="secno">1.1 </bdi>Introduction</a></li><li class="tocline"><a class="tocxref" href="#about-the-cprmv"><bdi class="secno">1.2 </bdi>About the CPRMV</a></li></ol></li><li class="tocline"><a class="tocxref" href="#conceptual-overview"><bdi class="secno">2. </bdi>Conceptual overview</a><ol class="toc"><li class="tocline"><a class="tocxref" href="#rules-structured-in-rulesets-as-legal-resources"><bdi class="secno">2.1 </bdi>Rules structured in RuleSets as legal resources</a></li><li class="tocline"><a class="tocxref" href="#rule-methods"><bdi class="secno">2.2 </bdi>Rule Methods</a></li><li class="tocline"><a class="tocxref" href="#traceability-and-explainability"><bdi class="secno">2.3 </bdi>Traceability and Explainability</a></li><li class="tocline"><a class="tocxref" href="#transparency-open-government"><bdi class="secno">2.4 </bdi>Transparency - Open Government</a></li><li class="tocline"><a class="tocxref" href="#extendability"><bdi class="secno">2.5 </bdi>Extendability</a></li></ol></li><li class="tocline"><a class="tocxref" href="#conformance"><bdi class="secno">3. </bdi>Conformance</a></li><li class="tocline"><a class="tocxref" href="#tof"><bdi class="secno">4. </bdi>List of Figures</a></li><li class="tocline"><a class="tocxref" href="#index"><bdi class="secno">A. </bdi>Index</a><ol class="toc"><li class="tocline"><a class="tocxref" href="#index-defined-here"><bdi class="secno">A.1 </bdi>Terms defined by this specification</a></li><li class="tocline"><a class="tocxref" href="#index-defined-elsewhere"><bdi class="secno">A.2 </bdi>Terms defined by reference</a></li></ol></li><li class="tocline"><a class="tocxref" href="#references"><bdi class="secno">B. </bdi>References</a><ol class="toc"><li class="tocline"><a class="tocxref" href="#informative-references"><bdi class="secno">B.1 </bdi>Informative references</a></li></ol></li></ol></nav><section class="informative" id="non-normative-section"><div class="header-wrapper"><h2 id="x1-non-normative-section"><bdi class="secno">1. </bdi>Non normative section</h2><a class="self-link" href="#non-normative-section" aria-label="Permalink for Section 1."></a></div><p><em>This section is non-normative.</em></p>
+<section id="introduction"><div class="header-wrapper"><h3 id="x1-1-introduction"><bdi class="secno">1.1 </bdi>Introduction</h3><a class="self-link" href="#introduction" aria-label="Permalink for Section 1.1"></a></div>
+<p>The <cite><a data-matched-text="[[[CPRMV]]]" href="https://regels.overheid.nl">Core Public Rule Management Vocabulary (CPRMV)</a></cite> extends the <cite><a data-matched-text="[[[CPSV-AP]]]" href="https://semiceu.github.io/CPSV-AP/releases/3.2.0/">Core Public Service Vocabulary Application Profile (CPSV-AP)</a></cite> standard to conform to a proposed standard for public rule management.</p>
+<p>Whereas in general, public organisations in some way utilize business rules to operationalize government services, this is almost only done within the organisation. Often they are based on agreements, like policies that also are not publicly shared and often: rules fill gaps in the details in the interpretation of all agreements (laws, policies, standards, architecture, decisions and so on) into an operationalized service themselves. </p>
+<p>It is necessary to understand that rules, whether formal or non formal, are agreements also, just like the rules denoted in the form of natural language in laws and decisions and that they need to be openly shared with end users of the services that operate on them to support these end users properly.</p>
+<p>Moreover, rules often formalize on agreements published by other organisations too. When rules are only made within the scope of a single organisation, this prohibits effective reuse of rules. A single formalisation of a rule might get reinvented for thousands of times adding to the risc the formalisations interprets agreements differently where this should not be the case and can not be attributed to a difference in context. By not openly sharing rules such that they can be easily found in relation to serice descriptions, transparency lacks and effective reuse and feedback processes are prohibited.</p>
+<p>The <cite><a data-matched-text="[[[CPSV-AP]]]" href="https://semiceu.github.io/CPSV-AP/releases/3.2.0/">Core Public Service Vocabulary Application Profile (CPSV-AP)</a></cite> defines a standard for describing services, optionally up until the concept of a "Rule" in relation to the agreements it formalizes. But the <cite><a data-matched-text="[[[CPSV-AP]]]" href="https://semiceu.github.io/CPSV-AP/releases/3.2.0/">Core Public Service Vocabulary Application Profile (CPSV-AP)</a></cite> leaves much of this undefined as it is more focused on specifying a single set of rules that describe the requirements for end users to be eligible to use a service, whereas services and rules can be more complicated than that as rules often have many sources of agreements across many organisations that when effectively managed for reuse should include other rules also.</p>
+<p>To overcome all this the <cite><a data-matched-text="[[[CPRMV]]]" href="https://regels.overheid.nl">Core Public Rule Management Vocabulary (CPRMV)</a></cite> extends the <cite><a data-matched-text="[[[CPSV-AP]]]" href="https://semiceu.github.io/CPSV-AP/releases/3.2.0/">Core Public Service Vocabulary Application Profile (CPSV-AP)</a></cite> standard to conform to a proposed standard for Public Rule Mangement in which:</p>
+<ul>
+<li>all bundled agreements are formalized as a set of similarily bundled rules</li>
+<li>all bundled rules are published in public as agreements</li>
+<li>like other published agreements, bundled rules are identifiable and therefor referrable through some acknowledged method of reference like <cite><a data-matched-text="[[[ELI]]]" href="https://eur-lex.europa.eu/eli-register/about.html">European Legislation Identifier (ELI)</a></cite></li>
+<li>like other published agreements such as laws, rules can refer to other bundled agreements both being a reference to some part of a bundled rules source and therefor automaticly the sources it formalizes.</li>
+<li>a CPSV-AP PublicService follows the set of rules in a single most specific bundled rules source</li>
+<li>a separate CPSV-AP PublicService is defined in which bundled rules conforming to the <cite><a data-matched-text="[[[CPRMV]]]" href="https://regels.overheid.nl">Core Public Rule Management Vocabulary (CPRMV)</a></cite> are being defined and supported and have a bundled set of rules as its output</li>
+<li>CPRMV does not enforce specific methods for analysis, formalization, testing, codification, execuction, publication or referencing of rules but allows for identifying these methods</li>
+</ul>
+<p>A standard for Public Rule Management can than elaborate on how to operationalize services based on rules that include not only the development and execution of a specific set of rules but also services to correct errors, change the rules as well as continuously improve them in interaction with all stakeholders, including the people and companies that have to make use of the services. </p>
+</section><section id="about-the-cprmv"><div class="header-wrapper"><h3 id="x1-2-about-the-cprmv"><bdi class="secno">1.2 </bdi>About the CPRMV</h3><a class="self-link" href="#about-the-cprmv" aria-label="Permalink for Section 1.2"></a></div>
+<p>This specification defines the <cite><a data-matched-text="[[[CPRMV]]]" href="https://regels.overheid.nl">Core Public Rule Management Vocabulary (CPRMV)</a></cite>. The <cite><a data-matched-text="[[[CPRMV]]]" href="https://regels.overheid.nl">Core Public Rule Management Vocabulary (CPRMV)</a></cite> is the basis for a standard for public rule management for which the <cite><a data-matched-text="[[[RONL]]]" href="https://regels.overheid.nl">regels.overheid.nl</a></cite> is  the (Dutch) portal for all related knowledge and tooling for now.</p>
+<p>This specification is in development in the context of the (Dutch) <cite><a data-matched-text="[[[RONL]]]" href="https://regels.overheid.nl">regels.overheid.nl</a></cite> project. Comments, problems, wishes etcetera can be left through issues using the <a href="https://git.open-regels.nl/standards/cprmv/issues" target="_blank">Github Issues page</a>.</p></section></section><section class="informative" id="conceptual-overview"><div class="header-wrapper"><h2 id="x2-conceptual-overview"><bdi class="secno">2. </bdi>Conceptual overview</h2><a class="self-link" href="#conceptual-overview" aria-label="Permalink for Section 2."></a></div><p><em>This section is non-normative.</em></p>
+<p>All concepts in relation to the <cite><a data-matched-text="[[[CPRMV]]]" href="https://regels.overheid.nl">Core Public Rule Management Vocabulary (CPRMV)</a></cite> are defined in the normative sections hereafter. This section gives a non normative overview of the concepts of the <cite><a data-matched-text="[[[CPRMV]]]" href="https://regels.overheid.nl">Core Public Rule Management Vocabulary (CPRMV)</a></cite>.</p>
+<p>The following overview shows the main <cite><a data-matched-text="[[[CPRMV]]]" href="https://regels.overheid.nl">Core Public Rule Management Vocabulary (CPRMV)</a></cite> concepts in relation to each other
+and how they relate to the <cite><a data-matched-text="[[[CPSV-AP]]]" href="https://semiceu.github.io/CPSV-AP/releases/3.2.0/">Core Public Service Vocabulary Application Profile (CPSV-AP)</a></cite> (version 3.2.0). Note that the overview does not include the entire <cite><a data-matched-text="[[[CPSV-AP]]]" href="https://semiceu.github.io/CPSV-AP/releases/3.2.0/">Core Public Service Vocabulary Application Profile (CPSV-AP)</a></cite>, only a relevant part. The overview does include the entire [<cite><a data-matched-text="[[[CPRMV]]]" href="https://regels.overheid.nl">Core Public Rule Management Vocabulary (CPRMV)</a></cite>. </p>
+<figure id="concepts">
+  <img src="./media/overview.png" alt="CPRMV concepts">
+  <figcaption><a class="self-link" href="#concepts">Figure <bdi class="figno">1</bdi></a> <span class="fig-title">CPRMV concepts</span></figcaption>
+</figure>
+
+<section id="rules-structured-in-rulesets-as-legal-resources"><div class="header-wrapper"><h3 id="x2-1-rules-structured-in-rulesets-as-legal-resources"><bdi class="secno">2.1 </bdi>Rules structured in RuleSets as legal resources</h3><a class="self-link" href="#rules-structured-in-rulesets-as-legal-resources" aria-label="Permalink for Section 2.1"></a></div>
+<p>Where the CPSV-AP associates a service with zero to many Rules (the Rule concept in the CPSV-AP), stating the service "follows" these Rules, and such a Rule "implements" a Legal Resource (<cite><a data-matched-text="[[[ELI]]]" href="https://eur-lex.europa.eu/eli-register/about.html">European Legislation Identifier (ELI)</a></cite>) which can be related to many other Legal Resources, the CPRMV denotes a Legal Resource to be formalised by a single RuleSet, that are sets of Rules (the Rule concept in the CPRMV) that together "implement" (formalises) the related Legal Resource to a certain extent. In CPRMV we do not call this a "implements" relation but a "isBasedOn" relation which is equivalent to eli:based_on.</p>
+<p>Where two Legal Resources relate, also the RuleSets that implement these Legal Resources will relate in the same way to each other. Rules may however refer to specific concepts within other Rules in the same or related RuleSets.
+Moreover, a RuleSet is to be seen and published as a Legal Resource too which can be formalised even further through a single other RuleSet. </p>
+<p>When using the CPRMV, a Public Service (CPSV-AP) can implicitly follow the Rules from a single RuleSet, and therefor all the Rules a service follows refer to the same legal resource that is the most specific legally binding agreement that defines the service. Such legal resources currently are often not defined and if they are often not published as such. CPRMV denotes all RuleSet's as referenceable LegalResources and as output of a Public Service (though note Government to Government services included). Output produced with regard to contract management proces of the Public Service and therefor by the organization delivering this service.</p>
+</section><section id="rule-methods"><div class="header-wrapper"><h3 id="x2-2-rule-methods"><bdi class="secno">2.2 </bdi>Rule Methods</h3><a class="self-link" href="#rule-methods" aria-label="Permalink for Section 2.2"></a></div>
+<p>The CPRMV allows for specifying the method with which Rules in a RuleSet are defined. There are four general types of such RuleMethods for formalising agreements: Analysis Methods, Formalisation Methods, Codification Methods and Test Methods. Also there are some more abstract RuleMethods that come into play as being able to find all information about how rules are formalized all the way up until case's with the decisions being made by following rules within service operations is essential, both for people working in governments as citizens and companies. These other types of RuleMethods are: Publication-, Execution-, Test- and Reference Methods.</p>
+<p>Analysis Methods do not yet entirely formalize knowledge in a legal resource such that you get rules that can be seen as deterministic enough for use in the operationalisation of services that then need to be able to follow these rules. Typically these methods involve annotating legal resources, structured as a set of rules with expert knowledge towards full formalisation. Adding metadata, sometimes also done within a method for publication is also a form of a Analysis.</p>
+<p>Formalisation Methods are methods for interpretation of knowledge, describing them as rules in a way that make them suitable and interoperable enough for operationalisation by systems that conform to the [<cite><a class="bibref" data-link-type="biblio" href="#bib-cprmv" title="Core Public Rule Management Vocabulary (CPRMV)">CPRMV</a></cite>] within the processes with which a Public Service is delivered..</p>
+<p>Codification Methods are methods for transforming formalised rules into a code language that can be executed by specific systems within the processes with which a Public Service is delivered. Normally these are quite technical, can be defined in a very sound way and less important just like programmers do not usually should have to look at te level of machine language.</p>
+<p>Note that services may be defined in which these methods are applied by multidisciplinary expert teams who are guided by these services. These teams will consist of representatives from different disciplines of the competent authority organisations that also specify the legal agreements and publish them as resource that impact the services that follow the rules in the rulesets that are based on these legal resources. These services do operationalize on rules as goal artifacts and probably can consume them for that goal. In such services, a RuleSet is the Ouput of the service in terms of the <cite><a data-matched-text="[[[CPSV-AP]]]" href="https://semiceu.github.io/CPSV-AP/releases/3.2.0/">Core Public Service Vocabulary Application Profile (CPSV-AP)</a></cite>. This makes all Rules, even those only containing the extra knowledge through applying Analysis Methods machine consumable, not to be mistaken for machine executable. </p>
+<p>Typically, RuleMethods also allow for testing Rules using test datasets which contain testcases (sometimes also called test scenario's). Just like the Rule concept in the <cite><a data-matched-text="[[[CPRMV]]]" href="https://regels.overheid.nl">Core Public Rule Management Vocabulary (CPRMV)</a></cite>, a test case only add extra very specific rules to rules to see, whether all the rules together including the extra ones of the test case still hold or not. Therefor a dataset with test cases, a TestSet, is a RuleSet that has one or more TestCase's which are Rule's themselves. TestCases are developed and evaluated through Test Methods.</p>
+<p>The standard for Public Rule Management the CPRMV is part of also includes a governed list of acknowledged Rule Methods. RuleMethods may include many things, including a prescribed way of utilizing the RuleMethod, or using prescribed tooling etcetera. Besides the obvious well known RuleMethods related to established Business Rule Management methods with related standards and tooling such as SBVR, DMN, some localised adoption of RuleSpeak, OpenFisca, Law Analysis (Wetsanalyse), Calculemus/FLINT and so on, also standards for describing architecture such as Archimate could actually be seen as a RuleMethod, or in the future maybe even methods utilising Universal Meaning Representations with some new type of AI that then probably will have to need to include symbolic AI reasoners to become reliable enough. Even this very document, the CPRMV vocabulary can be formalized as a RuleSet conforming to itself and becoming a potential standard as a legal resource that other Rules in other RuleSets can refer to.</p>
+<p>Allowing all these kinds of RuleMethods mixed together does not fully solve interoperability on its own, but it allows for getting all information already put into practice yet kept hidden, published openly from which point it is more easy to get to see how things correlate and to collaborate on traceability, explainability and interoperability resulting in more transparency, trust and efficiency. This is an important first step. All Rules express knowledge that needs to be known and explainable. Rules expressing the same knowledge with different RuleMethods that formalize to a comparable extent, should actually not differ that much semantically, and it should be fairly possible to work on rule interchange once the benefits of public rule management become clear. The more RuleMethods are in use, the more systems will need to be able to support them all. To enforce a single RuleMethod at current times is unrealistic however and probably not favorable in the future too, as none single RuleMethod will suffice for all in all cases. It will however become evident where stacking different interpretation steps using different methods on top of each other will only increase riscs and work if not part of a methodological approach.</p>
+<p>New is the concept DecisionModel, which is a Rule Set linked to a Formalisation Method, and the concept Analysis which is a Rule Set linked to a Analysis Method. A Decision Model typically is based on an Analysis (indicated with a new hasAnalysis property which implies a isBasedOn property). Also new is the concept of a Parameter, which is a Rule that definessmall parts of information typically with simple types that often changes, like numbers and dates.</p>
+</section><section id="traceability-and-explainability"><div class="header-wrapper"><h3 id="x2-3-traceability-and-explainability"><bdi class="secno">2.3 </bdi>Traceability and Explainability</h3><a class="self-link" href="#traceability-and-explainability" aria-label="Permalink for Section 2.3"></a></div>
+<p>All Rules must cite and/or refer to their specific sources they form an analyis/formalization of. This can be done through a AnalysisMethod that just chunks a legal resource in identifiable Rules and subparts, citing the legal resources that often are crafted in natural language and published as such.</p>
+<p>Rules refer to explanations where possible, for any specific stakeholder group requiring specific explanation of the Rule on its own (context independent), given a certain natural language and level of language that matches the group of stakeholders as intended audience. Note that these explanations may also have parts of explanations in a way such that context dependent (personalized) explanations can be made by services that operationalize on rules. It depends on the type of an Explanation object what content to expect. The CPRMV does not prescribe anything for this yet.</p>
+<p>The idea not to rely on services utilizing machines to generate explanations on formalized rules (without explanatory content) in its entirety is to have more unification and deliberation on how rules are to be explained to (and therefor interpreted by) any stakeholder. Automation of explanatory content based on Rules is possible but resembles the possibility of automation of formalisation of Rules from legal resources in natural language both of which will always need human oversight before and during services that operationalize on them. Also, automation requires all agreements to be available in a machine consumable form which currenlty seems not to be the case for details in the interpretation of agreements that are published and for example policies for edge cases solved only locally in an ad hoc way.</p>
+<p>These Explanations are also to be defined at the level of a whole RuleSet (which can specify a public service). Again, these may be automaticly generated through the explanations of the rules in the ruleset, but not entirely and not without proper human oversight.</p>
+</section><section id="transparency-open-government"><div class="header-wrapper"><h3 id="x2-4-transparency-open-government"><bdi class="secno">2.4 </bdi>Transparency - Open Government</h3><a class="self-link" href="#transparency-open-government" aria-label="Permalink for Section 2.4"></a></div>
+<p>The CPRMV is part of a standard for public rule management that will guide organisations to publish their RuleSet's (bundled sets of Rules) as legal resources in relation to the legal resources they implement.</p>
+</section><section id="extendability"><div class="header-wrapper"><h3 id="x2-5-extendability"><bdi class="secno">2.5 </bdi>Extendability</h3><a class="self-link" href="#extendability" aria-label="Permalink for Section 2.5"></a></div>
+<p>Note that it might be persuasive to extend this vocabulary with metadata on the operationalisation of sercices that follow the rules. Where this metadata has its origin in some specific Rule or legal resource it cites or refers to this might be plausible but then it might be best to introduce a RuleMethod for formalising the metadata at that level. Where the metadata is not dependent on Rules or Legal Resources (not affecting the outcome of a service), or form explanations, it is better not to include this in RuleSets. This kind of metadata might however be bundled with RuleSets and the explanatory content in relation to the same legal resources too to keep all relevant things together in relation to services.</p>
+</section></section><section class="conformance"><p><dfn id="dfn-ruleset" tabindex="0" aria-haspopup="dialog">RuleSet</dfn>: A set of Rule's. Which is produced as cv:Ouput within a cpsv:Publicservice while also always becoming a eli:LegalResource implemented by a cpsv:Rule followed by cpsv:Publicservice. Note however that with CPRMV, the resources a cpsv:Rule represent possibly are cprmv:RuleSet's themselves. Also, being a cv:Ouput, a cprmv:RuleSet cprmv:is_part_of a dcat.Dataset </p>
+<p>subclass of: <a href="http://data.europa.eu/m8g/Output">http://data.europa.eu/m8g/Output</a></p>
+<p>properties (excluding inherited):</p>
+<table>
+<thead>
+<tr>
+<th>Property</th>
+<th>Type/Range</th>
+<th>Cardinality</th>
+<th>Definition</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>id</td>
+<td></td>
+<td>1..1</td>
+<td>id</td>
+</tr>
+<tr>
+<td>isBasedOn</td>
+<td>Rule Set, Rule</td>
+<td>0..*</td>
+<td>isBasedOn</td>
+</tr>
+<tr>
+<td>output of</td>
+<td></td>
+<td>1..1</td>
+<td>output of</td>
+</tr>
+<tr>
+<td>method</td>
+<td>Rule Method</td>
+<td>1..*</td>
+<td>method</td>
+</tr>
+<tr>
+<td>validFrom</td>
+<td>xsd:date</td>
+<td>1..1</td>
+<td>validFrom</td>
+</tr>
+<tr>
+<td>validUntil</td>
+<td>xsd:date</td>
+<td>0..1</td>
+<td>validUntil</td>
+</tr>
+<tr>
+<td>publishedOn</td>
+<td>xsd:date</td>
+<td>0..1</td>
+<td>publishedOn</td>
+</tr>
+<tr>
+<td>hasPart</td>
+<td>Rule Set, Rule</td>
+<td>1..1</td>
+<td>hasPart</td>
+</tr>
+<tr>
+<td>comment</td>
+<td>xsd:string</td>
+<td>0..1</td>
+<td>comment</td>
+</tr>
+</tbody></table>
+<p><dfn id="dfn-analysis" tabindex="0" aria-haspopup="dialog">Analysis</dfn>: A Rule Set that has been produced by following a Analysis Method.</p>
+<p>subclass of: <a href="#dfn-ruleset" class="internalDFN" data-link-type="dfn" id="ref-for-dfn-ruleset-1">RuleSet</a></p>
+<p>properties (excluding inherited):</p>
+<table>
+<thead>
+<tr>
+<th>Property</th>
+<th>Type/Range</th>
+<th>Cardinality</th>
+<th>Definition</th>
+</tr>
+</thead>
+</table>
+<p><dfn id="dfn-decisionmodel" tabindex="0" aria-haspopup="dialog">DecisionModel</dfn>: A Rule Set that has been produced by following a Formalisation Method.</p>
+<p>subclass of: <a href="#dfn-ruleset" class="internalDFN" data-link-type="dfn" id="ref-for-dfn-ruleset-2">RuleSet</a></p>
+<p>properties (excluding inherited):</p>
+<table>
+<thead>
+<tr>
+<th>Property</th>
+<th>Type/Range</th>
+<th>Cardinality</th>
+<th>Definition</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>hasAnalysis</td>
+<td>Analysis</td>
+<td>0..*</td>
+<td>hasAnalysis</td>
+</tr>
+</tbody></table>
+<p><dfn id="dfn-rule" tabindex="0" aria-haspopup="dialog">Rule</dfn>: A Rule denotes a official expression of an agreement which can both be expressed in natural language like articles in laws as well as more formal business rules for automation of decisions</p>
+<p>properties (excluding inherited):</p>
+<table>
+<thead>
+<tr>
+<th>Property</th>
+<th>Type/Range</th>
+<th>Cardinality</th>
+<th>Definition</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>id</td>
+<td></td>
+<td>1..1</td>
+<td>id</td>
+</tr>
+<tr>
+<td>isBasedOn</td>
+<td>Rule Set, Rule</td>
+<td>0..*</td>
+<td>isBasedOn</td>
+</tr>
+<tr>
+<td>hasPart</td>
+<td>Rule Set, Rule</td>
+<td>0..1</td>
+<td>hasPart</td>
+</tr>
+<tr>
+<td>definition</td>
+<td></td>
+<td>0..1</td>
+<td>definition</td>
+</tr>
+<tr>
+<td>postDefinition</td>
+<td></td>
+<td>0..1</td>
+<td>postDefinition</td>
+</tr>
+<tr>
+<td>comment</td>
+<td>xsd:string</td>
+<td>0..1</td>
+<td>comment</td>
+</tr>
+<tr>
+<td>source quote</td>
+<td></td>
+<td>0..1</td>
+<td>source quote</td>
+</tr>
+</tbody></table>
+<p><dfn id="dfn-parameter" tabindex="0" aria-haspopup="dialog">Parameter</dfn>: A Rule that forms a parameter. Normally these are specific small parts of a Rule Set that are changed more often than the rest of a Rule Set. They normally have a definition holding information that is of a simple type like a number, date etc.</p>
+<p>subclass of: <a href="#dfn-rule" class="internalDFN" data-link-type="dfn" id="ref-for-dfn-rule-1">Rule</a></p>
+<p>properties (excluding inherited):</p>
+<table>
+<thead>
+<tr>
+<th>Property</th>
+<th>Type/Range</th>
+<th>Cardinality</th>
+<th>Definition</th>
+</tr>
+</thead>
+</table>
+<p><dfn id="dfn-rulemethod" tabindex="0" aria-haspopup="dialog">RuleMethod</dfn>: A Rule Method is a acknowledged known method for defining Rule's, either from scratch through deliberation and / or based on existing Rule's.</p>
+<p>properties (excluding inherited):</p>
+<table>
+<thead>
+<tr>
+<th>Property</th>
+<th>Type/Range</th>
+<th>Cardinality</th>
+<th>Definition</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>id</td>
+<td></td>
+<td>1..1</td>
+<td>id</td>
+</tr>
+<tr>
+<td>comment</td>
+<td>xsd:string</td>
+<td>0..1</td>
+<td>comment</td>
+</tr>
+</tbody></table>
+<p><dfn id="dfn-analysismethod" tabindex="0" aria-haspopup="dialog">AnalysisMethod</dfn>: A Rule Method with which an existing Rule is extended through analysis, which does not yet entirely formalises a Rule semantically but only defines what is to be seen as a separate Rule and adds metadata to it or normalises its form etcetera.</p>
+<p>subclass of: <a href="#dfn-rulemethod" class="internalDFN" data-link-type="dfn" id="ref-for-dfn-rulemethod-1">RuleMethod</a></p>
+<p>properties (excluding inherited):</p>
+<table>
+<thead>
+<tr>
+<th>Property</th>
+<th>Type/Range</th>
+<th>Cardinality</th>
+<th>Definition</th>
+</tr>
+</thead>
+</table>
+<p><dfn id="dfn-formalisationmethod" tabindex="0" aria-haspopup="dialog">FormalisationMethod</dfn>: A Rule Method with which an existing Rule is extended through formalisation, which entirely formalises a Rule semantically as far as possible and makes it represented in a interoperable way to the point cprmv compatible systems can comsume them within processes for delivering Public Services.</p>
+<p>subclass of: <a href="#dfn-rulemethod" class="internalDFN" data-link-type="dfn" id="ref-for-dfn-rulemethod-2">RuleMethod</a></p>
+<p>properties (excluding inherited):</p>
+<table>
+<thead>
+<tr>
+<th>Property</th>
+<th>Type/Range</th>
+<th>Cardinality</th>
+<th>Definition</th>
+</tr>
+</thead>
+</table>
+<p><dfn id="dfn-codificationmethod" tabindex="0" aria-haspopup="dialog">CodificationMethod</dfn>: A Rule Method with which an existing Rule is extended through codification, which entirely formalises a Rule semantically if necesary as well as codifies them into an executable form that can be utilised by specific systems within processes for delivering Public Services.</p>
+<p>subclass of: <a href="#dfn-rulemethod" class="internalDFN" data-link-type="dfn" id="ref-for-dfn-rulemethod-3">RuleMethod</a></p>
+<p>properties (excluding inherited):</p>
+<table>
+<thead>
+<tr>
+<th>Property</th>
+<th>Type/Range</th>
+<th>Cardinality</th>
+<th>Definition</th>
+</tr>
+</thead>
+</table>
+<p><dfn id="dfn-executionmethod" tabindex="0" aria-haspopup="dialog">ExecutionMethod</dfn>: A Rule Method with which an existing Rule is executed in the context of delivering a Public Service.</p>
+<p>subclass of: <a href="#dfn-rulemethod" class="internalDFN" data-link-type="dfn" id="ref-for-dfn-rulemethod-4">RuleMethod</a></p>
+<p>properties (excluding inherited):</p>
+<table>
+<thead>
+<tr>
+<th>Property</th>
+<th>Type/Range</th>
+<th>Cardinality</th>
+<th>Definition</th>
+</tr>
+</thead>
+</table>
+<p><dfn id="dfn-explanationmethod" tabindex="0" aria-haspopup="dialog">ExplanationMethod</dfn>: An explanation method defines the method for producing Explanations in relation to cprmv:Rule(Set)'s'</p>
+<p>subclass of: <a href="#dfn-rulemethod" class="internalDFN" data-link-type="dfn" id="ref-for-dfn-rulemethod-5">RuleMethod</a></p>
+<p>properties (excluding inherited):</p>
+<table>
+<thead>
+<tr>
+<th>Property</th>
+<th>Type/Range</th>
+<th>Cardinality</th>
+<th>Definition</th>
+</tr>
+</thead>
+</table>
+<p><dfn id="dfn-testmethod" tabindex="0" aria-haspopup="dialog">TestMethod</dfn>: A Rule Method with which Rule's are defined that describe test scenario's defined in cprmv:TestSet's containing cprmv:TestCase's, which are specialised cprmv:RuleSet's and cprmv:Rule's and that can be tested in the context of a cprmv:RuleSet's.</p>
+<p>subclass of: <a href="#dfn-rulemethod" class="internalDFN" data-link-type="dfn" id="ref-for-dfn-rulemethod-6">RuleMethod</a></p>
+<p>properties (excluding inherited):</p>
+<table>
+<thead>
+<tr>
+<th>Property</th>
+<th>Type/Range</th>
+<th>Cardinality</th>
+<th>Definition</th>
+</tr>
+</thead>
+</table>
+<p><dfn id="dfn-publicationmethod" tabindex="0" aria-haspopup="dialog">PublicationMethod</dfn>: A Rule Method for publication of the definition of Rule(Set)'s apart from the Execution of them...</p>
+<p>subclass of: <a href="#dfn-rulemethod" class="internalDFN" data-link-type="dfn" id="ref-for-dfn-rulemethod-7">RuleMethod</a></p>
+<p>properties (excluding inherited):</p>
+<table>
+<thead>
+<tr>
+<th>Property</th>
+<th>Type/Range</th>
+<th>Cardinality</th>
+<th>Definition</th>
+</tr>
+</thead>
+</table>
+<p><dfn id="dfn-referencenmethod" tabindex="0" aria-haspopup="dialog">ReferencenMethod</dfn>: A Rule Method for the referencing of Rule(Set)'s apart from the Execution of them...</p>
+<p>subclass of: <a href="#dfn-rulemethod" class="internalDFN" data-link-type="dfn" id="ref-for-dfn-rulemethod-8">RuleMethod</a></p>
+<p>properties (excluding inherited):</p>
+<table>
+<thead>
+<tr>
+<th>Property</th>
+<th>Type/Range</th>
+<th>Cardinality</th>
+<th>Definition</th>
+</tr>
+</thead>
+</table>
+<p><dfn id="dfn-explanation" tabindex="0" aria-haspopup="dialog">Explanation</dfn>: A cprmv:Explanation is a cprmv:Rule defined with a cprmv:ExplanationMethod. This Rule contains a concise explanation of one or multiple Rule's or RuleSet's.</p>
+<p>subclass of: <a href="#dfn-rule" class="internalDFN" data-link-type="dfn" id="ref-for-dfn-rule-2">Rule</a></p>
+<p>properties (excluding inherited):</p>
+<table>
+<thead>
+<tr>
+<th>Property</th>
+<th>Type/Range</th>
+<th>Cardinality</th>
+<th>Definition</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>explains</td>
+<td>Rule Set, Rule</td>
+<td>1..1</td>
+<td>explains</td>
+</tr>
+</tbody></table>
+<p><dfn id="dfn-testcase" tabindex="0" aria-haspopup="dialog">TestCase</dfn>: A TestCase is a cprmv:Case defined for and following a TestMethod</p>
+<p>subclass of: <a href="#dfn-case" class="internalDFN" data-link-type="dfn" id="ref-for-dfn-case-1">Case</a></p>
+<p>properties (excluding inherited):</p>
+<table>
+<thead>
+<tr>
+<th>Property</th>
+<th>Type/Range</th>
+<th>Cardinality</th>
+<th>Definition</th>
+</tr>
+</thead>
+</table>
+<p><dfn id="dfn-testset" tabindex="0" aria-haspopup="dialog">TestSet</dfn>: A TestSet is a cprmv:RuleSet containing cprmv:TestCase's defined for following a TestMethod</p>
+<p>subclass of: <a href="#dfn-ruleset" class="internalDFN" data-link-type="dfn" id="ref-for-dfn-ruleset-3">RuleSet</a></p>
+<p>properties (excluding inherited):</p>
+<table>
+<thead>
+<tr>
+<th>Property</th>
+<th>Type/Range</th>
+<th>Cardinality</th>
+<th>Definition</th>
+</tr>
+</thead>
+</table>
+<p><dfn id="dfn-decision" tabindex="0" aria-haspopup="dialog">Decision</dfn>: A Decision is a cprmv:Rule defined following a ExecutionMethod</p>
+<p>subclass of: <a href="#dfn-rule" class="internalDFN" data-link-type="dfn" id="ref-for-dfn-rule-3">Rule</a></p>
+<p>properties (excluding inherited):</p>
+<table>
+<thead>
+<tr>
+<th>Property</th>
+<th>Type/Range</th>
+<th>Cardinality</th>
+<th>Definition</th>
+</tr>
+</thead>
+</table>
+<p><dfn id="dfn-case" tabindex="0" aria-haspopup="dialog">Case</dfn>: A Case is a cprmv:Rule containing a list of Decisions defined following a ExecutionMethod</p>
+<p>subclass of: <a href="#dfn-rule" class="internalDFN" data-link-type="dfn" id="ref-for-dfn-rule-4">Rule</a></p>
+<p>properties (excluding inherited):</p>
+<table>
+<thead>
+<tr>
+<th>Property</th>
+<th>Type/Range</th>
+<th>Cardinality</th>
+<th>Definition</th>
+</tr>
+</thead>
+</table>
+</section>
+  <div class="dfn-panel" hidden="" role="dialog" aria-modal="true" id="dfn-panel-for-dfn-ruleset" aria-label="Links in this document to definition: RuleSet">
+      <span class="caret"></span>
+      <div>
+        <a class="self-link" href="#dfn-ruleset" aria-label="Permalink for definition: RuleSet. Activate to close this dialog.">Permalink</a>
+         
+      </div>
+      <p><b>Referenced in:</b></p>
+      <ul>
+    <li>
+      <a href="#ref-for-dfn-ruleset-1" class="respec-offending-element" title="Can't expand &quot;#ref-for-dfn-ruleset-1&quot;." id="respec-offender-can-t-expand-ref-for-dfn-ruleset-1">#ref-for-dfn-ruleset-1</a> <a href="#ref-for-dfn-ruleset-2" title="Reference 2">(2)</a> <a href="#ref-for-dfn-ruleset-3" title="Reference 3">(3)</a> 
+    </li>
+  </ul>
+    </div><div class="dfn-panel" hidden="" role="dialog" aria-modal="true" id="dfn-panel-for-dfn-analysis" aria-label="Links in this document to definition: Analysis">
+      <span class="caret"></span>
+      <div>
+        <a class="self-link" href="#dfn-analysis" aria-label="Permalink for definition: Analysis. Activate to close this dialog.">Permalink</a>
+         
+      </div>
+      <p><b>Referenced in:</b></p>
+      <ul>
+      <li>Not referenced in this document.</li>
+    </ul>
+    </div><div class="dfn-panel" hidden="" role="dialog" aria-modal="true" id="dfn-panel-for-dfn-decisionmodel" aria-label="Links in this document to definition: DecisionModel">
+      <span class="caret"></span>
+      <div>
+        <a class="self-link" href="#dfn-decisionmodel" aria-label="Permalink for definition: DecisionModel. Activate to close this dialog.">Permalink</a>
+         
+      </div>
+      <p><b>Referenced in:</b></p>
+      <ul>
+      <li>Not referenced in this document.</li>
+    </ul>
+    </div><div class="dfn-panel" hidden="" role="dialog" aria-modal="true" id="dfn-panel-for-dfn-rule" aria-label="Links in this document to definition: Rule">
+      <span class="caret"></span>
+      <div>
+        <a class="self-link" href="#dfn-rule" aria-label="Permalink for definition: Rule. Activate to close this dialog.">Permalink</a>
+         
+      </div>
+      <p><b>Referenced in:</b></p>
+      <ul>
+    <li>
+      <a href="#ref-for-dfn-rule-1" class="respec-offending-element" title="Can't expand &quot;#ref-for-dfn-rule-1&quot;." id="respec-offender-can-t-expand-ref-for-dfn-rule-1">#ref-for-dfn-rule-1</a> <a href="#ref-for-dfn-rule-2" title="Reference 2">(2)</a> <a href="#ref-for-dfn-rule-3" title="Reference 3">(3)</a> <a href="#ref-for-dfn-rule-4" title="Reference 4">(4)</a> 
+    </li>
+  </ul>
+    </div><div class="dfn-panel" hidden="" role="dialog" aria-modal="true" id="dfn-panel-for-dfn-parameter" aria-label="Links in this document to definition: Parameter">
+      <span class="caret"></span>
+      <div>
+        <a class="self-link" href="#dfn-parameter" aria-label="Permalink for definition: Parameter. Activate to close this dialog.">Permalink</a>
+         
+      </div>
+      <p><b>Referenced in:</b></p>
+      <ul>
+      <li>Not referenced in this document.</li>
+    </ul>
+    </div><div class="dfn-panel" hidden="" role="dialog" aria-modal="true" id="dfn-panel-for-dfn-rulemethod" aria-label="Links in this document to definition: RuleMethod">
+      <span class="caret"></span>
+      <div>
+        <a class="self-link" href="#dfn-rulemethod" aria-label="Permalink for definition: RuleMethod. Activate to close this dialog.">Permalink</a>
+         
+      </div>
+      <p><b>Referenced in:</b></p>
+      <ul>
+    <li>
+      <a href="#ref-for-dfn-rulemethod-1" class="respec-offending-element" title="Can't expand &quot;#ref-for-dfn-rulemethod-1&quot;." id="respec-offender-can-t-expand-ref-for-dfn-rulemethod-1">#ref-for-dfn-rulemethod-1</a> <a href="#ref-for-dfn-rulemethod-2" title="Reference 2">(2)</a> <a href="#ref-for-dfn-rulemethod-3" title="Reference 3">(3)</a> <a href="#ref-for-dfn-rulemethod-4" title="Reference 4">(4)</a> <a href="#ref-for-dfn-rulemethod-5" title="Reference 5">(5)</a> <a href="#ref-for-dfn-rulemethod-6" title="Reference 6">(6)</a> <a href="#ref-for-dfn-rulemethod-7" title="Reference 7">(7)</a> <a href="#ref-for-dfn-rulemethod-8" title="Reference 8">(8)</a> 
+    </li>
+  </ul>
+    </div><div class="dfn-panel" hidden="" role="dialog" aria-modal="true" id="dfn-panel-for-dfn-analysismethod" aria-label="Links in this document to definition: AnalysisMethod">
+      <span class="caret"></span>
+      <div>
+        <a class="self-link" href="#dfn-analysismethod" aria-label="Permalink for definition: AnalysisMethod. Activate to close this dialog.">Permalink</a>
+         
+      </div>
+      <p><b>Referenced in:</b></p>
+      <ul>
+      <li>Not referenced in this document.</li>
+    </ul>
+    </div><div class="dfn-panel" hidden="" role="dialog" aria-modal="true" id="dfn-panel-for-dfn-formalisationmethod" aria-label="Links in this document to definition: FormalisationMethod">
+      <span class="caret"></span>
+      <div>
+        <a class="self-link" href="#dfn-formalisationmethod" aria-label="Permalink for definition: FormalisationMethod. Activate to close this dialog.">Permalink</a>
+         
+      </div>
+      <p><b>Referenced in:</b></p>
+      <ul>
+      <li>Not referenced in this document.</li>
+    </ul>
+    </div><div class="dfn-panel" hidden="" role="dialog" aria-modal="true" id="dfn-panel-for-dfn-codificationmethod" aria-label="Links in this document to definition: CodificationMethod">
+      <span class="caret"></span>
+      <div>
+        <a class="self-link" href="#dfn-codificationmethod" aria-label="Permalink for definition: CodificationMethod. Activate to close this dialog.">Permalink</a>
+         
+      </div>
+      <p><b>Referenced in:</b></p>
+      <ul>
+      <li>Not referenced in this document.</li>
+    </ul>
+    </div><div class="dfn-panel" hidden="" role="dialog" aria-modal="true" id="dfn-panel-for-dfn-executionmethod" aria-label="Links in this document to definition: ExecutionMethod">
+      <span class="caret"></span>
+      <div>
+        <a class="self-link" href="#dfn-executionmethod" aria-label="Permalink for definition: ExecutionMethod. Activate to close this dialog.">Permalink</a>
+         
+      </div>
+      <p><b>Referenced in:</b></p>
+      <ul>
+      <li>Not referenced in this document.</li>
+    </ul>
+    </div><div class="dfn-panel" hidden="" role="dialog" aria-modal="true" id="dfn-panel-for-dfn-explanationmethod" aria-label="Links in this document to definition: ExplanationMethod">
+      <span class="caret"></span>
+      <div>
+        <a class="self-link" href="#dfn-explanationmethod" aria-label="Permalink for definition: ExplanationMethod. Activate to close this dialog.">Permalink</a>
+         
+      </div>
+      <p><b>Referenced in:</b></p>
+      <ul>
+      <li>Not referenced in this document.</li>
+    </ul>
+    </div><div class="dfn-panel" hidden="" role="dialog" aria-modal="true" id="dfn-panel-for-dfn-testmethod" aria-label="Links in this document to definition: TestMethod">
+      <span class="caret"></span>
+      <div>
+        <a class="self-link" href="#dfn-testmethod" aria-label="Permalink for definition: TestMethod. Activate to close this dialog.">Permalink</a>
+         
+      </div>
+      <p><b>Referenced in:</b></p>
+      <ul>
+      <li>Not referenced in this document.</li>
+    </ul>
+    </div><div class="dfn-panel" hidden="" role="dialog" aria-modal="true" id="dfn-panel-for-dfn-publicationmethod" aria-label="Links in this document to definition: PublicationMethod">
+      <span class="caret"></span>
+      <div>
+        <a class="self-link" href="#dfn-publicationmethod" aria-label="Permalink for definition: PublicationMethod. Activate to close this dialog.">Permalink</a>
+         
+      </div>
+      <p><b>Referenced in:</b></p>
+      <ul>
+      <li>Not referenced in this document.</li>
+    </ul>
+    </div><div class="dfn-panel" hidden="" role="dialog" aria-modal="true" id="dfn-panel-for-dfn-referencenmethod" aria-label="Links in this document to definition: ReferencenMethod">
+      <span class="caret"></span>
+      <div>
+        <a class="self-link" href="#dfn-referencenmethod" aria-label="Permalink for definition: ReferencenMethod. Activate to close this dialog.">Permalink</a>
+         
+      </div>
+      <p><b>Referenced in:</b></p>
+      <ul>
+      <li>Not referenced in this document.</li>
+    </ul>
+    </div><div class="dfn-panel" hidden="" role="dialog" aria-modal="true" id="dfn-panel-for-dfn-explanation" aria-label="Links in this document to definition: Explanation">
+      <span class="caret"></span>
+      <div>
+        <a class="self-link" href="#dfn-explanation" aria-label="Permalink for definition: Explanation. Activate to close this dialog.">Permalink</a>
+         
+      </div>
+      <p><b>Referenced in:</b></p>
+      <ul>
+      <li>Not referenced in this document.</li>
+    </ul>
+    </div><div class="dfn-panel" hidden="" role="dialog" aria-modal="true" id="dfn-panel-for-dfn-testcase" aria-label="Links in this document to definition: TestCase">
+      <span class="caret"></span>
+      <div>
+        <a class="self-link" href="#dfn-testcase" aria-label="Permalink for definition: TestCase. Activate to close this dialog.">Permalink</a>
+         
+      </div>
+      <p><b>Referenced in:</b></p>
+      <ul>
+      <li>Not referenced in this document.</li>
+    </ul>
+    </div><div class="dfn-panel" hidden="" role="dialog" aria-modal="true" id="dfn-panel-for-dfn-testset" aria-label="Links in this document to definition: TestSet">
+      <span class="caret"></span>
+      <div>
+        <a class="self-link" href="#dfn-testset" aria-label="Permalink for definition: TestSet. Activate to close this dialog.">Permalink</a>
+         
+      </div>
+      <p><b>Referenced in:</b></p>
+      <ul>
+      <li>Not referenced in this document.</li>
+    </ul>
+    </div><div class="dfn-panel" hidden="" role="dialog" aria-modal="true" id="dfn-panel-for-dfn-decision" aria-label="Links in this document to definition: Decision">
+      <span class="caret"></span>
+      <div>
+        <a class="self-link" href="#dfn-decision" aria-label="Permalink for definition: Decision. Activate to close this dialog.">Permalink</a>
+         
+      </div>
+      <p><b>Referenced in:</b></p>
+      <ul>
+      <li>Not referenced in this document.</li>
+    </ul>
+    </div><div class="dfn-panel" hidden="" role="dialog" aria-modal="true" id="dfn-panel-for-dfn-case" aria-label="Links in this document to definition: Case">
+      <span class="caret"></span>
+      <div>
+        <a class="self-link" href="#dfn-case" aria-label="Permalink for definition: Case. Activate to close this dialog.">Permalink</a>
+         
+      </div>
+      <p><b>Referenced in:</b></p>
+      <ul>
+    <li>
+      <a href="#ref-for-dfn-case-1" class="respec-offending-element" title="Can't expand &quot;#ref-for-dfn-case-1&quot;." id="respec-offender-can-t-expand-ref-for-dfn-case-1">#ref-for-dfn-case-1</a> 
+    </li>
+  </ul>
+    </div><script>
+    let content = "";
+
+    const getClass = function(key) {
+      if (respecConfig.content[key]!==""){return ` class="${respecConfig.content[key]}"`}
+    }
+
+    for (let contentKey in respecConfig.content) {
+      content += `<section data-include-format="markdown" data-include="${contentKey}.md" ${getClass(contentKey)||""}></section>`
+    }
+
+    document.getElementById("sotd").insertAdjacentHTML('afterend', content);
+  </script>
+  <section id="conformance"><div class="header-wrapper"><h2 id="x3-conformance"><bdi class="secno">3. </bdi>Conformance</h2><a class="self-link" href="#conformance" aria-label="Permalink for Section 3."></a></div><p>As well as sections marked as non-normative, all authoring guidelines, diagrams, examples, and notes in this specification are non-normative. Everything else in this specification is normative.</p></section>
+  <section id="tof"><div class="header-wrapper"><h2 id="x4-list-of-figures"><bdi class="secno">4. </bdi>List of Figures</h2><a class="self-link" href="#tof" aria-label="Permalink for Section 4."></a></div><ul class="tof">
+        <li class="tofline">
+    <a class="tocxref" href="#concepts"><span class="self-link">Figure <bdi class="figno">1</bdi></span> <span class="fig-title">CPRMV concepts</span></a>
+  </li>
+      </ul></section>
+  <section id="index" class="appendix"><div class="header-wrapper"><h2 id="a-index"><bdi class="secno">A. </bdi>Index</h2><a class="self-link" href="#index" aria-label="Permalink for Appendix A."></a></div><section id="index-defined-here">
+    <div class="header-wrapper"><h3 id="a-1-terms-defined-by-this-specification"><bdi class="secno">A.1 </bdi>Terms defined by this specification</h3><a class="self-link" href="#index-defined-here" aria-label="Permalink for Appendix A.1"></a></div>
+    <ul class="index">
+    <li>
+      <a class="index-term" href="#dfn-analysis">Analysis</a> 
+    </li><li>
+      <a class="index-term" href="#dfn-analysismethod">AnalysisMethod</a> 
+    </li><li>
+      <a class="index-term" href="#dfn-case">Case</a> 
+    </li><li>
+      <a class="index-term" href="#dfn-codificationmethod">CodificationMethod</a> 
+    </li><li>
+      <a class="index-term" href="#dfn-decision">Decision</a> 
+    </li><li>
+      <a class="index-term" href="#dfn-decisionmodel">DecisionModel</a> 
+    </li><li>
+      <a class="index-term" href="#dfn-executionmethod">ExecutionMethod</a> 
+    </li><li>
+      <a class="index-term" href="#dfn-explanation">Explanation</a> 
+    </li><li>
+      <a class="index-term" href="#dfn-explanationmethod">ExplanationMethod</a> 
+    </li><li>
+      <a class="index-term" href="#dfn-formalisationmethod">FormalisationMethod</a> 
+    </li><li>
+      <a class="index-term" href="#dfn-parameter">Parameter</a> 
+    </li><li>
+      <a class="index-term" href="#dfn-publicationmethod">PublicationMethod</a> 
+    </li><li>
+      <a class="index-term" href="#dfn-referencenmethod">ReferencenMethod</a> 
+    </li><li>
+      <a class="index-term" href="#dfn-rule">Rule</a> 
+    </li><li>
+      <a class="index-term" href="#dfn-rulemethod">RuleMethod</a> 
+    </li><li>
+      <a class="index-term" href="#dfn-ruleset">RuleSet</a> 
+    </li><li>
+      <a class="index-term" href="#dfn-testcase">TestCase</a> 
+    </li><li>
+      <a class="index-term" href="#dfn-testmethod">TestMethod</a> 
+    </li><li>
+      <a class="index-term" href="#dfn-testset">TestSet</a> 
+    </li>
+  </ul>
+  </section><section id="index-defined-elsewhere">
+    <div class="header-wrapper"><h3 id="a-2-terms-defined-by-reference"><bdi class="secno">A.2 </bdi>Terms defined by reference</h3><a class="self-link" href="#index-defined-elsewhere" aria-label="Permalink for Appendix A.2"></a></div>
+    <ul class="index">
+    
+  </ul>
+  </section></section>
+
+
+
+<section id="references" class="appendix"><div class="header-wrapper"><h2 id="b-references"><bdi class="secno">B. </bdi>References</h2><a class="self-link" href="#references" aria-label="Permalink for Appendix B."></a></div><section id="informative-references">
+    <div class="header-wrapper"><h3 id="b-1-informative-references"><bdi class="secno">B.1 </bdi>Informative references</h3><a class="self-link" href="#informative-references" aria-label="Permalink for Appendix B.1"></a></div>
+    <dl class="bibliography"><dt id="bib-cprmv">[CPRMV]</dt><dd>
+      <a href="https://regels.overheid.nl"><cite>Core Public Rule Management Vocabulary (CPRMV)</cite></a>. ministerie van Binnenlandse Zaken en Koninkrijksrelaties.URL: <a href="https://regels.overheid.nl">https://regels.overheid.nl</a>
+    </dd><dt id="bib-cpsv-ap">[CPSV-AP]</dt><dd>
+      <a href="https://semiceu.github.io/CPSV-AP/releases/3.2.0/"><cite>Core Public Service Vocabulary Application Profile (CPSV-AP)</cite></a>. Core Public Service Vocabulary Working Group.2024-05-06. URL: <a href="https://semiceu.github.io/CPSV-AP/releases/3.2.0/">https://semiceu.github.io/CPSV-AP/releases/3.2.0/</a>
+    </dd><dt id="bib-eli">[ELI]</dt><dd>
+      <a href="https://eur-lex.europa.eu/eli-register/about.html"><cite>European Legislation Identifier (ELI)</cite></a>. European Legislation Identifier Task Force. 2017-11-06. URL: <a href="https://eur-lex.europa.eu/eli-register/about.html">https://eur-lex.europa.eu/eli-register/about.html</a>
+    </dd><dt id="bib-ronl">[RONL]</dt><dd>
+      <a href="https://regels.overheid.nl"><cite>regels.overheid.nl</cite></a>. ministerie van Binnenlandse Zaken en Koninkrijksrelaties.URL: <a href="https://regels.overheid.nl">https://regels.overheid.nl</a>
+    </dd></dl>
+  </section></section><p role="navigation" id="back-to-top">
+    <a href="#title"><abbr title="Back to Top">↑</abbr></a>
+  </p><script id="respec-dfn-panel">(() => {
+// @ts-check
+if (document.respec) {
+  document.respec.ready.then(setupPanel);
+} else {
+  setupPanel();
+}
+
+function setupPanel() {
+  const listener = panelListener();
+  document.body.addEventListener("keydown", listener);
+  document.body.addEventListener("click", listener);
+}
+
+function panelListener() {
+  /** @type {HTMLElement} */
+  let panel = null;
+  return event => {
+    const { target, type } = event;
+
+    if (!(target instanceof HTMLElement)) return;
+
+    // For keys, we only care about Enter key to activate the panel
+    // otherwise it's activated via a click.
+    if (type === "keydown" && event.key !== "Enter") return;
+
+    const action = deriveAction(event);
+
+    switch (action) {
+      case "show": {
+        hidePanel(panel);
+        /** @type {HTMLElement} */
+        const dfn = target.closest("dfn, .index-term");
+        panel = document.getElementById(`dfn-panel-for-${dfn.id}`);
+        const coords = deriveCoordinates(event);
+        displayPanel(dfn, panel, coords);
+        break;
+      }
+      case "dock": {
+        panel.style.left = null;
+        panel.style.top = null;
+        panel.classList.add("docked");
+        break;
+      }
+      case "hide": {
+        hidePanel(panel);
+        panel = null;
+        break;
+      }
+    }
+  };
+}
+
+/**
+ * @param {MouseEvent|KeyboardEvent} event
+ */
+function deriveCoordinates(event) {
+  const target = /** @type HTMLElement */ (event.target);
+
+  // We prevent synthetic AT clicks from putting
+  // the dialog in a weird place. The AT events sometimes
+  // lack coordinates, so they have clientX/Y = 0
+  const rect = target.getBoundingClientRect();
+  if (
+    event instanceof MouseEvent &&
+    event.clientX >= rect.left &&
+    event.clientY >= rect.top
+  ) {
+    // The event probably happened inside the bounding rect...
+    return { x: event.clientX, y: event.clientY };
+  }
+
+  // Offset to the middle of the element
+  const x = rect.x + rect.width / 2;
+  // Placed at the bottom of the element
+  const y = rect.y + rect.height;
+  return { x, y };
+}
+
+/**
+ * @param {Event} event
+ */
+function deriveAction(event) {
+  const target = /** @type {HTMLElement} */ (event.target);
+  const hitALink = !!target.closest("a");
+  if (target.closest("dfn:not([data-cite]), .index-term")) {
+    return hitALink ? "none" : "show";
+  }
+  if (target.closest(".dfn-panel")) {
+    if (hitALink) {
+      return target.classList.contains("self-link") ? "hide" : "dock";
+    }
+    const panel = target.closest(".dfn-panel");
+    return panel.classList.contains("docked") ? "hide" : "none";
+  }
+  if (document.querySelector(".dfn-panel:not([hidden])")) {
+    return "hide";
+  }
+  return "none";
+}
+
+/**
+ * @param {HTMLElement} dfn
+ * @param {HTMLElement} panel
+ * @param {{ x: number, y: number }} clickPosition
+ */
+function displayPanel(dfn, panel, { x, y }) {
+  panel.hidden = false;
+  // distance (px) between edge of panel and the pointing triangle (caret)
+  const MARGIN = 20;
+
+  const dfnRects = dfn.getClientRects();
+  // Find the `top` offset when the `dfn` can be spread across multiple lines
+  let closestTop = 0;
+  let minDiff = Infinity;
+  for (const rect of dfnRects) {
+    const { top, bottom } = rect;
+    const diffFromClickY = Math.abs((top + bottom) / 2 - y);
+    if (diffFromClickY < minDiff) {
+      minDiff = diffFromClickY;
+      closestTop = top;
+    }
+  }
+
+  const top = window.scrollY + closestTop + dfnRects[0].height;
+  const left = x - MARGIN;
+  panel.style.left = `${left}px`;
+  panel.style.top = `${top}px`;
+
+  // Find if the panel is flowing out of the window
+  const panelRect = panel.getBoundingClientRect();
+  const SCREEN_WIDTH = Math.min(window.innerWidth, window.screen.width);
+  if (panelRect.right > SCREEN_WIDTH) {
+    const newLeft = Math.max(MARGIN, x + MARGIN - panelRect.width);
+    const newCaretOffset = left - newLeft;
+    panel.style.left = `${newLeft}px`;
+    /** @type {HTMLElement} */
+    const caret = panel.querySelector(".caret");
+    caret.style.left = `${newCaretOffset}px`;
+  }
+
+  // As it's a dialog, we trap focus.
+  // TODO: when <dialog> becomes a implemented, we should really
+  // use that.
+  trapFocus(panel, dfn);
+}
+
+/**
+ * @param {HTMLElement} panel
+ * @param {HTMLElement} dfn
+ * @returns
+ */
+function trapFocus(panel, dfn) {
+  /** @type NodeListOf<HTMLAnchorElement> elements */
+  const anchors = panel.querySelectorAll("a[href]");
+  // No need to trap focus
+  if (!anchors.length) return;
+
+  // Move focus to first anchor element
+  const first = anchors.item(0);
+  first.focus();
+
+  const trapListener = createTrapListener(anchors, panel, dfn);
+  panel.addEventListener("keydown", trapListener);
+
+  // Hiding the panel releases the trap
+  const mo = new MutationObserver(records => {
+    const [record] = records;
+    const target = /** @type HTMLElement */ (record.target);
+    if (target.hidden) {
+      panel.removeEventListener("keydown", trapListener);
+      mo.disconnect();
+    }
+  });
+  mo.observe(panel, { attributes: true, attributeFilter: ["hidden"] });
+}
+
+/**
+ *
+ * @param {NodeListOf<HTMLAnchorElement>} anchors
+ * @param {HTMLElement} panel
+ * @param {HTMLElement} dfn
+ * @returns
+ */
+function createTrapListener(anchors, panel, dfn) {
+  const lastIndex = anchors.length - 1;
+  let currentIndex = 0;
+  return event => {
+    switch (event.key) {
+      // Hitting "Tab" traps us in a nice loop around elements.
+      case "Tab": {
+        event.preventDefault();
+        currentIndex += event.shiftKey ? -1 : +1;
+        if (currentIndex < 0) {
+          currentIndex = lastIndex;
+        } else if (currentIndex > lastIndex) {
+          currentIndex = 0;
+        }
+        anchors.item(currentIndex).focus();
+        break;
+      }
+
+      // Hitting "Enter" on an anchor releases the trap.
+      case "Enter":
+        hidePanel(panel);
+        break;
+
+      // Hitting "Escape" returns focus to dfn.
+      case "Escape":
+        hidePanel(panel);
+        dfn.focus();
+        return;
+    }
+  };
+}
+
+/** @param {HTMLElement} panel */
+function hidePanel(panel) {
+  if (!panel) return;
+  panel.hidden = true;
+  panel.classList.remove("docked");
+}
+})()</script><div class="sidelabel">MinBZK - Dutch Ministry of Internal Affairs Standard - First public working draft</div><script src="./fixup.js"></script></body></html>
