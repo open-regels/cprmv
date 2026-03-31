@@ -112,19 +112,37 @@ def rules(
     return PlainTextResponse(get_rules(rule_id_path, path_delimiter, format, unformat))
 
 
-@app.get("/ref/{referencemethod}/{reference}")
-def ref(referencemethod: str = "Juriconnect", reference : str = ""):
+@app.get("/ref")
+def ref(reference : str = ""):
     """
     Supported reference methods
     
-    eli
+    - ELI to Formex4 to be found on EU CELLAR. (Work in progress)
     
-    Not yet supported
+      Currently the resonse will be from the EU CELLAR SPARQL endpoint giving a list fro multiple files that form a collection. 
+      See endpoint /cellar-by-eli what to do with this. This endpoint will make the language and format to default to 'NLD' and 'fmx4'
+      Use for example: http://data.europa.eu/eli/reg/2018/1805/oj
     
-    juriconnect
+    - ELI to BWB and CVDR. (Experimental, Work in progress)
     
-    Supports both jci version 1.3 as 1.31. The usage of sighting date is not (yet) supported (it can be included in the URL but it won't have any effect as the cprmv api does not yet support it as part of the rule id path). The sighting date therefor always implicitly defaults to today (which is the default in the Juriconnect standard too).
-    Also, only references to single consolidations are supported. Note that what the juriconnect standard supports within the CPRMV API might not yet be supported in the BWB support implementation within the CPRMV API. For instance some types of items can not yet be referenced. Currently supported of the juriconnect standard therefor is: "artikel", "hoofdstuk", "paragraaf", "onderdeel", "lid".
+      Note it just accepts a cprmv api path delimited with forward slashes after the base URI. Note that it also accepts CFMX4... references due to this
+      
+      Example: https://wetten.overheid.nl/BWBR0015703/Artikel%2020/onderdeel%20a.
+    
+    - Juriconnect:
+    
+        Supports both jci version 1.3 as 1.31. The usage of sighting date is not (yet) supported (it can be included in the URL but it won't have any effect as the cprmv api does not yet support it as part of the rule id path). The sighting date therefor always implicitly defaults to today (which is the default in the Juriconnect standard too).
+    
+        Also, only references to single consolidations are supported. Note that what the juriconnect standard supports within the CPRMV API might not yet be supported in the BWB support implementation within the CPRMV API. For instance some types of items can not yet be referenced. Currently supported of the juriconnect standard therefor is: "artikel", "hoofdstuk", "paragraaf", "onderdeel", "lid".
+    
+        Example: jci1.31:c:BWBR0015703&artikel=20&o=a.'
+    
+    - CPRMV API:
+    
+      you can just use the /rules endpoint but you can also use the URL to such endpoint call here to make this call on this CPRMV API instance.
+        
+      Example: https://cprmv.open-regels.nl/rules/BWBR0015703/Artikel%2020/onderdeel%20a.         
+    
     """
     
     redirect_url = detect_cprmv_serve_reference_method_and_transform(reference)
@@ -136,7 +154,25 @@ def ref(referencemethod: str = "Juriconnect", reference : str = ""):
     return {"error": "not a valid or supported reference..."}
 
 
-@app.get("/cellar-by-celex/{celexid}/{language}/{format}")
+@app.get("/cellar-by-eli/{elipath:path}/{language}/{format}")
+def eli(elipath: str = "http://data.europa.eu/eli/reg/2018/1805/oj", language: str = "NLD", format: str = "fmx4"):
+    """
+    Same as the /cellar-by-celex endpoint but using a ELI reference to EU CELLAR instead of a CELEX reference.
+    
+    Example ELI reference: http://data.europa.eu/eli/reg/2018/1805/oj/nld/fmx4
+    
+    Note that currently due to a CORS issue in swagger the redirect causes a TypeError: Load failed to show up as response. 
+    Try opening the request url shown in swagger to see the actual response you get by using the CPRMV API directly. 
+    """
+    print("cellar by eli")
+    language = language.upper()
+    format = format.lower()
+    cellarurl = f"https://publications.europa.eu/webapi/rdf/sparql?default-graph-uri=&query=prefix+cdm%3A+%3Chttp%3A%2F%2Fpublications.europa.eu%2Fontology%2Fcdm%23%3E+%0D%0Aprefix+purl%3A+%3Chttp%3A%2F%2Fpurl.org%2Fdc%2Felements%2F1.1%2F%3E+%0D%0Aselect+distinct+%3Fitem%0D%0Awhere+%7B%0D%0A%3Fwork+cdm%3Aresource_legal_eli+%22{elipath}%22%5E%5E%3Chttp%3A%2F%2Fwww.w3.org%2F2001%2FXMLSchema%23anyURI%3E+.%0D%0A%3Fexpr+cdm%3Aexpression_belongs_to_work+%3Fwork+%3B%0D%0Acdm%3Aexpression_uses_language+%3Flang+.%0D%0A%3Flang+purl%3Aidentifier+%3FlangCode+.%0D%0A%3Fmanif+cdm%3Amanifestation_manifests_expression+%3Fexpr%3B%0D%0Acdm%3Amanifestation_type+%3Fformat.%0D%0A%3Fitem+cdm%3Aitem_belongs_to_manifestation+%3Fmanif.%0D%0AFILTER%28str%28%3FlangCode%29%3D%22{language}%22+%26%26+str%28%3Fformat%29%3D%22{format}%22%29%0D%0A%7D+LIMIT+100&format=application%2Fjson&timeout=0&debug=on&run=+Run+Query+"
+    print(cellarurl)
+    response = RedirectResponse(url=cellarurl)
+    return response
+
+@app.get("/cellar-by-celex/{celexid}")
 def celex(celexid: str = "32018R1805", language: str = "NLD", format: str = "fmx4"):
     """
     Gives a URL to the SPARQL endpoint of the European CELLAR repository
@@ -161,9 +197,14 @@ def celex(celexid: str = "32018R1805", language: str = "NLD", format: str = "fmx
     can be used to forge the rule set id:
     'CFMX483e4752e-f2e5-11e8-9982-01aa75ed71a1.0017.02_DOC_2'
     (Note this will be improved so you do not have to do this yourselves)
+    
+    Also note that currently due to a CORS issue in swagger the redirect causes a TypeError: Load failed to show up as response. 
+    Try opening the request url shown in swagger to see the actual response you get by using the CPRMV API directly. 
     """
-    url = f"https://publications.europa.eu/webapi/rdf/sparql?default-graph-uri=&query=prefix+cdm%3A+%3Chttp%3A%2F%2Fpublications.europa.eu%2Fontology%2Fcdm%23%3E+%0D%0Aprefix+purl%3A+%3Chttp%3A%2F%2Fpurl.org%2Fdc%2Felements%2F1.1%2F%3E+%0D%0Aselect+distinct+%3Fitem%0D%0Awhere+%7B%0D%0A%3Fwork+owl%3AsameAs+%3Chttp%3A%2F%2Fpublications.europa.eu%2Fresource%2Fcelex%2F{celexid}%3E+.%0D%0A%3Fexpr+cdm%3Aexpression_belongs_to_work+%3Fwork+%3B%0D%0Acdm%3Aexpression_uses_language+%3Flang+.%0D%0A%3Flang+purl%3Aidentifier+%3FlangCode+.%0D%0A%3Fmanif+cdm%3Amanifestation_manifests_expression+%3Fexpr%3B%0D%0Acdm%3Amanifestation_type+%3Fformat+.%0D%0A%3Fitem+cdm%3Aitem_belongs_to_manifestation+%3Fmanif.%0D%0AFILTER%28str%28%3FlangCode%29%3D%22NLD%22+%26%26+str%28%3Fformat%29%3D%22fmx4%22%29%0D%0A%7D+LIMIT+1000&format=application%2Fjson&timeout=0&debug=on&run=+Run+Query+"
-    return {"url": url}
+    cellarurl = f"https://publications.europa.eu/webapi/rdf/sparql?default-graph-uri=&query=prefix+cdm%3A+%3Chttp%3A%2F%2Fpublications.europa.eu%2Fontology%2Fcdm%23%3E+%0D%0Aprefix+purl%3A+%3Chttp%3A%2F%2Fpurl.org%2Fdc%2Felements%2F1.1%2F%3E+%0D%0Aselect+distinct+%3Fitem%0D%0Awhere+%7B%0D%0A%3Fwork+owl%3AsameAs+%3Chttp%3A%2F%2Fpublications.europa.eu%2Fresource%2Fcelex%2F{celexid}%3E+.%0D%0A%3Fexpr+cdm%3Aexpression_belongs_to_work+%3Fwork+%3B%0D%0Acdm%3Aexpression_uses_language+%3Flang+.%0D%0A%3Flang+purl%3Aidentifier+%3FlangCode+.%0D%0A%3Fmanif+cdm%3Amanifestation_manifests_expression+%3Fexpr%3B%0D%0Acdm%3Amanifestation_type+%3Fformat+.%0D%0A%3Fitem+cdm%3Aitem_belongs_to_manifestation+%3Fmanif.%0D%0AFILTER%28str%28%3FlangCode%29%3D%22{language}%22+%26%26+str%28%3Fformat%29%3D%22{format}%22%29%0D%0A%7D+LIMIT+100&format=application%2Fjson&timeout=0&debug=on&run=+Run+Query+"
+    print(cellarurl)
+    response = RedirectResponse(url=cellarurl)
+    return response
 
 
 # Tip: use https://publications.europa.eu/webapi/rdf/sparql to edit the SPARQL query in the URL above (you get the URI in a new browser window by executing the query):
@@ -173,6 +214,22 @@ prefix purl: <http://purl.org/dc/elements/1.1/>
 select distinct ?item
 where {
 ?work owl:sameAs <http://publications.europa.eu/resource/celex/32018R1805> .
+?expr cdm:expression_belongs_to_work ?work ;
+cdm:expression_uses_language ?lang .
+?lang purl:identifier ?langCode .
+?manif cdm:manifestation_manifests_expression ?expr;
+cdm:manifestation_type ?format.
+?item cdm:item_belongs_to_manifestation ?manif.
+FILTER(str(?langCode)="NLD" && str(?format)="fmx4")
+} LIMIT 100
+
+or for the eli version:
+
+prefix cdm: <http://publications.europa.eu/ontology/cdm#> 
+prefix purl: <http://purl.org/dc/elements/1.1/> 
+select distinct ?item
+where {
+?work cdm:resource_legal_eli "http://data.europa.eu/eli/reg/2018/1805/oj"^^<http://www.w3.org/2001/XMLSchema#anyURI> .
 ?expr cdm:expression_belongs_to_work ?work ;
 cdm:expression_uses_language ?lang .
 ?lang purl:identifier ?langCode .
@@ -287,6 +344,7 @@ def transform_jci_reference(method_config, reference_parts):
         print("Invalid call to transform_jci_reference. No subversion part in reference parts...")
         return None
     if reference_parts['subversion'] not in ('3','31'):
+        print("No valid juriconnect version (must be 1.3 or 1.31)")
         return None
     path = '/rules/'
     cprmvMethods = app.cprmvsettings["CPRMVMETHODS_KG"]
@@ -305,24 +363,41 @@ def transform_jci_reference(method_config, reference_parts):
         if kv[0] == mapping[str(CPRMVSERVE['reference-mapping-valid-on'])]:
             id_parts['date'] = kv[1]
         elif kv[0] == mapping[str(CPRMVSERVE['reference-mapping-seen-on'])]:
-            id_parts['sightdate'] = kv[1]
-        else:
+            id_parts['index'] = kv[1]
+        elif kv[0] in mapping:
             locstr_path = locstr_path+delim+mapping[kv[0]]+'%20'+kv[1]
             delim = '%2C'
     id_parts['rulesetid'] = reference_parts['bwbid'].upper()
     if 'date' not in id_parts:
-        return None
-    id_parts['index'] = 'latest'
-    return path+id_format.format_map(id_parts)+'/'+locstr_path
+        id_parts['date'] = datetime.now().strftime('%Y-%m-%d')
+    if 'index' not in id_parts:
+        id_parts['index'] = 'latest'
+    return path+id_format.format_map(id_parts)+'%2C'+locstr_path
 
-# not implemented yet
-def transform_eli_reference(method_config, reference_parts):
-    return None
-    
-# not implemented yet
 def transform_cprmvapi_reference(method_config, reference_parts):
-    return None
-
+    path = reference_parts['path'].replace('/',', ')
+    return '/rules/'+path
+    
+def transform_eli_reference(method_config, reference):
+    result = None
+    language='NLD'
+    format='fmx4'
+    cellarurl = f"https://publications.europa.eu/webapi/rdf/sparql?default-graph-uri=&query=prefix+cdm%3A+%3Chttp%3A%2F%2Fpublications.europa.eu%2Fontology%2Fcdm%23%3E+%0D%0Aprefix+purl%3A+%3Chttp%3A%2F%2Fpurl.org%2Fdc%2Felements%2F1.1%2F%3E+%0D%0Aselect+distinct+%3Fitem%0D%0Awhere+%7B%0D%0A%3Fwork+cdm%3Aresource_legal_eli+%22{reference}%22%5E%5E%3Chttp%3A%2F%2Fwww.w3.org%2F2001%2FXMLSchema%23anyURI%3E+.%0D%0A%3Fexpr+cdm%3Aexpression_belongs_to_work+%3Fwork+%3B%0D%0Acdm%3Aexpression_uses_language+%3Flang+.%0D%0A%3Flang+purl%3Aidentifier+%3FlangCode+.%0D%0A%3Fmanif+cdm%3Amanifestation_manifests_expression+%3Fexpr%3B%0D%0Acdm%3Amanifestation_type+%3Fformat.%0D%0A%3Fitem+cdm%3Aitem_belongs_to_manifestation+%3Fmanif.%0D%0AFILTER%28str%28%3FlangCode%29%3D%22{language}%22+%26%26+str%28%3Fformat%29%3D%22{format}%22%29%0D%0A%7D+LIMIT+100&format=application%2Fjson&timeout=0&debug=on&run=+Run+Query+"
+    print(f"querying EU CELLAR: {cellarurl}")
+    with urllib.request.urlopen(cellarurl) as response:
+        data = response.read().decode('utf-8')
+        json_data = json.loads(data)
+        if not len(json_data.results) == 1:
+            result = json_data
+        else:
+            result = json_data.results[0]
+    print(json_data)
+    return result
+    
+def transform_elinl_reference(method_config, reference_parts):
+    path = reference_parts['path'].replace('/',', ')
+    return '/rules/'+path
+    
 def detect_cprmv_serve_reference_method_and_transform(reference):
     cprmvMethods = app.cprmvsettings["CPRMVMETHODS_KG"]
     result = None
@@ -331,15 +406,18 @@ def detect_cprmv_serve_reference_method_and_transform(reference):
         method_config = cprmvMethods.value(methods, RDF.first)
         reference_method_id = str(cprmvMethods.value(method_config , CPRMV["id"]))
         referenceformat = str(cprmvMethods.value(method_config , CPRMVSERVE["reference-format"]))
-        result = parse(referenceformat, reference)
-        print(result)
-        if result is not None:
+        refresult = parse(referenceformat, reference)
+        print(reference_method_id+' '+referenceformat+' '+reference)
+        if refresult is not None:
             if reference_method_id == 'Juriconnect':
-                result = transform_jci_reference(method_config , result)
-            elif reference_method_id == 'ELI':
-                result = transform_eli_reference(method_config , result)
-            elif reference_method_id == 'cprmvapi':
-                result = transform_cprmvapi_reference(method_config , result)
+                result = transform_jci_reference(method_config , refresult)
+            elif reference_method_id == 'ELI2FMX4 on EU CELLAR':
+                result = transform_eli_reference(method_config , reference)
+            elif reference_method_id == 'ELI for BWB and CVDR':
+                result = transform_elinl_reference(method_config , refresult)
+            elif reference_method_id == 'CPRMV API - rule id path':
+                result = transform_cprmvapi_reference(method_config , refresult)
+            print(refresult)
             if result is not None:
                 break
         methods = cprmvMethods.value(methods, RDF.rest)
