@@ -2,6 +2,7 @@
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:dmn="https://www.omg.org/spec/DMN/20191111/MODEL/" xmlns:dmndi="https://www.omg.org/spec/DMN/20191111/DMNDI/" xmlns:dc="http://www.omg.org/spec/DMN/20180521/DC/" xmlns:modeler="http://camunda.org/schema/modeler/1.0" xmlns:camunda="http://camunda.org/schema/1.0/dmn" version="1.0">
   <xsl:output method="text" indent="no" omit-xml-declaration="yes"/>
   <xsl:param name="cprmvid" select="'root'"/>
+  <xsl:param name="puburl" select="''"/>
   
   <xsl:template match="text()"/>
   
@@ -10,6 +11,7 @@
 @prefix cprmv: &lt;https://standaarden.open-regels.nl/standards/cprmv/0.4.0/#&gt; .
 @prefix cprmvmethods: &lt;https://cprmv.open-regels.nl/0.4.0/methods/&gt; .
 &lt;</xsl:text><xsl:value-of select="$cprmvid"/><xsl:text xml:space="preserve">&gt; a cprmv:RuleSet;
+    cprmv:isBasedOn &lt;</xsl:text><xsl:value-of select="$puburl"/><xsl:text xml:space="preserve">&gt;;
     cprmv:id "</xsl:text><xsl:value-of select="$cprmvid"/><xsl:text xml:space="preserve">"@nl;
     cprmv:method cprmvmethods:dmn13;
     cprmv:hasPart (</xsl:text><xsl:apply-templates select="./*"/><xsl:text xml:space="preserve">).
