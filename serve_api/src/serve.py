@@ -1,5 +1,5 @@
 from fastapi_mcp import FastApiMCP
-from rdflib import Graph
+from rdflib import Graph, BNode, URIRef
 from rdflib.term import Literal
 from rdflib.namespace import RDF
 from typing import Union
@@ -49,7 +49,7 @@ except locale.Error:
 
 app = FastAPI(
     title="CPRMV Rules Serve API",
-    description="This experimental API allows fetching single CPRMV Rules from locally provided CPRMV RuleSets in a desired RDF format",
+    description="This experimental API allows fetching single CPRMV Rules from locally provided CPRMV RuleSets in a desired RDF format.",
     version="0.4.0",
     contact={
         "name": "Bas Kaptijn",
@@ -105,7 +105,8 @@ def rules(
     Returns the Rule(Set) including all Rules that are part of it and that can be found as indicated in the given Rule Id Path.
 
     This endpoint retrieves a specific rule or rule set from various official publication repositories
-    and transforms it into CPRMV format. It supports BWB, CVDR, and EU CELLAR repositories.
+    and transforms it into CPRMV format. The ReSpec documentation of the CPRMV can be found under the /respec endpoint. 
+    It supports BWB, CVDR, EU CELLAR and the operaton.open-regels.nl repositories.
 
     The API downloads the source publication on-the-fly, transforms it using XSLT, and serves the resulting
     CPRMV-formatted rules. You can request individual rules within a rule set by specifying their path.
@@ -480,7 +481,7 @@ def get_cprmv_rule_set_from_publication(g, method):
             transform = etree.XSLT(
                 etree.parse(method[CPRMVSERVE.xslt]), access_control=ac
             )
-            result = str(transform(xml, cprmvid=etree.XSLT.strparam(cprmvid)))
+            result = str(transform(xml, cprmvid=etree.XSLT.strparam(cprmvid), puburl=etree.XSLT.strparam(puburl)))
             os.remove(tmp_file.name)
             # print(result)
             g.parse(data=result, format="turtle")
@@ -554,7 +555,7 @@ def get_rules(
     formatarg: str = "cprmv-json",
     unformat: str = "",
 ):
-    if (unformat != "") or (formatarg not in ['cprmv-json', 'json-ld', 'turtle', 'n3', 'xml', 'ttl', 'turtle2']):
+    if formatarg not in ['cprmv-json', 'json-ld', 'turtle', 'n3', 'xml', 'ttl', 'turtle2']:
         print('Info: using default format cprmv-json...')
         formatarg = "cprmv-json"
     try:
@@ -580,38 +581,60 @@ def get_rules(
     r = get_first_rule_by_id_path(g, rule_id_path, path_delimiter)
     if r is None:
         return "No rules found for given path..."
-    print(f"rule found {r}")
+    r2 = g.value(r, CPRMV.hasPart)
+    r2 = g.value(r2, RDF.first)
+    r2id = g.value(r2, CPRMV.id)
+    print(f"rule found {r2id}")
+    
+    if unformat != "":
+        definition = g.value(r2, CPRMV.definition)
+        if definition is not None:
+            string_definition = str(
+                " ".join(definition.split())
+            )  # transform no break spaces in regular ones
+            definition: Result | Match | None = search(
+                unformat, string_definition, extra_types={"param_value": param_value}
+            )
+            if definition is not None:
+                named_definition: Definition = definition.named
+                named_definition["rulesetid"] = rulesetid
+                named_definition["rule_id_path"] = rule_id_path
+                prefix, namespace, local_name = g.namespace_manager.compute_qname(r)
+                for key in named_definition:
+                    g.add((r2, URIRef(namespace+key), Literal(named_definition[key])))
+    
     if formatarg == "cprmv-json":
         result = get_rule(
             g, r
         )  # this custom format has a more human readable pretty print layout
     else:
         result = g.cbd(r).serialize(format=formatarg)
-    if unformat != "" and CPRMV.definition in result:
-        string_definition = str(
-            " ".join(result[CPRMV.definition].split())
-        )  # transform no break spaces in regular ones
-        definition: Result | Match | None = search(
-            unformat, string_definition, extra_types={"param_value": param_value}
-        )
-        if definition is not None:
-            named_definition: Definition = definition.named
-            named_definition["rulesetid"] = rulesetid
-            named_definition["rule_id_path"] = rule_id_path
-            result.update(named_definition)
     if (type(result) != str):
-        result = json.dumps(result, indent=4)
+        result = json.dumps(result, indent=4, ensure_ascii=False)
     return result
 
 
 # depth first search in the given graph g for the first rule matching the given path (the path splitted as a list) from the given rootrule
+# the found (sub)Rule will be nested as such within the root item which is always a RuleSet
 def get_first_rule_by_id_path(g, path, path_delimiter: str = ","):
     pathsplit = path.split(path_delimiter)
     firstid = pathsplit.pop(0).strip()
+    firstroot = None
     for rootrule in g.subjects(CPRMV.id, Literal(firstid, lang="nl")):
+        if firstroot is None:
+            firstroot = rootrule
         rule = get_first_rule_by_Id_path_split_from_rule_as_root(g, rootrule, pathsplit)
         if rule is not None:
-            return rule
+            if rule != firstroot:
+                subrules = g.value(firstroot, CPRMV.hasPart)
+                g.remove((firstroot, CPRMV.hasPart, subrules))
+                subrules = BNode()
+                g.add((subrules, RDF.first, rule))
+                g.add((subrules, RDF.rest, RDF.nil))
+                g.add((firstroot, CPRMV.hasPart, subrules))
+                return firstroot
+            else:
+                return rule
     return None
 
 
@@ -651,12 +674,12 @@ def get_first_rule_by_Id_path_split_from_rule_as_root(g, rootrule, pathsplit):
     return None
 
 
-# retrieves all info of the given rule (and all its subrules from the given graph).
+# retrieves all info of the given rule (and all its subrules from the given graph by default. Use includeSubRules=False when no subrules need to be returned instead).
 # Note that rule structures over CPRMV.hasPart relations should be trees, so no cyclic graphs, otherwise this method will not stop.
-def get_rule(g, rule):
+def get_rule(g, rule, includeSubRules=True):
     r = {}
     for p, o in g.predicate_objects(rule):
-        if p == CPRMV.hasPart:
+        if includeSubRules and p == CPRMV.hasPart:
             r[p] = {}
             item = o
             while item != RDF.nil:

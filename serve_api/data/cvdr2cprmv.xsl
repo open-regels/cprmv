@@ -4,8 +4,9 @@
     xmlns:dcterms="http://purl.org/dc/terms/"
     xmlns:overheidrg="http://standaarden.overheid.nl/cvdr/meta/"
     xmlns:overheid="http://standaarden.overheid.nl/owms/terms/" version="1.0">
-  <xsl:output method="text" indent="yes"/>
+  <xsl:output method="text" encoding="UTF-8" indent="yes"/>
   <xsl:param name="cprmvid" select="''"/>
+  <xsl:param name="puburl" select="''"/>
   
   <xsl:template match="text()"/>
   
@@ -16,9 +17,9 @@
 @prefix cprmvmethods: &lt;https://cprmv.open-regels.nl/0.4.0/methods/&gt; .
 @prefix overheid: &lt;http://standaarden.overheid.nl/owms/terms/&gt; .
 @prefix tooicvdr: &lt;https://identifier.overheid.nl/tooi/thes/cvdr&gt; .
-&lt;http://opencatalogi.open-regels.nl/</xsl:text><xsl:value-of select="./cvdr:meta/cvdr:owmskern/dcterms:identifier"/><xsl:text xml:space="preserve">&gt; a cprmv:RuleSet;
-    cprmv:isBasedOn &lt;https://identifier.overheid.nl/tooi/id/cvdr/</xsl:text><xsl:value-of select="./cvdr:meta/cvdr:owmskern/dcterms:identifier"/><xsl:text xml:space="preserve">&gt;;
-    cprmv:id "</xsl:text><xsl:value-of select="./cvdr:meta/cvdr:owmskern/dcterms:identifier"/><xsl:text xml:space="preserve">"@nl;
+&lt;http://cprmv.open-regels.nl/</xsl:text><xsl:value-of select="./cvdr:meta/cvdr:owmskern/dcterms:identifier"/><xsl:text xml:space="preserve">&gt; a cprmv:RuleSet;
+    cprmv:isBasedOn &lt;</xsl:text><xsl:value-of select="$puburl"/><xsl:text xml:space="preserve">&gt;;
+    cprmv:id "</xsl:text><xsl:value-of select="$cprmvid"/><xsl:text xml:space="preserve">"@nl;
     cprmv:hasMethod cprmvmethods:cvdr;
     cprmv:output-of [
         a cpsv:PublicService;

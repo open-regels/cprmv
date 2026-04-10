@@ -4,8 +4,9 @@
     xmlns:dcterms="http://purl.org/dc/terms/"
     xmlns:overheidrg="http://standaarden.overheid.nl/cvdr/meta/"
     xmlns:overheid="http://standaarden.overheid.nl/owms/terms/" version="1.0">
-  <xsl:output method="text" indent="yes"/>
+  <xsl:output method="text" encoding="UTF-8" indent="yes"/>
   <xsl:param name="cprmvid" select="''"/>
+  <xsl:param name="puburl" select="''"/>
   
   <xsl:template match="text()"/>
   
@@ -14,6 +15,7 @@
 @prefix cprmv: &lt;https://standaarden.open-regels.nl/standards/cprmv/0.4.0/#&gt; .
 @prefix cprmvmethods: &lt;https://cprmv.open-regels.nl/0.4.0/methods/&gt; .
 &lt;http://publications.europa.eu/resource/celex/</xsl:text><xsl:value-of select="$cprmvid"/><xsl:text xml:space="preserve">&gt; a cprmv:RuleSet;
+    cprmv:isBasedOn &lt;</xsl:text><xsl:value-of select="$puburl"/><xsl:text xml:space="preserve">&gt;;
     cprmv:id "</xsl:text><xsl:value-of select="$cprmvid"/><xsl:text xml:space="preserve">"@nl;
     cprmv:id "3</xsl:text><xsl:value-of select="BIB.INSTANCE/DOCUMENT.REF/YEAR"/><xsl:text xml:space="preserve">R</xsl:text><xsl:value-of select="BIB.INSTANCE/NO.DOC/NO.CURRENT"/><xsl:text xml:space="preserve">.NLD.fmx4.</xsl:text><xsl:value-of select="BIB.INSTANCE/DOCUMENT.REF/@FILE"/><xsl:text xml:space="preserve">"@nl;
     cprmv:hasMethod cprmvmethods:cellarfmx4;

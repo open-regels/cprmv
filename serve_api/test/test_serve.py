@@ -222,12 +222,8 @@ def test_get_rules():
         params={"unformat": "{situatie:param_value}: € {norm:param_value};"},
     )
     assert response.status_code == 200
-    assert response.json() == {
-        "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "https://standaarden.open-regels.nl/standards/cprmv/0.4.0/#Rule",
-        "https://standaarden.open-regels.nl/standards/cprmv/0.4.0/#definition": "een alleenstaande of een alleenstaande ouder zonder kostendelende medebewoners: €\xa01.369,06;",
-        "https://standaarden.open-regels.nl/standards/cprmv/0.4.0/#id": "onderdeel a.",
-        "norm": "1.369,06",
-        "rule_id_path": "TEST001BWBR0015703_2025-07-01_0, Artikel\xa021, onderdeel\xa0a)",
-        "rulesetid": "TEST001BWBR0015703_2025-07-01_0",
-        "situatie": "een alleenstaande of een alleenstaande ouder zonder kostendelende medebewoners",
-    }
+    resp = response.json()
+    resp['https://standaarden.open-regels.nl/standards/cprmv/0.4.0/#output-of'] = ''
+    print(resp)
+    assert resp == {'http://www.w3.org/1999/02/22-rdf-syntax-ns#type': 'https://standaarden.open-regels.nl/standards/cprmv/0.4.0/#RuleSet', 'https://standaarden.open-regels.nl/standards/cprmv/0.4.0/#isBasedOn': path, 'https://standaarden.open-regels.nl/standards/cprmv/0.4.0/#id': 'TEST001BWBR0015703_2025-07-01_0', 'https://standaarden.open-regels.nl/standards/cprmv/0.4.0/#hasMethod': 'https://cprmv.open-regels.nl/0.4.0/methods/bwb', 'https://standaarden.open-regels.nl/standards/cprmv/0.4.0/#output-of': '', 'https://identifier.overheid.nl/tooi/thes/bwbid': 'TEST001BWBR0015703', 'https://identifier.overheid.nl/tooi/thes/bwbinwerkingtreding': '2025-07-01', 'https://standaarden.open-regels.nl/standards/cprmv/0.4.0/#hasPart': {'onderdeel a.': {'http://www.w3.org/1999/02/22-rdf-syntax-ns#type': 'https://standaarden.open-regels.nl/standards/cprmv/0.4.0/#Rule', 'https://standaarden.open-regels.nl/standards/cprmv/0.4.0/#id': 'onderdeel a.', 'https://standaarden.open-regels.nl/standards/cprmv/0.4.0/#definition': 'een alleenstaande of een alleenstaande ouder zonder kostendelende medebewoners: €\xa01.369,06;', 'http://cprmv.open-regels.nl/situatie': 'een alleenstaande of een alleenstaande ouder zonder kostendelende medebewoners', 'http://cprmv.open-regels.nl/norm': '1.369,06', 'http://cprmv.open-regels.nl/rulesetid': 'TEST001BWBR0015703_2025-07-01_0', 'http://cprmv.open-regels.nl/rule_id_path': 'TEST001BWBR0015703_2025-07-01_0, Artikel\xa021, onderdeel\xa0a)'}}}
+

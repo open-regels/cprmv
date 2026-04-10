@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="1.0">
-  <xsl:output method="text" indent="yes"/>
+  <xsl:output method="text" encoding="UTF-8" indent="yes"/>
   <xsl:param name="cprmvid" select="''"/>
+  <xsl:param name="puburl" select="''"/>
   
   <xsl:template match="text()"/>
   
@@ -12,9 +13,9 @@
 @prefix cprmvmethods: &lt;https://cprmv.open-regels.nl/0.4.0/methods/&gt; .
 @prefix overheid: &lt;http://standaarden.overheid.nl/owms/terms/&gt; .
 @prefix tooibwb: &lt;https://identifier.overheid.nl/tooi/thes/bwb&gt; .
-&lt;http://opencatalogi.open-regels.nl/</xsl:text><xsl:value-of select="concat(./@bwb-id,'-',./@inwerkingtreding)"/><xsl:text xml:space="preserve">&gt; a cprmv:RuleSet;
-    cprmv:isBasedOn &lt;https://identifier.overheid.nl/tooi/id/bwb/</xsl:text><xsl:value-of select="./@bwb-id"/><xsl:text xml:space="preserve">&gt;;
-    cprmv:id "</xsl:text><xsl:value-of select="concat(./@bwb-id,'_',./@inwerkingtreding, '_', substring(./@bwb-ng-vast-deel, string-length(./@bwb-ng-vast-deel)))"/><xsl:text xml:space="preserve">"@nl;
+&lt;http://cprmv.open-regels.nl/</xsl:text><xsl:value-of select="concat(./@bwb-id,'-',./@inwerkingtreding)"/><xsl:text xml:space="preserve">&gt; a cprmv:RuleSet;
+    cprmv:isBasedOn &lt;</xsl:text><xsl:value-of select="$puburl"/><xsl:text xml:space="preserve">&gt;;
+    cprmv:id "</xsl:text><xsl:value-of select="$cprmvid"/><xsl:text xml:space="preserve">"@nl;
     cprmv:hasMethod cprmvmethods:bwb;
     cprmv:output-of [
         a cpsv:PublicService;
