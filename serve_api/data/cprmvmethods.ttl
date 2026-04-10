@@ -138,9 +138,9 @@ cprmvmethods:juriconnect a cprmv:ReferenceMethod;
         ( cprmv-serve:reference-mapping-seen-on "z")
     ).
     
-cprmvmethods:eli2fmx4 a cprmv:ReferenceMethod;
-    cprmv:id "ELI2FMX4 on EU CELLAR"@en;
-    cprmv:id "ELI2FMX4 on EU CELLAR"@nl;
+cprmvmethods:elifmx4 a cprmv:ReferenceMethod;
+    cprmv:id "ELIFMX4 on EU CELLAR"@en;
+    cprmv:id "ELIFMX4 on EU CELLAR"@nl;
     cprmv:comment "ELI references to Formex 4 documents in EU CELLAR";
     cprmv-serve:reference-format "http://data.europa.eu/eli/{typedoc}/{year}/{naturalnumber}/{start-date}".
     

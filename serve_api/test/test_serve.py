@@ -34,13 +34,13 @@ def test_get_mapping():
 
 def test_transform_jci_reference():
     assert transform_jci_reference(CPRMVMETHODS.juriconnect, {'subversion' : '2', 'bwbid' : 'R1234567', 'locatie-string' : 'hoofdstuk=5&artikel=20&g=2026-01-01&z=2026-01-01'}) == None
-    assert transform_jci_reference(CPRMVMETHODS.juriconnect, {'subversion' : '31', 'bwbid' : 'R1234567', 'locatie-string' : 'hoofdstuk=5&artikel=20&g=2026-01-01&z=2026-01-01'}) == '/rules/BWBR1234567_2026-01-01_latest/Hoofdstuk%205%2CArtikel%2020'
-    assert transform_jci_reference(CPRMVMETHODS.juriconnect, {'subversion' : '3', 'bwbid' : 'R1234567', 'locatie-string' : 'hoofdstuk=5&artikel=20&g=2026-01-01'}) == '/rules/BWBR1234567_2026-01-01_latest/Hoofdstuk%205%2CArtikel%2020'
+    assert transform_jci_reference(CPRMVMETHODS.juriconnect, {'subversion' : '31', 'bwbid' : 'R1234567', 'locatie-string' : 'hoofdstuk=5&artikel=20&g=2026-01-01&z=2026-01-01'}) == '/rules/BWBR1234567_2026-01-01_2026-01-01%2CHoofdstuk%205%2CArtikel%2020'
+    assert transform_jci_reference(CPRMVMETHODS.juriconnect, {'subversion' : '3', 'bwbid' : 'R1234567', 'locatie-string' : 'hoofdstuk=5&artikel=20&g=2026-01-01'}) == '/rules/BWBR1234567_2026-01-01_latest%2CHoofdstuk%205%2CArtikel%2020'
 
 def test_detect_cprmv_serve_reference_method_and_transform():
     assert detect_cprmv_serve_reference_method_and_transform('') == None
-    assert detect_cprmv_serve_reference_method_and_transform('jci1.31:c:BWBR0015703&hoofdstuk=3&paragraaf=3.2&artikel=20&z=2025-07-01&g=2025-07-01') == '/rules/BWBR0015703_2025-07-01_latest/Hoofdstuk%203%2CParagraaf%203.2%2CArtikel%2020'
-    assert detect_cprmv_serve_reference_method_and_transform('jci1.3:c:BWBR0015703&hoofdstuk=3&paragraaf=3.2&artikel=20&g=2025-07-01') == '/rules/BWBR0015703_2025-07-01_latest/Hoofdstuk%203%2CParagraaf%203.2%2CArtikel%2020'
+    assert detect_cprmv_serve_reference_method_and_transform('jci1.31:c:BWBR0015703&hoofdstuk=3&paragraaf=3.2&artikel=20&z=2025-07-01&g=2025-07-01') == '/rules/BWBR0015703_2025-07-01_2025-07-01%2CHoofdstuk%203%2CParagraaf%203.2%2CArtikel%2020'
+    assert detect_cprmv_serve_reference_method_and_transform('jci1.3:c:BWBR0015703&hoofdstuk=3&paragraaf=3.2&artikel=20&g=2025-07-01') == '/rules/BWBR0015703_2025-07-01_latest%2CHoofdstuk%203%2CParagraaf%203.2%2CArtikel%2020'
 
 def test_detect_cprmv_serve_acknowledged_method_unknown_identifier():
     try:
