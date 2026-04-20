@@ -1,33 +1,34 @@
 @base <http://example.com/> .
 @prefix schema: <http://schema.org/> .
 @prefix cpsv: <http://purl.org/vocab/cpsv#> .
-@prefix cprmv: <https://standaarden.open-regels.nl/standards/cprmv/0.4.0#> .
+@prefix cprmv: <https://standaarden.open-regels.nl/standards/cprmv/0.4.1#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix owl: <http://www.w3.org/2002/07/owl#> .
 @prefix vann: <http://purl.org/vocab/vann/> .
 @prefix dct: <http://purl.org/dc/terms/> .
 @prefix eli: <http://data.europa.eu/eli/ontology#> .
+@prefix frbroo: <http://iflastandards.info/ns/fr/frbr/frbroo/> .
 @prefix cv: <http://data.europa.eu/m8g/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema> .
 @prefix prov: <http://www.w3.org/ns/prov#> .
 @prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 
-<https://standaarden.open-regels.nl/standards/cprmv/0.4.0#> a owl:Ontology;
-  vann:preferredNamespaceURI "https://standaarden.open-regels.nl/standards/cprmv/0.4.0#";
+<https://standaarden.open-regels.nl/standards/cprmv/0.4.1#> a owl:Ontology;
+  vann:preferredNamespaceURI "https://standaarden.open-regels.nl/standards/cprmv/0.4.1#";
   vann:preferredNamespacePrefix "cprmv";
   dct:title "CPRMV";
   dct:description "Core Public Rule Management Vocabulary is a vocabulary for expressing knowledge about agreements published as rules which can both be expressed in natural language like articles in laws as well as more formal business rules for automation of decisions, and also how all these rules relate to each other as well as to the concepts in the Core Public Service Vocabulary. It is based on the notion that all these rules are also produced as the ouput of a service delivered by Public Organizations. Typically many rules are used in the context of other services, and to some extend this requires organizations to collaborate on them, even during operationalized in services that follow them. CPRMV allows for the possibility to make all this more transparent and structured. It extends the other Core Vocabularies in this regard.";
-  owl:versionIRI <https://standaarden.open-regels.nl/standards/cprmv/0.4.0#>;
-  owl:versionInfo "0.4.0";
-  dct:created "2026-02-08"^^xsd:date;
+  owl:versionIRI <https://standaarden.open-regels.nl/standards/cprmv/0.4.1#>;
+  owl:versionInfo "0.4.1";
+  dct:created "2026-04-20"^^xsd:date;
   dct:creator <https://www.ictu.nl/>;
   dct:license <https://creativecommons.org/licenses/by/4.0/>;
   rdfs:seeAlso <https://www.open-regels.nl/standards/cprmv> .
 
 cprmv:RuleSet a owl:Class;
     skos:prefLabel "Rule Set"@en;
-    skos:definition "A set of Rule's. Which is produced as cv:Ouput within a cpsv:Publicservice while also always becoming a eli:LegalResource implemented by a cpsv:Rule followed by cpsv:Publicservice. Note however that with CPRMV, the resources a cpsv:Rule represent possibly are cprmv:RuleSet's themselves. Also, being a cv:Ouput, a cprmv:RuleSet cprmv:is_part_of a dcat.Dataset "@en;
-    rdfs:subClassOf eli:LegalResource;
+    skos:definition "A set of Rule's. Which is produced as cv:Ouput within a cpsv:Publicservice. While not always being a eli:LegalResource, a eli:LegalResource is to be seen as a cprmv:RuleSet. Just like eli:Work, CPRMV defines RuleSet's as FRBR Work (frboo F1_work).  eli:LegalResource's are eli:Work's too and more formalised versions thereof are to be seen as a derivation of those eli:Work's' too but separate Works. Also, being a cv:Ouput, a cprmv:RuleSet cprmv:is_part_of a dcat.Dataset "@en;
+    rdfs:subClassOf frbroo:F1_Work;
     rdfs:subClassOf cv:Output.
     
 cprmv:Analysis a owl:Class;
@@ -54,8 +55,8 @@ cprmv:id a owl:ObjectProperty;
     
 cprmv:isBasedOn a owl:ObjectProperty;
     skos:prefLabel "isBasedOn"@en;
-    skos:definition "In the case of a RuleSet this property states the RuleSet to be eli:based_on an eli:LegalResource (which includes any cprmv:RuleSet) the RuleSet is based on in its entirety (all cprmv:Rules contained in the cprmv:RuleSet that is extended, depending on whether they are defined with the same cprmv:hasMethod or not, can or must have matching ones in the cprmv:RuleSet that extends) possibly aggregated by analysis or formalisation (not codification). In the case of a cprmv:Rule it refers to the matching cprmv:Rule contained in a cprmv:RuleSet that is extended by the RuleSet that contains the extending cprmv:Rule (this must be the case). A cprmv:Rule in the cprmv:RuleSet that is extended does not have to be referred by a cprmv:Rule contained in the extending cprmv:RuleSet if both RuleSet's contain only cprmv:Rule's defined with the same cprmv:method, in which case this implies the cprmv:Rule implicitly becomes part of the extending cprmv:RuleSet as is. Multiple cprmv:Rule's / cprmv:RuleSet's can be extended within the same cprmv:Rule / cprmv:RuleSet"@en;
-    rdfs:subPropertyOf eli:based_on;
+    skos:definition "In the case of a RuleSet this property states the RuleSet to be derived from the RuleSet(s) in their entirety (all cprmv:Rules contained in the cprmv:RuleSet that is derived from, depending on whether they are defined with the same cprmv:hasMethod or not, can or must have matching ones in the cprmv:RuleSet that derives) possibly aggregated by analysis or formalisation (not codification). In the case of a cprmv:Rule it refers to the matching cprmv:Rule contained in a cprmv:RuleSet that is derived from by the RuleSet that contains the deriving cprmv:Rule (this must be the case). A cprmv:Rule in the cprmv:RuleSet that is derived from does not have to be referred by a cprmv:Rule contained in the deriving cprmv:RuleSet if both RuleSet's contain only cprmv:Rule's defined with the same cprmv:method, in which case this implies the cprmv:Rule implicitly becomes part of the deriving cprmv:RuleSet as is. Multiple cprmv:Rule's / cprmv:RuleSet's can be derived from within the same cprmv:Rule / cprmv:RuleSet"@en;
+    rdfs:subPropertyOf frbroo:R2_is_derivative_of;
     rdfs:subPropertyOf prov:wasDerivedFrom;
     rdfs:domain (owl:unionOf (cprmv:Rule cprmv:RuleSet));
     rdfs:range (owl:unionOf (cprmv:Rule cprmv:RuleSet)).

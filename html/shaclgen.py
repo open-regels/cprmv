@@ -17,8 +17,10 @@ package "cpsv-ap v3.2.0 (relevant part)" as cpsv-ap {
     object "cpsv-ap:Rule" as cpsvrule
     object "cpsv-ap:PublicService" as service
     service "0..*" -u-> cpsvrule : follows
-    
+
+    object "frbroo:F1_Work" as frbrooWork    
     object "eli:LegalResource" as legalresource
+    frbrooWork <|-- legalresource
     legalresource <-[dotted]- "0..*" cpsvrule : implements
     object "cv:output" as output
     service "0..*" -l-> output : produces
@@ -41,10 +43,10 @@ package "cpsv-ap v3.2.0 (relevant part)" as cpsv-ap {
 
 CPRMV_CPSV_PUML = """
 
-RuleSet --> "1..1" legalresource : isBasedOn
+RuleSet --> "1..1" frbrooWork : isBasedOn
 RuleSet  -[dotted]-> service : "output-of"
 output <|--  RuleSet
-
+frbrooWork <|--  RuleSet
 """
 
 def asList(kg, obj, prop = None):
@@ -65,8 +67,8 @@ def asList(kg, obj, prop = None):
 
 def load():
     vocabkg = Graph()
-    vocabkg.parse('../rdf/cprmv.ttl', format="turtle")
-    vocabkg.parse('../rdf/cprmv.shacl.ttl', format="turtle")
+    vocabkg.parse('../rdf/0.4.1/cprmv.ttl', format="turtle")
+    vocabkg.parse('../rdf/0.4.1/cprmv.shacl.ttl', format="turtle")
     
     classes = {}
 

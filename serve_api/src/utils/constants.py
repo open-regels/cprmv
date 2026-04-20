@@ -56,9 +56,9 @@ Note that for CMFX4 finding the version on a specific date is not supported yet.
  **URL Encoding Note:** Remember to URL-encode special characters in the path when making requests.
  """
 
-CPRMV = Namespace("https://standaarden.open-regels.nl/standards/cprmv/0.4.0/#")
-CPRMVSERVE = Namespace("https://cprmv.open-regels.nl/0.4.0/serve-api/")
-CPRMVMETHODS = Namespace("https://cprmv.open-regels.nl/0.4.0/methods/")
+CPRMV = Namespace("https://standaarden.open-regels.nl/standards/cprmv/0.4.1/#")
+CPRMVSERVE = Namespace("https://cprmv.open-regels.nl/0.4.1/serve-api/")
+CPRMVMETHODS = Namespace("https://cprmv.open-regels.nl/0.4.1/methods/")
 
 RULE_ID_PATH: str = Path(
     min_length=10,
