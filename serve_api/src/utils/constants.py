@@ -38,6 +38,11 @@ The Rule ID Path consisting of the Rule Set ID followed by a comma-separated pat
  - Example: `CFMX483e4752e-f2e5-11e8-9982-01aa75ed71a1.0017.02_DOC_2`
  - Fetches from: http://publications.europa.eu/resource/cellar/
  
+4. **Operaton server at operaton.open-regels.nl:**
+ - Format: `DMN1.3_{deploymentid}R{resourceid}_{date}_{index}`
+ - Example: `DMN1.3_e62cb254-0e74-11f1-a5e9-f68ed60940f5Re62cb255-0e74-11f1-a5e9-f68ed60940f5_2026-01-01_1, LiteralExpression_2021`
+ - Fetches from: http://operaton.open-regels.nl/
+ 
 Note that for CMFX4 finding the version on a specific date is not supported yet.
         
 **Rule Path Navigation:**
@@ -51,9 +56,9 @@ Note that for CMFX4 finding the version on a specific date is not supported yet.
  **URL Encoding Note:** Remember to URL-encode special characters in the path when making requests.
  """
 
-CPRMV = Namespace("https://standaarden.open-regels.nl/standards/cprmv/0.4.0/#")
-CPRMVSERVE = Namespace("https://cprmv.open-regels.nl/0.4.0/serve-api/")
-CPRMVMETHODS = Namespace("https://cprmv.open-regels.nl/0.4.0/methods/")
+CPRMV = Namespace("https://standaarden.open-regels.nl/standards/cprmv/0.4.1/#")
+CPRMVSERVE = Namespace("https://cprmv.open-regels.nl/0.4.1/serve-api/")
+CPRMVMETHODS = Namespace("https://cprmv.open-regels.nl/0.4.1/methods/")
 
 RULE_ID_PATH: str = Path(
     min_length=10,

@@ -1,5 +1,6 @@
 ```puml
 @startuml
+!pragma layout elk
 left to right direction
 
 package cprmv {
@@ -90,8 +91,10 @@ package "cpsv-ap v3.2.0 (relevant part)" as cpsv-ap {
     object "cpsv-ap:Rule" as cpsvrule
     object "cpsv-ap:PublicService" as service
     service "0..*" -u-> cpsvrule : follows
-    
+
+    object "frbroo:F1_Work" as frbrooWork    
     object "eli:LegalResource" as legalresource
+    frbrooWork <|-- legalresource
     legalresource <-[dotted]- "0..*" cpsvrule : implements
     object "cv:output" as output
     service "0..*" -l-> output : produces
@@ -113,10 +116,10 @@ package "cpsv-ap v3.2.0 (relevant part)" as cpsv-ap {
 
 
 
-RuleSet --> "1..1" legalresource : isBasedOn
+RuleSet --> "1..1" frbrooWork : isBasedOn
 RuleSet  -[dotted]-> service : "output-of"
 output <|--  RuleSet
-
+frbrooWork <|--  RuleSet
 
 @enduml
 ```

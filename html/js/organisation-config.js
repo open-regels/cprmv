@@ -3,8 +3,8 @@ function fixGitLabLinks(config, domobj, utils) {
     for(let i=0; i<linkElems.length; i++) {
         elem = linkElems[i];
         if(elem.href) {
-            if(elem.href.startsWith("https://github.com/discipl")) {
-                linkElems[i].href = elem.href.replace("https://github.com/standards", "https://git.open-regels.nl");
+            if(elem.href.startsWith("https://github.com/standards/cprmv/")) {
+                linkElems[i].href = elem.href.replace("https://github.com/standards/cprmv/", "https://git.open-regels.nl/standards/cprmv/");
                 if(elem.href.endsWith("pulls/")) {
                     linkElems[i].href = linkElems[i].href.replace("pulls/", "-/merge_requests");
                 }
@@ -19,11 +19,11 @@ function fixGitLabLinks(config, domobj, utils) {
 // Plaats dit bestand op een centrale locatie voor hergebruik in meerdere documenten.
 var organisationConfig = {
     nl_organisationName: "MinBZK - Dutch Ministry of Internal Affairs",
-    nl_organisationStylesURL: "https://gitdocumentatie.logius.nl/publicatie/respec/style/",
-    nl_organisationPublishURL: "https://regels.overheid.nl/publicaties/",
+    nl_organisationStylesURL: "file://./style/",
+    nl_organisationPublishURL: "https://standaarden.open-regels.nl/standards/",
     logos: [
             {
-                src: "https://gitdocumentatie.logius.nl/publicatie/respec/style/logos/figure-logius.svg",
+                src: "./style/logos/figure-logius.svg",
                 alt: "Logius",
                 id: "Logius",
                 height: 77,
@@ -43,13 +43,13 @@ var organisationConfig = {
     thisVersion: [
         "nl_organisationPublishURL",
         "shortName",
-        "/v",
+        "/",
         "publishVersion",
     ],
     prevVersion: [
         "nl_organisationPublishURL",
         "shortName",
-        "/v",
+        "/",
         "previousPublishVersion",
     ],
     useLogo: true,
@@ -132,21 +132,21 @@ var organisationConfig = {
             short: "CC0",
             url: "https://creativecommons.org/publicdomain/zero/1.0/",
         image:
-            "https://gitdocumentatie.logius.nl/publicatie/respec/media/logos/cc-zero.svg",
+            "./media/logos/cc-zero.svg",
         },
         "cc-by": {
             name: "Creative Commons Attribution 4.0 International Public License",
             short: "CC-BY",
             url: "https://creativecommons.org/licenses/by/4.0/legalcode",
         image:
-            "https://gitdocumentatie.logius.nl/publicatie/respec/media/logos/cc-by.svg",
+            "./media/logos/cc-by.svg",
         },
         "cc-by-nd": {
             name: "Creative Commons Naamsvermelding-GeenAfgeleideWerken 4.0 Internationaal",
             short: "CC-BY-ND",
             url: "https://creativecommons.org/licenses/by-nd/4.0/legalcode.nl",
         image:
-            "https://gitdocumentatie.logius.nl/publicatie/respec/media/logos/cc-by-nd.svg",
+            "./media/logos/cc-by-nd.svg",
         },
     },
     
@@ -198,7 +198,7 @@ var organisationConfig = {
             date: "",
         },
         "CPRMV": {
-            href: "https://regels.overheid.nl",
+            href: "https://standaarden.open-regels.nl/standards/cprmv/0.4.1/",
             title: "Core Public Rule Management Vocabulary (CPRMV)",
             authors: ["ministerie van Binnenlandse Zaken en Koninkrijksrelaties."],
             date: "",

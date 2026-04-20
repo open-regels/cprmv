@@ -64,6 +64,7 @@ test-cprmv-api:
     - python -m py_compile src/serve.py
     - python -c "from src.serve import app; print('FastAPI app imported successfully')"
     - test -f ./data/cprmvmethods.ttl || echo "Warning cprmvmethods.ttl not found"
+    - test -f ./data/cprmv.ttl || echo "Warning cprmv.ttl not found"
     - pytest
     - echo "API tests completed successfully"
   rules:

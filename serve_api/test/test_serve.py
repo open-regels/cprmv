@@ -22,11 +22,11 @@ client = TestClient(app)
 def test_get_root():
     response = client.get("/")
     assert response.status_code == 200
-    assert response.json() == {"CPRMV Rules Serve API": "0.4.0"}
+    assert response.json() == {"CPRMV Rules Serve API": "0.4.1"}
 
 def test_get_mapping():
     result = get_mapping(CPRMVMETHODS.juriconnect)
-    expected = {'aanwijzing': 'Aanwijzing', 'afdeling': 'Afdeling', 'artikel': 'Artikel', 'bijlage': 'Bijlage', 'boek': 'Boek', 'deel': 'Deel', 'enig': 'enig', 'hoofdstuk': 'Hoofdstuk', 'inhoudsopgave': 'Inhoudsopgave', 'nummer': 'nummer', 'paragraaf': 'Paragraaf', 'sub-paragraaf': 'Paragraaf', 'titeldeel': 'Titeldeel', 'taal': 'taal', 'verdragsonderdeel': 'Verdragsonderdeel', 'lid': 'lid', 'o': 'onderdeel', 'volzin': 'volzin', 'https://cprmv.open-regels.nl/0.4.0/serve-api/reference-mapping-valid-on': 'g', 'https://cprmv.open-regels.nl/0.4.0/serve-api/reference-mapping-seen-on': 'z'}
+    expected = {'aanwijzing': 'Aanwijzing', 'afdeling': 'Afdeling', 'artikel': 'Artikel', 'bijlage': 'Bijlage', 'boek': 'Boek', 'deel': 'Deel', 'enig': 'enig', 'hoofdstuk': 'Hoofdstuk', 'inhoudsopgave': 'Inhoudsopgave', 'nummer': 'nummer', 'paragraaf': 'Paragraaf', 'sub-paragraaf': 'Paragraaf', 'titeldeel': 'Titeldeel', 'taal': 'taal', 'verdragsonderdeel': 'Verdragsonderdeel', 'lid': 'lid', 'o': 'onderdeel', 'volzin': 'volzin', 'https://cprmv.open-regels.nl/0.4.1/serve-api/reference-mapping-valid-on': 'g', 'https://cprmv.open-regels.nl/0.4.1/serve-api/reference-mapping-seen-on': 'z'}
     assert result == expected
     assert get_mapping(CPRMVMETHODS.eli) == {}
     assert get_mapping(CPRMVMETHODS.cprmvapi) == {}
@@ -34,13 +34,13 @@ def test_get_mapping():
 
 def test_transform_jci_reference():
     assert transform_jci_reference(CPRMVMETHODS.juriconnect, {'subversion' : '2', 'bwbid' : 'R1234567', 'locatie-string' : 'hoofdstuk=5&artikel=20&g=2026-01-01&z=2026-01-01'}) == None
-    assert transform_jci_reference(CPRMVMETHODS.juriconnect, {'subversion' : '31', 'bwbid' : 'R1234567', 'locatie-string' : 'hoofdstuk=5&artikel=20&g=2026-01-01&z=2026-01-01'}) == '/rules/BWBR1234567_2026-01-01_latest/Hoofdstuk%205%2CArtikel%2020'
-    assert transform_jci_reference(CPRMVMETHODS.juriconnect, {'subversion' : '3', 'bwbid' : 'R1234567', 'locatie-string' : 'hoofdstuk=5&artikel=20&g=2026-01-01'}) == '/rules/BWBR1234567_2026-01-01_latest/Hoofdstuk%205%2CArtikel%2020'
+    assert transform_jci_reference(CPRMVMETHODS.juriconnect, {'subversion' : '31', 'bwbid' : 'R1234567', 'locatie-string' : 'hoofdstuk=5&artikel=20&g=2026-01-01&z=2026-01-01'}) == '/rules/BWBR1234567_2026-01-01_2026-01-01%2CHoofdstuk%205%2CArtikel%2020'
+    assert transform_jci_reference(CPRMVMETHODS.juriconnect, {'subversion' : '3', 'bwbid' : 'R1234567', 'locatie-string' : 'hoofdstuk=5&artikel=20&g=2026-01-01'}) == '/rules/BWBR1234567_2026-01-01_latest%2CHoofdstuk%205%2CArtikel%2020'
 
 def test_detect_cprmv_serve_reference_method_and_transform():
     assert detect_cprmv_serve_reference_method_and_transform('') == None
-    assert detect_cprmv_serve_reference_method_and_transform('jci1.31:c:BWBR0015703&hoofdstuk=3&paragraaf=3.2&artikel=20&z=2025-07-01&g=2025-07-01') == '/rules/BWBR0015703_2025-07-01_latest/Hoofdstuk%203%2CParagraaf%203.2%2CArtikel%2020'
-    assert detect_cprmv_serve_reference_method_and_transform('jci1.3:c:BWBR0015703&hoofdstuk=3&paragraaf=3.2&artikel=20&g=2025-07-01') == '/rules/BWBR0015703_2025-07-01_latest/Hoofdstuk%203%2CParagraaf%203.2%2CArtikel%2020'
+    assert detect_cprmv_serve_reference_method_and_transform('jci1.31:c:BWBR0015703&hoofdstuk=3&paragraaf=3.2&artikel=20&z=2025-07-01&g=2025-07-01') == '/rules/BWBR0015703_2025-07-01_2025-07-01%2CHoofdstuk%203%2CParagraaf%203.2%2CArtikel%2020'
+    assert detect_cprmv_serve_reference_method_and_transform('jci1.3:c:BWBR0015703&hoofdstuk=3&paragraaf=3.2&artikel=20&g=2025-07-01') == '/rules/BWBR0015703_2025-07-01_latest%2CHoofdstuk%203%2CParagraaf%203.2%2CArtikel%2020'
 
 def test_detect_cprmv_serve_acknowledged_method_unknown_identifier():
     try:
@@ -222,12 +222,8 @@ def test_get_rules():
         params={"unformat": "{situatie:param_value}: € {norm:param_value};"},
     )
     assert response.status_code == 200
-    assert response.json() == {
-        "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "https://standaarden.open-regels.nl/standards/cprmv/0.4.0/#Rule",
-        "https://standaarden.open-regels.nl/standards/cprmv/0.4.0/#definition": "een alleenstaande of een alleenstaande ouder zonder kostendelende medebewoners: €\xa01.369,06;",
-        "https://standaarden.open-regels.nl/standards/cprmv/0.4.0/#id": "onderdeel a.",
-        "norm": "1.369,06",
-        "rule_id_path": "TEST001BWBR0015703_2025-07-01_0, Artikel\xa021, onderdeel\xa0a)",
-        "rulesetid": "TEST001BWBR0015703_2025-07-01_0",
-        "situatie": "een alleenstaande of een alleenstaande ouder zonder kostendelende medebewoners",
-    }
+    resp = response.json()
+    resp['https://standaarden.open-regels.nl/standards/cprmv/0.4.1/#output-of'] = ''
+    print(resp)
+    assert resp == {'http://www.w3.org/1999/02/22-rdf-syntax-ns#type': 'https://standaarden.open-regels.nl/standards/cprmv/0.4.1/#RuleSet', 'https://standaarden.open-regels.nl/standards/cprmv/0.4.1/#isBasedOn': path, 'https://standaarden.open-regels.nl/standards/cprmv/0.4.1/#id': 'TEST001BWBR0015703_2025-07-01_0', 'https://standaarden.open-regels.nl/standards/cprmv/0.4.1/#hasMethod': 'https://cprmv.open-regels.nl/0.4.1/methods/bwb', 'https://standaarden.open-regels.nl/standards/cprmv/0.4.1/#output-of': '', 'https://identifier.overheid.nl/tooi/thes/bwbid': 'TEST001BWBR0015703', 'https://identifier.overheid.nl/tooi/thes/bwbinwerkingtreding': '2025-07-01', 'https://standaarden.open-regels.nl/standards/cprmv/0.4.1/#hasPart': {'onderdeel a.': {'http://www.w3.org/1999/02/22-rdf-syntax-ns#type': 'https://standaarden.open-regels.nl/standards/cprmv/0.4.1/#Rule', 'https://standaarden.open-regels.nl/standards/cprmv/0.4.1/#id': 'onderdeel a.', 'https://standaarden.open-regels.nl/standards/cprmv/0.4.1/#definition': 'een alleenstaande of een alleenstaande ouder zonder kostendelende medebewoners: €\xa01.369,06;', 'http://cprmv.open-regels.nl/situatie': 'een alleenstaande of een alleenstaande ouder zonder kostendelende medebewoners', 'http://cprmv.open-regels.nl/norm': '1.369,06', 'http://cprmv.open-regels.nl/rulesetid': 'TEST001BWBR0015703_2025-07-01_0', 'http://cprmv.open-regels.nl/rule_id_path': 'TEST001BWBR0015703_2025-07-01_0, Artikel\xa021, onderdeel\xa0a)'}}}
+
