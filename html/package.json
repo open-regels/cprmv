@@ -4,7 +4,7 @@
   "description": "Core Public Rule Management Vocabulary ReSpec specification",
   "main": "0.4.1",
   "scripts": {
-    "build": "npx respec --no-sandbox --localhost --src index.html --out ./public/0.4.1/index.html && sed -r -i '' 's/file...//g' ./public/0.4.1/index.html && cp -f -R template/* public/0.4.1 && cp -f -R media public/0.4.1"
+    "build": "npx respec --no-sandbox --localhost --src index.html --out ./public/0.4.1/index.html && sed -r -i '' 's/file...//g' ./public/0.4.1/index.html && cp -f -R template/* public/0.4.1 && cp -f -R media public/0.4.1 && cp -f -R public/0.4.1/* ../serve_api/respec/0.4.1 && cp -f -R public/0.4.1/* ../serve_api/respec"
   },
   "author": "Bas Kaptijn",
   "license": "CC0",

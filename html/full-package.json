@@ -4,7 +4,8 @@
   "description": "Core Public Rule Management Vocabulary ReSpec specification",
   "main": "0.4.1",
   "scripts": {
-    "build": "python shaclgen.py && npx respec --no-sandbox --localhost --src index.html --out ./public/0.4.1/index.html && sed -r -i '' 's/file...//g' ./public/0.4.1/index.html && java -jar $npm_package_config_plantuml_jar --format png --output-dir ../media puml/overview.puml && cp -f -R template/* public/0.4.1 && cp -f -R media public/0.4.1 && pandoc ./public/0.4.1/index.html -t latex -o ./public/0.4.1/cprmv.pdf"
+    "get-plantuml": "curl -L -o plantuml.jar $npm_package_config_plantuml_jar",
+    "build": "python shaclgen.py && npx respec --no-sandbox --localhost --src index.html --out ./public/$npm_package_version/index.html && sed -r -i '' 's/file...//g' ./public/$npm_package_version/index.html && java -jar plantuml.jar --format png --output-dir ../media puml/overview.puml && cp -f -R template/* public/$npm_package_version && cp -f -R media public/$npm_package_version && cd ./public/$npm_package_version && pandoc index.html -t latex -o cprmv.pdf && cd ../.. && cp -f -R public/$npm_package_version/* ../serve_api/respec/$npm_package_version && cp -f -R public/$npm_package_version/* ../serve_api/respec"
   },
   "author": "Bas Kaptijn",
   "license": "CC0",
@@ -12,6 +13,6 @@
     "respec": "^35.2.2"
   },
   "config": {
-    "plantuml_jar": "/path/to/plantuml-1.2026.1.jar"
+    "plantuml_jar": "https://github.com/plantuml/plantuml/releases/download/v1.2026.2/plantuml-epl-1.2026.2.jar"
   }
 }

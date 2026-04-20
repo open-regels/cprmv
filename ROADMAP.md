@@ -2,23 +2,8 @@
   
 Note: this roadmap can change at any moment without prior notice  
   
-**v0.4.1 CPRMV**  
--  **Documentation on properties in the ReSpec documentation**  
--  **Improved class diagram layout in the ReSpec documentation**  
--  **Examples and link to RDF definitions in the ReSpec documentation**   
-  
-**v0.4.1 CPRMV API**  
--  **/cellar-by-celex endpoint : redirects to the output of CELLAR instead of giving the user a URL to CELLAR**  
--  **/cellar-by-eli endpoint : new variant of /cellar-by-celex which accepts a full ELI URI as argument. Also redirecting to output of CELLAR.**  
--  **/ref endpoint : new version which accepts supported types of references, currently being ELI and Juriconnect but also an experimental ELI for BWB/CVDR reference and CPRMV API /rules endpoint references.. For the CPRMV API style reference one can also just use the /rules endpoint of course**  
--  **Link to /respec section from within the /docs section**  
--  **The /rules endpoint allows for retrieving the raw unprocessed source (the whole ruleset, not transformed into a CPRMV ruleset if the source isn’t a CPRMV ruleset) **  
--  **The /rules endpoint adds isBasedOn property (relation) to RuleSet’s with an URI’s as value (This will be the link to [repository.overheid.nl](http://repository.overheid.nl) in case for BWB,CVDR, an ELI reference in case of Formex 4 (these are seen as root sources for now). In the case of DMN it is the URI to the Operaton server**
--  **Fix escaping of quotes and newlines in transformations to RDF, which up until 0.4.1 can cause some sources to fail to load**
--  **Improved and more complete support for BWB, CVDR, Formex 4 and DMN 1.3 standards through usage of the existing XML Schema’s independent from XSL stylesheets (CPRMV uses a generic single stylesheet for all XML based standards which are constrained through schema checking)**  
--  **Adds (basic) support for using the CPRMV API as MCP server**
-  
 **v0.4.2 CPRMV**  
+-  **Examples and link to RDF definitions in the ReSpec documentation and makes URI's resove to RDF instead of the ReSpec documentation to be referred from the RDF information**  
 -  **Improved and more complete cprmv methods knowledge / value lists**  
 -  **Better defined relation with with official organisation registers (EU)**  
 -  **Start of a CPRMV-NL variant, based on MIM and CPSV-NL and the ROO**  
@@ -34,7 +19,12 @@ Note: this roadmap can change at any moment without prior notice
 -  **Adds user friendly access to method knowledge in the /browser section relating to defined services for governance on value lists**
 -  **adds basic support for RegelSpraak sources (depending on where these will get published)**
 
+**0.4.3 CPRMV**
+-  **Support for Dutch parliamentary documents that are officially published**
+-  **Adds example of a fully traceable piece of law, from parliament to execution of formalised rules (Article 7a of the Dutch Old Age Pension law)**
+
 **0.4.3 CPRMV API**
+- **Adds example of a fully traceable piece of law, from parliament to execution of formalised rules (Article 7a of the Dutch Old Age Pension law)**
 - **Adds a caching feaure to the CPRMV API. RuleSets requested for can be cached and fetched from this cache. One can request recaching a RuleSet**
 - **Adds the possibility to determin a need for recaching so new versions are automatically fetched and chached when there are new versions of a RuleSet (if the request is not already specifically requesting a specific version in time).**
 - **Adds some easy caching settings with which memory/disk usage can be controlled**
