@@ -119,8 +119,9 @@ def load():
 def genmd(classes, out='ch03.md'):
     with open(out, 'w') as f:
         with redirect_stdout(f):
+            print(f"# CPRMV Specification\n\n")
             for c in classes.keys():
-                print(f"<dfn>{URIRef(c).fragment}</dfn>: {classes[c][SKOS.definition]}\n\n")
+                print(f"## <dfn>{URIRef(c).fragment}</dfn>\n {classes[c][SKOS.definition]}\n\n")
                 link = '-'.join(classes[c][SKOS.prefLabel].split())
                 if RDFS.subClassOf in classes[c].keys():
                     if classes[c][RDFS.subClassOf] in classes.keys():
