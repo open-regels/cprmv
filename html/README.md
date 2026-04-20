@@ -1,6 +1,9 @@
 ## ReSpec template instructies
 
 
+### note for PDF generation (manual for now)
+pandoc index.html -t latex -o cprmv.pdf
+
 NB deze repository gebruikt geen github workflows.
 
 Om de specificatie te builden:

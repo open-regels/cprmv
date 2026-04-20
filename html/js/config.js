@@ -9,11 +9,11 @@ let respecConfig = {
 
   // shortName = Repository name
   shortName: "cprmv",
-  publishDate: "2026-02-09",
-  publishVersion: "0.4.0",
+  publishDate: "2026-04-20",
+  publishVersion: "0.4.1",
 
-  previousPublishVersion: "0.3.0",
-  previousPublishDate: "2025-03-27",
+  previousPublishVersion: "0.4.0",
+  previousPublishDate: "2026-02-09",
   previousMaturity: "fpwd",
   title: "CPRMV",
   subtitle:
@@ -56,7 +56,7 @@ let respecConfig = {
   alternateFormats: [
     {
       label: "pdf",
-      uri: "https://standaarden.open-regels.nl/standards/cprmv/0.4.0/cprmv.pdf",
+      uri: "./cprmv.pdf",
     },
   ],
 };

@@ -147,7 +147,7 @@ def genmd(classes, out='ch03.md'):
                             prop[SH.maxCount] = '*'
                     if SH.minCount not in prop.keys():
                         prop[SH.minCount] = 0
-                    print(f"| {prop[SKOS.prefLabel]} | {range} | {prop[SH.minCount]}..{prop[SH.maxCount]} | {prop[SKOS.prefLabel]} |")
+                    print(f"| {prop[SKOS.prefLabel]} | {range} | {prop[SH.minCount]}..{prop[SH.maxCount]} | {prop[SKOS.definition]} |")
                 print('\n\n')
 
 def genpuml(classes, out='puml/overview.puml'):
@@ -156,6 +156,7 @@ def genpuml(classes, out='puml/overview.puml'):
             n = 0
             print('```puml')
             print('@startuml')
+            print('!pragma layout elk')
             print('left to right direction')
             print('')
             print('package cprmv {')
