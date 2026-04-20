@@ -43,13 +43,13 @@ var organisationConfig = {
     thisVersion: [
         "nl_organisationPublishURL",
         "shortName",
-        "/v",
+        "/",
         "publishVersion",
     ],
     prevVersion: [
         "nl_organisationPublishURL",
         "shortName",
-        "/v",
+        "/",
         "previousPublishVersion",
     ],
     useLogo: true,
