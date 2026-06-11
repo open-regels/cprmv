@@ -634,7 +634,25 @@ def get_rules(
             g, r
         )  # this custom format has a more human readable pretty print layout
     else:
-        result = g.cbd(r).serialize(format=formatarg)
+        # The Concise Bounded Description of the RuleSet does not include the
+        # triples of the named cprmv:RuleMethod it points to (those live in the
+        # separate CPRMVMETHODS_KG graph). Without them the published Turtle would
+        # fail SHACL: RuleSetShape requires cprmv:hasMethod to resolve to a typed
+        # cprmv:RuleMethod, and RuleMethodShape requires that method to carry a
+        # cprmv:id. So copy the method's cprmv-vocabulary triples (type/id/comment)
+        # into the output graph and assert the cprmv:RuleMethod type explicitly
+        # (the shapes carry no rdfs:subClassOf entailment, so the specific subtype
+        # alone — e.g. cprmv:AnalysisMethod — is not sufficient). Only the type and
+        # id are copied: cprmv:comment is optional and RuleMethodShape constrains it
+        # to xsd:string, which the language-tagged method comments would violate.
+        out = g.cbd(r)
+        methods_kg = app.cprmvsettings["CPRMVMETHODS_KG"]
+        for method in set(out.objects(None, CPRMV.hasMethod)):
+            out.add((method, RDF.type, CPRMV.RuleMethod))
+            for p, o in methods_kg.predicate_objects(method):
+                if p in (RDF.type, CPRMV.id):
+                    out.add((method, p, o))
+        result = out.serialize(format=formatarg)
     if (type(result) != str):
         result = json.dumps(result, indent=4, ensure_ascii=False)
     return result
