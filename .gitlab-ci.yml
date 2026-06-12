@@ -21,7 +21,7 @@ stages:
 # ============================================================================
 
 # The Docker image that will be used to build your app
-image: node:lts
+image: ghcr.io/puppeteer/puppeteer:latest
 create-pages:
   pages:
     # The folder that contains the files to be exposed at the Page URL
@@ -42,8 +42,8 @@ create-pages:
     #  libxss1 libxtst6 ca-certificates fonts-liberation libnss3 lsb-release
     #  xdg-utils wget
     - npm ci
-    - rm -rf /root/.cache/puppeteer/chrome
-    - npx puppeteer install chrome --install-deps
+    #- rm -rf /root/.cache/puppeteer/chrome
+    #- npx puppeteer install chrome --install-deps
   script:
     - npm run build
     - cd ..
