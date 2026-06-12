@@ -36,15 +36,6 @@ create-pages:
   # Functions that should be executed before the build script is run
   before_script:
     - cd html
-    # - apt-get update
-    #- apt-get install -yq gconf-service libasound2 libatk1.0-0 libc6 libcairo2
-    #  libcups2 libdbus-1-3 libexpat1 libfontconfig1 libgbm1 libgcc1 libgconf-2-4
-    #  libgdk-pixbuf2.0-0 libglib2.0-0 libgtk-3-0 libnspr4 libpango-1.0-0
-    #  libpangocairo-1.0-0 libstdc++6 libx11-6 libx11-xcb1 libxcb1 libxcomposite1
-    #  libxcursor1 libxdamage1 libxext6 libxfixes3 libxi6 libxrandr2 libxrender1
-    #  libxss1 libxtst6 ca-certificates fonts-liberation libnss3 lsb-release
-    #  xdg-utils wget
-    #- rm -rf /root/.cache/puppeteer/chrome
     - apk update
     - apk add --no-cache chromium nss freetype harfbuzz ca-certificates ttf-freefont
     - npm ci
@@ -72,7 +63,7 @@ test-cprmv-api:
     - test -f ./data/cprmvmethods.ttl || echo "Warning cprmvmethods.ttl not found"
     - test -f ./data/cprmv.ttl || echo "Warning cprmv.ttl not found"
     - pytest
-    - echo "API tests completed successfully"
+    - echo "API tests completed successfully."
   rules:
     - if: $CI_PIPELINE_SOURCE == "merge_request_event"
       changes:
@@ -90,7 +81,7 @@ build-cprmv-api:
     - cd serve_api
     - docker info
   script:
-    - echo "Logging into Docker Hub..."
+    - echo "Logging into Docker Hub ..."
     - echo $DOCKER_HUB_TOKEN | docker login -u $DOCKER_HUB_USERNAME --password-stdin
     - echo "Building Docker image..."
     - >
@@ -120,7 +111,7 @@ deploy-cprmv-api:
   stage: deploy
   image: alpine:latest
   script:
-    - echo "New CPRMV API image available at Docker Hub"
+    - echo "New CPRMV API image available at Docker Hub."
     - echo "docker pull $DOCKER_IMAGE_NAME:latest"
     - echo "docker pull $DOCKER_IMAGE_NAME:$CI_COMMIT_SHORT_SHA"
     - echo "Update your docker-compose.yml to use the new image"
