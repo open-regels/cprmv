@@ -23,7 +23,7 @@ Then from the directory containing this README and serve.py run:
 
 Host locally:
 
-`fastapi dev serve.py`
+`fastapi dev src/serve.py`
 
 then navigate with a browser to: http://127.0.0.1/docs
 to try out the API
