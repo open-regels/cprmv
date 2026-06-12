@@ -4,6 +4,8 @@ variables:
   DOCKER_IMAGE_NAME: "datafluisteraar/cprmv-api"
   DOCKER_DRIVER: overlay2
   DOCKER_TLS_CERTDIR: "/certs"
+  PUPPETEER_SKIP_CHROMIUM_DOWNLOAD: "true"
+  PUPPETEER_EXECUTABLE_PATH: "/usr/bin/chromium-browser"
 
 # Define pipeline stages
 stages:
@@ -22,9 +24,6 @@ stages:
 
 # The Docker image that will be used to build your app
 image: node:lts-alpine
-variables:
-  PUPPETEER_SKIP_CHROMIUM_DOWNLOAD: "true"
-  PUPPETEER_EXECUTABLE_PATH: "/usr/bin/chromium-browser"
 create-pages:
   pages:
     # The folder that contains the files to be exposed at the Page URL
