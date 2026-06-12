@@ -25,6 +25,11 @@ RUN python -m pip install --no-cache-dir --upgrade pip setuptools wheel && \
 COPY src/ ./src/
 COPY data/ ./data/
 COPY respec/ ./respec/
+# Bundled certSIGN Web CA intermediate, loaded by src/serve.py into its SSL context.
+# repository.officiele-overheidspublicaties.nl omits this intermediate from its TLS
+# handshake, so without it OpenSSL/Python cannot verify the chain. See certs/README
+# and SSL_FIX.md for provenance and details.
+COPY certs/ ./certs/
 
 # Add labels for better Docker Hub integration
 LABEL maintainer="Bas.Kaptijn@ictu.nl"

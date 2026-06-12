@@ -12,11 +12,13 @@ from urllib.request import Request, urlopen
 from urllib.error import URLError
 from lxml import etree
 import shutil
+import ssl
 import tempfile
 import os
 import ciso8601
 import json
 from datetime import datetime
+from pathlib import Path
 import time
 
 import locale
@@ -33,6 +35,30 @@ from .utils.constants import (
 
 
 type Definition = dict[str, Union[str, dict]]
+
+
+# --- TLS trust fix -----------------------------------------------------------
+# repository.officiele-overheidspublicaties.nl serves an incomplete certificate
+# chain: it omits the "certSIGN Web CA" intermediate that signed its leaf
+# certificate (it presents the unrelated "certSIGN Web CA G2" intermediate
+# instead). OpenSSL/Python therefore cannot build a trust path and every upstream
+# fetch fails with "unable to get local issuer certificate". Browsers hide this by
+# downloading the missing intermediate via the leaf's AIA extension; urllib does
+# not. We bundle the intermediate (certs/certsign-webca.crt) and add it to the
+# default trust store here, so the fix is OS-independent and works for both local
+# runs and the Docker image without any system-level certificate installation.
+# See certs/README.md and SSL_FIX.md for provenance and details.
+_BUNDLED_INTERMEDIATE = Path(__file__).resolve().parent.parent / "certs" / "certsign-webca.crt"
+
+
+def _build_ssl_context() -> ssl.SSLContext:
+    ctx = ssl.create_default_context()
+    if _BUNDLED_INTERMEDIATE.is_file():
+        ctx.load_verify_locations(cafile=str(_BUNDLED_INTERMEDIATE))
+    return ctx
+
+
+SSL_CONTEXT = _build_ssl_context()
 
 
 try:
@@ -260,7 +286,7 @@ def find_publication_version_valid_on_date(date, method, as_seen_on=datetime.now
     try:
         print(f"retrieving versioning information through SRU service: {sru_url}")
         req = Request(sru_url)
-        response = urlopen(req)
+        response = urlopen(req, context=SSL_CONTEXT)
         print("Saving response from SRU")
         with tempfile.NamedTemporaryFile(delete=False) as tmp_file:
             shutil.copyfileobj(response, tmp_file)
@@ -386,7 +412,7 @@ def transform_eli_reference(method_config, reference):
     format='fmx4'
     cellarurl = f"https://publications.europa.eu/webapi/rdf/sparql?default-graph-uri=&query=prefix+cdm%3A+%3Chttp%3A%2F%2Fpublications.europa.eu%2Fontology%2Fcdm%23%3E+%0D%0Aprefix+purl%3A+%3Chttp%3A%2F%2Fpurl.org%2Fdc%2Felements%2F1.1%2F%3E+%0D%0Aselect+distinct+%3Fitem%0D%0Awhere+%7B%0D%0A%3Fwork+cdm%3Aresource_legal_eli+%22{reference}%22%5E%5E%3Chttp%3A%2F%2Fwww.w3.org%2F2001%2FXMLSchema%23anyURI%3E+.%0D%0A%3Fexpr+cdm%3Aexpression_belongs_to_work+%3Fwork+%3B%0D%0Acdm%3Aexpression_uses_language+%3Flang+.%0D%0A%3Flang+purl%3Aidentifier+%3FlangCode+.%0D%0A%3Fmanif+cdm%3Amanifestation_manifests_expression+%3Fexpr%3B%0D%0Acdm%3Amanifestation_type+%3Fformat.%0D%0A%3Fitem+cdm%3Aitem_belongs_to_manifestation+%3Fmanif.%0D%0AFILTER%28str%28%3FlangCode%29%3D%22{language}%22+%26%26+str%28%3Fformat%29%3D%22{format}%22%29%0D%0A%7D+LIMIT+100&format=application%2Fjson&timeout=0&debug=on&run=+Run+Query+"
     print(f"querying EU CELLAR: {cellarurl}")
-    with urlopen(cellarurl) as response:
+    with urlopen(cellarurl, context=SSL_CONTEXT) as response:
         data = response.read().decode('utf-8')
         json_data = json.loads(data)
         print(json_data)
@@ -470,7 +496,7 @@ def get_cprmv_rule_set_from_publication(g, method):
     try:
         print(f"downloading publication: {puburl}")
         req = Request(puburl)
-        response = urlopen(req)
+        response = urlopen(req, context=SSL_CONTEXT)
         with tempfile.NamedTemporaryFile(delete=False) as tmp_file:
             shutil.copyfileobj(response, tmp_file)
             tmp_file.close()
