@@ -21,7 +21,10 @@ stages:
 # ============================================================================
 
 # The Docker image that will be used to build your app
-image: ghcr.io/puppeteer/puppeteer:latest
+image: node:lts-alpine
+variables:
+  PUPPETEER_SKIP_CHROMIUM_DOWNLOAD: "true"
+  PUPPETEER_EXECUTABLE_PATH: "/usr/bin/chromium-browser"
 create-pages:
   pages:
     # The folder that contains the files to be exposed at the Page URL
@@ -42,8 +45,9 @@ create-pages:
     #  libxss1 libxtst6 ca-certificates fonts-liberation libnss3 lsb-release
     #  xdg-utils wget
     #- rm -rf /root/.cache/puppeteer/chrome
+    - apk update
+    - apk add --no-cache chromium nss freetype harfbuzz ca-certificates ttf-freefont
     - npm ci
-    - npx puppeteer install chrome@131.0.6778.204 --install-deps
   script:
     - npm run build
     - cd ..
