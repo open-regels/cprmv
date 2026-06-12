@@ -42,8 +42,8 @@ create-pages:
     #  libxss1 libxtst6 ca-certificates fonts-liberation libnss3 lsb-release
     #  xdg-utils wget
     #- rm -rf /root/.cache/puppeteer/chrome
-    - npx puppeteer install chrome@131.0.6778.204 --install-deps
     - npm ci
+    - npx puppeteer install chrome@131.0.6778.204 --install-deps
   script:
     - npm run build
     - cd ..
