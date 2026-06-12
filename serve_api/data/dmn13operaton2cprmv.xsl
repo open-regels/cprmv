@@ -8,12 +8,13 @@
   
   <xsl:template match="/dmn:definitions" priority="2">
     <xsl:text xml:space="preserve">@base &lt;http://operaton.open-regels.nl/&gt; .
-@prefix cprmv: &lt;https://standaarden.open-regels.nl/standards/cprmv/0.4.1/#&gt; .
+@prefix cprmv: &lt;https://standaarden.open-regels.nl/standards/cprmv/0.4.1#&gt; .
 @prefix cprmvmethods: &lt;https://cprmv.open-regels.nl/0.4.1/methods/&gt; .
-&lt;</xsl:text><xsl:value-of select="$cprmvid"/><xsl:text xml:space="preserve">&gt; a cprmv:RuleSet;
-    cprmv:isBasedOn &lt;</xsl:text><xsl:value-of select="$puburl"/><xsl:text xml:space="preserve">&gt;;
+@prefix prov: &lt;http://www.w3.org/ns/prov#&gt; .
+&lt;</xsl:text><xsl:value-of select="$cprmvid"/><xsl:text xml:space="preserve">&gt; a cprmv:DecisionModel;
+    prov:wasDerivedFrom &lt;</xsl:text><xsl:value-of select="$puburl"/><xsl:text xml:space="preserve">&gt;;
     cprmv:id "</xsl:text><xsl:value-of select="$cprmvid"/><xsl:text xml:space="preserve">"@nl;
-    cprmv:method cprmvmethods:dmn13;
+    cprmv:hasMethod cprmvmethods:dmn13;
     cprmv:hasPart (</xsl:text><xsl:apply-templates select="./*"/><xsl:text xml:space="preserve">).
 </xsl:text>
   </xsl:template>

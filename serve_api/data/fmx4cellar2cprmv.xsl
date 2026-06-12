@@ -12,14 +12,17 @@
   
   <xsl:template match="/ACT|/CONS.ACT"><xsl:text xml:space="preserve">@base &lt;http://example.com/&gt; .
 @prefix cpsv: &lt;http://purl.org/vocab/cpsv#&gt; .
-@prefix cprmv: &lt;https://standaarden.open-regels.nl/standards/cprmv/0.4.1/#&gt; .
+@prefix cprmv: &lt;https://standaarden.open-regels.nl/standards/cprmv/0.4.1#&gt; .
 @prefix cprmvmethods: &lt;https://cprmv.open-regels.nl/0.4.1/methods/&gt; .
+@prefix prov: &lt;http://www.w3.org/ns/prov#&gt; .
+@prefix xsd: &lt;http://www.w3.org/2001/XMLSchema#&gt; .
 &lt;http://publications.europa.eu/resource/celex/</xsl:text><xsl:value-of select="$cprmvid"/><xsl:text xml:space="preserve">&gt; a cprmv:RuleSet;
-    cprmv:isBasedOn &lt;</xsl:text><xsl:value-of select="$puburl"/><xsl:text xml:space="preserve">&gt;;
+    prov:wasDerivedFrom &lt;</xsl:text><xsl:value-of select="$puburl"/><xsl:text xml:space="preserve">&gt;;
+    # TODO cprmv:validFrom "YYYY-MM-DD"^^xsd:date is required by RuleSetShape; wire a reliable date from the FMX4 source.
     cprmv:id "</xsl:text><xsl:value-of select="$cprmvid"/><xsl:text xml:space="preserve">"@nl;
     cprmv:id "3</xsl:text><xsl:value-of select="BIB.INSTANCE/DOCUMENT.REF/YEAR"/><xsl:text xml:space="preserve">R</xsl:text><xsl:value-of select="BIB.INSTANCE/NO.DOC/NO.CURRENT"/><xsl:text xml:space="preserve">.NLD.fmx4.</xsl:text><xsl:value-of select="BIB.INSTANCE/DOCUMENT.REF/@FILE"/><xsl:text xml:space="preserve">"@nl;
     cprmv:hasMethod cprmvmethods:cellarfmx4;
-    cprmv:output-of [
+    cprmv:isOutputOf [
         a cpsv:PublicService;
         cprmv:id "some cpsv:PublicService instance ";
         cprmv:providedBy "EU";

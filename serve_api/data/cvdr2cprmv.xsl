@@ -13,15 +13,18 @@
   <xsl:template match="/cvdr:cvdr">
     <xsl:text xml:space="preserve">@base &lt;http://example.com/&gt; .
 @prefix cpsv: &lt;http://purl.org/vocab/cpsv#&gt; .
-@prefix cprmv: &lt;https://standaarden.open-regels.nl/standards/cprmv/0.4.1/#&gt; .
+@prefix cprmv: &lt;https://standaarden.open-regels.nl/standards/cprmv/0.4.1#&gt; .
 @prefix cprmvmethods: &lt;https://cprmv.open-regels.nl/0.4.1/methods/&gt; .
+@prefix prov: &lt;http://www.w3.org/ns/prov#&gt; .
+@prefix xsd: &lt;http://www.w3.org/2001/XMLSchema#&gt; .
 @prefix overheid: &lt;http://standaarden.overheid.nl/owms/terms/&gt; .
 @prefix tooicvdr: &lt;https://identifier.overheid.nl/tooi/thes/cvdr&gt; .
 &lt;http://cprmv.open-regels.nl/</xsl:text><xsl:value-of select="./cvdr:meta/cvdr:owmskern/dcterms:identifier"/><xsl:text xml:space="preserve">&gt; a cprmv:RuleSet;
-    cprmv:isBasedOn &lt;</xsl:text><xsl:value-of select="$puburl"/><xsl:text xml:space="preserve">&gt;;
+    prov:wasDerivedFrom &lt;</xsl:text><xsl:value-of select="$puburl"/><xsl:text xml:space="preserve">&gt;;
     cprmv:id "</xsl:text><xsl:value-of select="$cprmvid"/><xsl:text xml:space="preserve">"@nl;
+    cprmv:validFrom "</xsl:text><xsl:value-of select="./cvdr:meta/cvdr:cvdripm/overheidrg:inwerkingtredingDatum"/><xsl:text xml:space="preserve">"^^xsd:date;
     cprmv:hasMethod cprmvmethods:cvdr;
-    cprmv:output-of [
+    cprmv:isOutputOf [
         a cpsv:PublicService;
         cprmv:id &lt;https://identifier.overheid.nl/tooi/id/upl/cvdr/</xsl:text><xsl:value-of select="./cvdr:meta/cvdr:owmskern/dcterms:identifier"/><xsl:text xml:space="preserve">&gt;;
         cprmv:providedBy [ overheid:authority [ </xsl:text><xsl:value-of select="./cvdr:meta/cvdr:owmskern/dcterms:creator/@scheme"/><xsl:text xml:space="preserve"> "</xsl:text><xsl:value-of select="./cvdr:meta/cvdr:owmskern/dcterms:creator"/><xsl:text xml:space="preserve">" ]];

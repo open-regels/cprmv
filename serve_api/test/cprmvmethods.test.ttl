@@ -1,5 +1,5 @@
 @base <http://example.com/> .
-@prefix cprmv: <https://standaarden.open-regels.nl/standards/cprmv/0.4.1/#> .
+@prefix cprmv: <https://standaarden.open-regels.nl/standards/cprmv/0.4.1#> .
 @prefix cprmv-serve: <https://cprmv.open-regels.nl/0.4.1/serve-api/> .
 @prefix cprmvmethods: <https://cprmv.open-regels.nl/0.4.1/methods/> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
