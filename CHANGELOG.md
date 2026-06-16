@@ -4,6 +4,19 @@ This changelog is going to be maintained starting from CPRMV / CPRMV API v0.4.0.
 Usage of earlier versions is deprecated and at own risk.   
 Note that CPRMV / CPRMV API still is highly subjected to change.   
 
+
+**v0.4.2 CPRMV**  
+- **updates URI's and documentation to mention 0.4.2 instead of 0.4.1**
+- **adds improved compatibility : the SHACL shapes now do not include a recursive definition**
+- **makes the output of the API validate against the cprmv SHACL shapes, which failed due to compatibility problems, but also the DMN and FMX4 methods are now made conformant (using dummy properties for the moment though)**
+- **updates tests for the API output against SHACL shapes (tests in the rdf folder)** 
+- **improves the npm run build script in the full-package.json to create folders if they do not exist**
+- **removes old deprecated project folders: /example and /tools**
+
+**v0.4.2 CPRMV API**
+- **Updates URI's and documentation to mention 0.4.2 instead of 0.4.1**
+- **removes some old deprecated project files** 
+
 **v0.4.1 CPRMV**  
 - **Updates URI's and documentation to mention 0.4.1 instead of 0.4.0**
 - **The CPRMV now defines a RuleSet to be a subclass of FRBR Work (frbroo:F1_Work) instead of an eli:LegalResource as Formalisations like business rules are not to be seen as legal resources in the context of ELI up until further notice. Note that eli:LegalResources are defined as a subclass of FRBR Work too.**
