@@ -8,13 +8,25 @@
   
   <xsl:template match="/dmn:definitions" priority="2">
     <xsl:text xml:space="preserve">@base &lt;http://operaton.open-regels.nl/&gt; .
+@prefix cpsv: &lt;http://purl.org/vocab/cpsv#&gt; .
 @prefix cprmv: &lt;https://standaarden.open-regels.nl/standards/cprmv/0.4.1#&gt; .
 @prefix cprmvmethods: &lt;https://cprmv.open-regels.nl/0.4.1/methods/&gt; .
 @prefix prov: &lt;http://www.w3.org/ns/prov#&gt; .
+@prefix xsd: &lt;http://www.w3.org/2001/XMLSchema#&gt; .
+@prefix overheid: &lt;http://standaarden.overheid.nl/owms/terms/&gt; .
+@prefix tooibwb: &lt;https://identifier.overheid.nl/tooi/thes/bwb&gt; .
 &lt;</xsl:text><xsl:value-of select="$cprmvid"/><xsl:text xml:space="preserve">&gt; a cprmv:DecisionModel;
     prov:wasDerivedFrom &lt;</xsl:text><xsl:value-of select="$puburl"/><xsl:text xml:space="preserve">&gt;;
     cprmv:id "</xsl:text><xsl:value-of select="$cprmvid"/><xsl:text xml:space="preserve">"@nl;
+    # TODO cprmv:validFrom "YYYY-MM-DD"^^xsd:date is required by RuleSetShape; wire a reliable date from the DMN source.
+    cprmv:validFrom "</xsl:text>2026-01-01<xsl:text xml:space="preserve">"^^xsd:date;
     cprmv:hasMethod cprmvmethods:dmn13;
+    cprmv:isOutputOf [
+        a cpsv:PublicService;
+        cprmv:id &lt;https://identifier.overheid.nl/tooi/id/upl/provincie/flevoland/thuisbatterij/</xsl:text><xsl:text xml:space="preserve">&gt;;
+        cprmv:providedBy [ overheid:authority "Provincie Flevoland (oid)" ];
+        cpsv:produces &lt;</xsl:text><xsl:value-of select="$cprmvid"/><xsl:text xml:space="preserve">&gt;
+    ];
     cprmv:hasPart (</xsl:text><xsl:apply-templates select="./*"/><xsl:text xml:space="preserve">).
 </xsl:text>
   </xsl:template>
