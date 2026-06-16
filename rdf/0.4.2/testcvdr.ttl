@@ -1,4 +1,4 @@
-@prefix ns1: <https://standaarden.open-regels.nl/standards/cprmv/0.4.1#> .
+@prefix ns1: <https://standaarden.open-regels.nl/standards/cprmv/0.4.2#> .
 @prefix ns2: <https://identifier.overheid.nl/tooi/thes/> .
 @prefix ns3: <http://purl.org/vocab/cpsv#> .
 @prefix ns4: <http://standaarden.overheid.nl/owms/terms/> .
@@ -12,7 +12,7 @@
     ns2:cvdrinwerkingtreding "2015-01-01" ;
     ns2:cvdrterugwerkendekrachtDatum "" ;
     ns2:cvdrtitle "Beleidsregels Individuele Inkomenstoeslag gemeente Pekela 2015" ;
-    ns1:hasMethod <https://cprmv.open-regels.nl/0.4.1/methods/cvdr> ;
+    ns1:hasMethod <https://cprmv.open-regels.nl/0.4.2/methods/cvdr> ;
     ns1:hasPart ( [ a ns1:Rule ;
                 ns1:definition "1. Wanneer de belanghebbende 36 maanden of langer voorafgaande aan de peildatum heeft geleefd van een bijstandsuitkering, hoeven er geen bewijsstukken worden aangeleverd. "@nl ;
                 ns1:id "Artikel 5."@nl ] ) ;
@@ -23,7 +23,7 @@
             ns1:providedBy [ ns4:authority [ ns4:Gemeente "Pekela" ] ] ] ;
     ns1:validFrom "2015-01-01"^^xsd:date .
 
-<https://cprmv.open-regels.nl/0.4.1/methods/cvdr> a ns1:AnalysisMethod,
+<https://cprmv.open-regels.nl/0.4.2/methods/cvdr> a ns1:AnalysisMethod,
         ns1:PublicationMethod,
         ns1:RuleMethod ;
     ns1:id "cvdr"@nl .

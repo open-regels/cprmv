@@ -34,7 +34,7 @@ COPY certs/ ./certs/
 # Add labels for better Docker Hub integration
 LABEL maintainer="Bas.Kaptijn@ictu.nl"
 LABEL description="CPRMV Rules Serve API - Experimental API for fetching CPRMV Rules from RuleSets"
-LABEL version="0.4.1"
+LABEL version="0.4.2"
 LABEL org.opencontainers.image.source="https://git.open-regels.nl/standards/cprmv"
 
 # Create non-root user for security

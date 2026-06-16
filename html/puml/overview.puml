@@ -58,15 +58,15 @@ package cprmv {
     RuleSet --> "0..*" RuleSet : isBasedOn
     RuleSet --> "0..*" Rule : isBasedOn
     RuleSet --> "1..*" RuleMethod : hasMethod
-    RuleSet --> "1..1" RuleSet : hasPart
-    RuleSet --> "1..1" Rule : hasPart
+    RuleSet --> "0..*" RuleSet : hasPart
+    RuleSet --> "0..*" Rule : hasPart
     Analysis --|> RuleSet
     DecisionModel --> "0..*" Analysis : hasAnalysis
     DecisionModel --|> RuleSet
     Rule --> "0..*" RuleSet : isBasedOn
     Rule --> "0..*" Rule : isBasedOn
-    Rule --> "0..1" RuleSet : hasPart
-    Rule --> "0..1" Rule : hasPart
+    Rule --> "0..*" RuleSet : hasPart
+    Rule --> "0..*" Rule : hasPart
     Parameter --|> Rule
     AnalysisMethod --|> RuleMethod
     FormalisationMethod --|> RuleMethod

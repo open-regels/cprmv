@@ -67,8 +67,8 @@ def asList(kg, obj, prop = None):
 
 def load():
     vocabkg = Graph()
-    vocabkg.parse('../rdf/0.4.1/cprmv.ttl', format="turtle")
-    vocabkg.parse('../rdf/0.4.1/cprmv.shacl.ttl', format="turtle")
+    vocabkg.parse('../rdf/0.4.2/cprmv.ttl', format="turtle")
+    vocabkg.parse('../rdf/0.4.2/cprmv.shacl.ttl', format="turtle")
     
     classes = {}
 

@@ -1,7 +1,7 @@
 @base <http://example.com/> .
-@prefix cprmv: <https://standaarden.open-regels.nl/standards/cprmv/0.4.1#> .
-@prefix cprmv-serve: <https://cprmv.open-regels.nl/0.4.1/serve-api/> .
-@prefix cprmvmethods: <https://cprmv.open-regels.nl/0.4.1/methods/> .
+@prefix cprmv: <https://standaarden.open-regels.nl/standards/cprmv/0.4.2#> .
+@prefix cprmv-serve: <https://cprmv.open-regels.nl/0.4.2/serve-api/> .
+@prefix cprmvmethods: <https://cprmv.open-regels.nl/0.4.2/methods/> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix owl: <http://www.w3.org/2002/07/owl#> .
 @prefix vann: <http://purl.org/vocab/vann/> .
@@ -9,13 +9,13 @@
 @prefix xsd: <http://www.w3.org/2001/XMLSchema> .
 @prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 
-<https://standaarden.open-regels.nl/standards/cprmv/0.4.1/methods> a owl:Ontology;
-  vann:preferredNamespaceURI "https://standaarden.open-regels.nl/standards/cprmv/0.4.1/methods";
+<https://standaarden.open-regels.nl/standards/cprmv/0.4.2/methods> a owl:Ontology;
+  vann:preferredNamespaceURI "https://standaarden.open-regels.nl/standards/cprmv/0.4.2/methods";
   vann:preferredNamespacePrefix "cprmv";
   dct:title "CPRMV";
   dct:description "Core Public Rule Management Vocabulary is a vocabulary for expressing knowledge about agreements published as rules which can both be expressed in natural language like articles in laws as well as more formal business rules for automation of decisions, and also how all these rules relate";
-  owl:versionIRI <https://standaarden.open-regels.nl/standards/cprmv/0.4.1/methods>;
-  owl:versionInfo "0.4.1";
+  owl:versionIRI <https://standaarden.open-regels.nl/standards/cprmv/0.4.2/methods>;
+  owl:versionInfo "0.4.2";
   dct:created "2026-04-20"^^xsd:date;
   dct:creator <https://www.ictu.nl/>;
   dct:license <https://creativecommons.org/licenses/by/4.0/>;

@@ -1,4 +1,4 @@
-@prefix ns1: <https://standaarden.open-regels.nl/standards/cprmv/0.4.1#> .
+@prefix ns1: <https://standaarden.open-regels.nl/standards/cprmv/0.4.2#> .
 @prefix ns2: <http://purl.org/vocab/cpsv#> .
 @prefix prov: <http://www.w3.org/ns/prov#> .
 @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
@@ -6,7 +6,7 @@
 
 <http://publications.europa.eu/resource/celex/CFMX483e4752e-f2e5-11e8-9982-01aa75ed71a1.0017.02_DOC_2> a ns1:RuleSet ;
     prov:wasDerivedFrom <https://publications.europa.eu/resource/cellar/83e4752e-f2e5-11e8-9982-01aa75ed71a1.0017.02/DOC_2> ;
-    ns1:hasMethod <https://cprmv.open-regels.nl/0.4.1/methods/cellarfmx4> ;
+    ns1:hasMethod <https://cprmv.open-regels.nl/0.4.2/methods/cellarfmx4> ;
     ns1:hasPart ( [ a ns1:Rule ;
                 ns1:hasPart ( [ a ns1:Rule ;
                             ns1:definition "Onderwerp"@nl ;
@@ -609,7 +609,7 @@
             ns1:providedBy "EU" ] ;
     ns1:validFrom "2026-01-01"^^xsd:date .
 
-<https://cprmv.open-regels.nl/0.4.1/methods/cellarfmx4> a ns1:AnalysisMethod,
+<https://cprmv.open-regels.nl/0.4.2/methods/cellarfmx4> a ns1:AnalysisMethod,
         ns1:PublicationMethod,
         ns1:RuleMethod ;
     ns1:id "cellarfmx4"@en,

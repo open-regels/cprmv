@@ -1,7 +1,7 @@
 @prefix ex: <http://example.com/> .
 @prefix cpsv: <http://purl.org/vocab/cpsv#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
-@prefix cprmv: <https://standaarden.open-regels.nl/standards/cprmv/0.4.1#> .
+@prefix cprmv: <https://standaarden.open-regels.nl/standards/cprmv/0.4.2#> .
 
 ex:myRuleMethod a cprmv:RuleMethod ;
     cprmv:id "test" ;

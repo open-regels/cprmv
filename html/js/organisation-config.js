@@ -198,7 +198,7 @@ var organisationConfig = {
             date: "",
         },
         "CPRMV": {
-            href: "https://standaarden.open-regels.nl/standards/cprmv/0.4.1/",
+            href: "https://standaarden.open-regels.nl/standards/cprmv/0.4.2/",
             title: "Core Public Rule Management Vocabulary (CPRMV)",
             authors: ["ministerie van Binnenlandse Zaken en Koninkrijksrelaties."],
             date: "",

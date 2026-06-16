@@ -3,7 +3,7 @@
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 @prefix cpsv: <http://purl.org/vocab/cpsv#> .
-@prefix cprmv: <https://standaarden.open-regels.nl/standards/cprmv/0.4.1#> .
+@prefix cprmv: <https://standaarden.open-regels.nl/standards/cprmv/0.4.2#> .
 
 cprmv:RuleSetShape
     a sh:NodeShape ;
