@@ -18,10 +18,10 @@ Note: this roadmap can change at any moment without prior notice
 -  **Refactored code base that supports the support of rule methods as separate modules**
 -  **Adds that the API properly and always references to a service (which can be an unknown however) but with always the right competent authority.**
 -  **Support for using the /rules endpoint to find multiple published ruleset’s, which is a modus separate from referencing a single published ruleset. In the case of multiple ruleset’s the CPRMV API returns a list with references RuleSets which can be used with the CPRMV API to retrieve them.**
--  **Support for utilizing organisation and product and services catalog information within references in the /rules endpoint. ** 
--  **Support for automatically determin :isBasedOn relations using ref2link **
+-  **Support for utilizing organisation and product and services catalog information within references in the /rules endpoint.** 
+-  **Support for automatically determin :isBasedOn relations using ref2link**
 -  **Support for utilizing :isBasedOn relations within references in the /rules endpoint. It should be possible to refer to all rulesets based on a given ruleset and vice versa.**
--  **Adds a /browser section offering a minimal viable web based GUI to browse organisations, services and rulesets. Offers a searchable tree control at the left and a resource viewer at the right which should offer users to start processes related to the resources (as defined by services)  **  
+-  **Adds a /browser section offering a minimal viable web based GUI to browse organisations, services and rulesets. Offers a searchable tree control at the left and a resource viewer at the right which should offer users to start processes related to the resources (as defined by services)**  
 -  **Adds user friendly access to method knowledge in the /browser section relating to defined services for governance on value lists**
 -  **Adds basic support for Legifrance sources (depending on where these will get published)**
 -  **Adds basic support for RegelSpraak sources (depending on where these will get published)**
