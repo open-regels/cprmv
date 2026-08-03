@@ -1,0 +1,10 @@
+@base <http://example.com/> .
+@prefix cprmv: <https://standaarden.open-regels.nl/standards/cprmv/0.4.2#> .
+@prefix cprmv-serve: <https://cprmv.open-regels.nl/0.4.2/serve-api/> .
+@prefix cprmvmethods: <https://cprmv.open-regels.nl/0.4.2/methods/> .
+
+cprmvmethods:repository-overheid-nl-bwb a cprmvmethods:operaton;
+    cprmv:id "operaton.open-regels.nl"@nl;
+    cprmv:label "Operaton as repository at open-regels.nl IOU showcase environment";
+    cprmv:comment "zie open-regels.nl"@nl;
+    cprmv-serve:repository-publication-location-format "https://operaton.open-regels.nl/engine-rest/deployment/{deploymentid}/resources/{resourceid}/data".

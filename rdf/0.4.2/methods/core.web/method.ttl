@@ -1,0 +1,14 @@
+@base <http://example.com/> .
+@prefix cprmv: <https://standaarden.open-regels.nl/standards/cprmv/0.4.2#> .
+@prefix cprmv-serve: <https://cprmv.open-regels.nl/0.4.2/serve-api/> .
+
+cprmv-serve:core-web a cprmv:PublicationMethod;
+    cprmv:id "core.web"@nl;
+    cprmv:label "CPRMV API - Generic Web Publication Method";
+    cprmv:comment "CPRMV API - Generic Web Publication Method";
+    cprmv-serve:repository-publication-location-format "".
+
+cprmv-serve:repository-publication-location-format a owl:ObjectProperty;
+    skos:prefLabel "repository-publication-location-format"@en;
+    skos:definition "The format of the URL to retrieve a publication"@en;
+    rdfs:domain cprmv-serve:core-web.

@@ -1,4 +1,3 @@
-# ALEF webservice
+# git
 
-The alef-webservice method is a codification method that can be used within the ALEF IDE by the Dutch national tax authority.
-It allows alef-regelspraak rulesets to be compiled into executable Java REST/SOAP webservices.
+The git method is a well known base publication method for the publication of rulesets in git repositories.

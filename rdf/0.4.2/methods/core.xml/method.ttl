@@ -1,0 +1,8 @@
+@base <http://example.com/> .
+@prefix cprmv: <https://standaarden.open-regels.nl/standards/cprmv/0.4.2#> .
+@prefix cprmv-serve: <https://cprmv.open-regels.nl/0.4.2/serve-api/> .
+
+cprmv-serve:core-xml a cprmv:SerialisationMethod;
+    cprmv:id "core.xml"@nl;
+    cprmv:label "CPRMV API - Generic XML Serialisation Method";
+    cprmv:comment "CPRMV API - Generic XML Serialisation  Method".
