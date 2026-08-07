@@ -1,0 +1,12 @@
+@base <http://example.com/> .
+@prefix cprmv: <https://standaarden.open-regels.nl/standards/cprmv/0.4.2#> .
+@prefix cprmv-serve: <https://cprmv.open-regels.nl/0.4.2/serve-api/> .
+@prefix cprmvmethods: <https://cprmv.open-regels.nl/0.4.2/methods/> .
+
+cprmvmethods:eucellar-fmx4 a cprmv-serve:core-web;
+    a cprmvmethods:fmx4;
+    cprmv:id "eucellarfmx4"@en;
+    cprmv:id "eucellarfmx4"@nl;
+    cprmv:label "Formex v4 from EU CELLAR";
+    cprmv:comment "see: ... "@en;
+    cprmv-serve:repository-publication-location-format "https://publications.europa.eu/resource/cellar/{rulesetid}/{docid}".

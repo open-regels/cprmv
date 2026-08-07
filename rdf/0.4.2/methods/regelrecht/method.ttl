@@ -1,0 +1,11 @@
+@base <http://example.com/> .
+@prefix cprmv: <https://standaarden.open-regels.nl/standards/cprmv/0.4.2#> .
+@prefix cprmv-serve: <https://cprmv.open-regels.nl/0.4.2/serve-api/> .
+@prefix cprmvmethods: <https://cprmv.open-regels.nl/0.4.2/methods/> .
+
+cprmvmethods:regelrecht a cprmvmethods:git;
+    a cprmvmethods:nrml;
+    cprmv:id "RegelRecht git repository"@nl;
+    cprmv:label "NRML files on RegelRecht Git Repository";
+    cprmv:comment "zie https://regelrecht.rijks.app"@nl;
+    cprmv-serve:repository-publication-location-format "https://github/regelrecht...".

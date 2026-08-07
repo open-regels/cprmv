@@ -12,4 +12,4 @@ cprmvmethods:dmn13 a cprmv:FormalisationMethod;
     cprmv:comment "see https://www.omg.org/spec/DMN/1.3/About-DMN";
     cprmv-serve:publication-id-format "DMN1.3_{deploymentid}R{resourceid}_{date}_{index}";
     cprmv-serve:normalized-id-format "DMN1.3_{rulesetid}_{date}_{index}";
-    cprmv-serve:xslt "data/dmn13operaton2cprmv.xsl".
+    cprmv-serve:xslt "dmn13operaton2cprmv.xsl".

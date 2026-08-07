@@ -1,0 +1,10 @@
+@base <http://example.com/> .
+@prefix cprmv: <https://standaarden.open-regels.nl/standards/cprmv/0.4.2#> .
+@prefix cprmv-serve: <https://cprmv.open-regels.nl/0.4.2/serve-api/> .
+
+cprmvmethods:regelspraak a cprmv:FormalisationMethod;
+    cprmv:id "RegelSpraak"@en;
+    cprmv:id "RegelSpraak"@fr;
+    cprmv:id "RegelSpraak"@nl;
+    cprmv:label "RegelSpraak";
+    cprmv:comment "see https://regelspraak.nl".

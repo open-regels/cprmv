@@ -1,0 +1,8 @@
+@base <http://example.com/> .
+@prefix cprmv: <https://standaarden.open-regels.nl/standards/cprmv/0.4.2#> .
+@prefix cprmv-serve: <https://cprmv.open-regels.nl/0.4.2/serve-api/> .
+
+cprmvmethods:jas a cprmv:AnalysisMethod;
+    cprmv:id "Law Analysis / JAS"@en;
+    cprmv:id "Wetsanalyse / JAS"@nl;
+    cprmv:comment "zie: https://regels.overheid.nl/standaarden/wetsanalyse"@nl.
