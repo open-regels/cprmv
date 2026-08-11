@@ -3,6 +3,7 @@
 @prefix cprmv-serve: <https://cprmv.open-regels.nl/0.4.2/serve-api/> .
 
 cprmvmethods:nrml a cprmv:FormalisationMethod;
+    a cprmv-serve:core-json;
     cprmv:id "NRML"@en;
     cprmv:id "NRML"@fr;
     cprmv:id "NRML"@nl;
