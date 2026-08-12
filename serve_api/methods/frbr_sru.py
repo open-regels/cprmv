@@ -1,5 +1,17 @@
 from datetime import datetime
 from core_web import core_web
+import ciso8601
+import shutil
+from urllib.request import Request, urlopen
+from urllib.error import URLError
+import tempfile
+from lxml import etree
+from parse import parse
+from utils.constants import CPRMV, CPRMVSERVE
+from rdflib import Namespace
+import os
+
+FRBR_SRU = Namespace("https://cprmv.open-regels.nl/0.4.2/methods/frbr-sru/")
 
 class frbr_sru(core_web):
 
@@ -12,24 +24,34 @@ class frbr_sru(core_web):
 
     # as_seen_on (zichtdatum) argument not implemented. Always defaults to default used in SRU service which is "today" ..
     # only implemented for AnalysisMethods, not the non-FRBR methods
-    def find_publication_version_valid_on_date(date, as_seen_on=datetime.now().strftime('%Y-%m-%d')):
+    def find_publication_version_valid_on_date(self, publication, as_seen_on=datetime.now().strftime('%Y-%m-%d')):
+        date = str(publication[CPRMVSERVE['id_parts']]['valid-on'])
+        print(f"OK date {date}")
+        cprmvMethods = self.app.cprmvsettings["CPRMVMETHODS_KG"]
+        for p, o in cprmvMethods.predicate_objects(self.config):
+            print(f"frbr-sru config: {p},{o}")
         date_ts = ciso8601.parse_datetime(date)
-        frbr_sru_url_format = str(method[CPRMVSERVE["frbr-repository-sru-url"]])
-        frbr_valid_from_term_ns = str(method[CPRMVSERVE["frbr-repository-sru-response-from-date-term-namespace"]])
-        frbr_valid_from_term = str(method[CPRMVSERVE["frbr-repository-sru-response-from-date-term"]])
+        frbr_sru_url_format = str(cprmvMethods.value(self.config, FRBR_SRU["url"]))
+        frbr_valid_from_term_ns = str(cprmvMethods.value(self.config, FRBR_SRU["response-from-date-term-namespace"]))
+        frbr_valid_from_term = str(cprmvMethods.value(self.config, FRBR_SRU["response-from-date-term"]))
         fvft_prefix = 'fvft'
+        print("OK")
         frbr_valid_from_xpath = '//'+fvft_prefix+':'+frbr_valid_from_term
-        frbr_sru_response_publoc_term_ns = str(method[CPRMVSERVE["frbr-repository-sru-response-publication-location-term-namespace"]])
-        frbr_sru_response_publoc_term = str(method[CPRMVSERVE["frbr-repository-sru-response-publication-location-term"]])
+        frbr_sru_response_publoc_term_ns = str(cprmvMethods.value(self.config, FRBR_SRU["response-publication-location-term-namespace"]))
+        frbr_sru_response_publoc_term = str(cprmvMethods.value(self.config, FRBR_SRU["response-publication-location-term"]))
         fsrpt_prefix = 'fsrpt'
-        frbr_publoc_format = str(method[CPRMVSERVE["repository-publication-location-format"]])
+        print("OKOK")
+        frbr_publoc_format = str(cprmvMethods.value(self.config, CPRMVSERVE["repository-publication-location-format"]))
+        print(f"test: {frbr_sru_response_publoc_term}")
         frbr_publoc_xpath = '//'+fsrpt_prefix+':'+frbr_sru_response_publoc_term
-        sru_url = frbr_sru_url_format.format_map(method[CPRMVSERVE["id_parts"]])
-        methodLabel = method[CPRMV.label]
+        sru_url = frbr_sru_url_format.format_map(publication[CPRMVSERVE['id_parts']])
+        print("OKOK3")
+        methodLabel = cprmvMethods.value(self.config, CPRMV.label)
+        print("OKOKOK")
         try:
             print(f"retrieving versioning information through SRU service: {sru_url}")
             req = Request(sru_url)
-            response = urlopen(req, context=SSL_CONTEXT)
+            response = urlopen(req, context=self.app.SSL_CONTEXT)
             print("Saving response from SRU")
             with tempfile.NamedTemporaryFile(delete=False) as tmp_file:
                 shutil.copyfileobj(response, tmp_file)
@@ -60,7 +82,7 @@ class frbr_sru(core_web):
                             if 'index' in parts:
                                 found_index = parts['index']
                             else:
-                                raise Exception('Error parsing frbr-repository-publication-location-format. No index value configured or found...')
+                                raise Exception('Error parsing (frbr) repository-publication-location-format. No index value configured or found...')
                             print(f"found publication index: "+found_index)
                         else:
                             raise Exception('SRU response contained unexpected publication location url.')

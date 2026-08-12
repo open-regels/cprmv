@@ -5,8 +5,7 @@
 cprmv-serve:core-web a cprmv:PublicationMethod;
     cprmv:id "core.web"@nl;
     cprmv:label "CPRMV API - Generic Web Publication Method";
-    cprmv:comment "CPRMV API - Generic Web Publication Method";
-    cprmv-serve:repository-publication-location-format "".
+    cprmv:comment "CPRMV API - Generic Web Publication Method".
 
 cprmv-serve:repository-publication-location-format a owl:ObjectProperty;
     skos:prefLabel "repository-publication-location-format"@en;

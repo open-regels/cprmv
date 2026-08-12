@@ -12,7 +12,7 @@ cprmvmethods:repository-overheid-nl-bwb a cprmvmethods:frbr-sru;
     cprmv-serve:repository-publication-location-format "https://repository.officiele-overheidspublicaties.nl/bwb/BWB{rulesetid}/{date}_{index}/xml/BWB{rulesetid}_{date}_{index}.xml";
     cprmv-serve:publication-id-format "BWB{rulesetid}_{date}_{index}";
     cprmv-serve:normalized-id-format "BWB{rulesetid}_{date}_{index}";
-    frbr-sru:url "https://zoekservice.overheid.nl/sru/Search?x-connection=BWB&operation=searchRetrieve&version=2.0&maximumRecords=1&query=dcterms.identifier=BWB{rulesetid}%20and%20overheidbwb.geldigheidsdatum={valid-on}".
+    frbr-sru:url "https://zoekservice.overheid.nl/sru/Search?x-connection=BWB&operation=searchRetrieve&version=2.0&maximumRecords=1&query=dcterms.identifier=BWB{rulesetid}%20and%20overheidbwb.geldigheidsdatum={valid-on}";
     frbr-sru:response-publication-location-term-namespace
         "http://standaarden.overheid.nl/bwb/terms/";
     frbr-sru:response-publication-location-term
@@ -30,7 +30,7 @@ cprmvmethods:repository-overheid-nl-cvdr a cprmvmethods:frbr-sru;
     cprmv-serve:repository-publication-location-format "https://repository.officiele-overheidspublicaties.nl/cvdr/CVD{rulesetid}/{index}/xml/CVD{rulesetid}_{index}.xml";
     cprmv-serve:publication-id-format "CVD{rulesetid}_{index}";
     cprmv-serve:normalized-id-format "CVD{rulesetid}_{date}_{index}";
-    frbr-sru:url "https://zoekservice.overheid.nl/sru/Search?x-connection=cvdr&operation=searchRetrieve&version=2.0&maximumRecords=1&query=dcterms.identifier=CVD{rulesetid}_*%20and%20overheidrg.inwerkingtredingDatum%3C={valid-on}%20sortby%20overheidrg.inwerkingtredingDatum/descending".
+    frbr-sru:url "https://zoekservice.overheid.nl/sru/Search?x-connection=cvdr&operation=searchRetrieve&version=2.0&maximumRecords=1&query=dcterms.identifier=CVD{rulesetid}_*%20and%20overheidrg.inwerkingtredingDatum%3C={valid-on}%20sortby%20overheidrg.inwerkingtredingDatum/descending";
     frbr-sru:response-publication-location-term-namespace
         "http://standaarden.overheid.nl/sru";
     frbr-sru:response-publication-location-term

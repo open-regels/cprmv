@@ -32,7 +32,7 @@
         cprmvmethods:core.web,
         cprmvmethods:core.xml,
         cprmvmethods:core.yaml,
-        cprmvmethods:cprmvidpath,
+        cprmvmethods:cprmvapi,
         cprmvmethods:cvdr,
         cprmvmethods:dmn13,
         cprmvmethods:eli,
@@ -113,7 +113,6 @@ cprmvmethods:executionmethods a owl:Class;
 
 cprmvmethods:publicationmethods a owl:Class;
     cprmv:acknowledged (
-        cprmvmethods:operaton
         cprmvmethods:repository-overheid-nl-bwb
         cprmvmethods:repository-overheid-nl-cvdr
         cprmvmethods:eucellar-fmx4
@@ -173,8 +172,7 @@ cprmv-serve:core-json a cprmv:SerialisationMethod;
 cprmv-serve:core-web a cprmv:PublicationMethod;
     cprmv:id "core.web"@nl;
     cprmv:label "CPRMV API - Generic Web Publication Method";
-    cprmv:comment "CPRMV API - Generic Web Publication Method";
-    cprmv-serve:repository-publication-location-format "".
+    cprmv:comment "CPRMV API - Generic Web Publication Method".
 
 cprmv-serve:repository-publication-location-format a owl:ObjectProperty;
     skos:prefLabel "repository-publication-location-format"@en;
@@ -206,9 +204,9 @@ cprmv-serve:core-yaml a cprmv:SerialisationMethod;
 @prefix cprmv-serve: <https://cprmv.open-regels.nl/0.4.2/serve-api/> .
 @prefix cprmvmethods: <https://cprmv.open-regels.nl/0.4.2/methods/> .
 
-cprmvmethods:cprmvidpath a cprmv:ReferenceMethod;
-    cprmv:id "CPRMV API - rule id path"@en;
-    cprmv:id "CPRMV API - rule id path"@nl;
+cprmvmethods:cprmvapi a cprmv:ReferenceMethod;
+    cprmv:id "cprmvapi"@en;
+    cprmv:id "cprmvapi"@nl;
     cprmv:comment "CPRMV API functions as a Reference resolver but to enable this harbours it's own way of referencing (rule id path). Also it allows for additional functionality on top of what methods like juriconnect and eli offer";
     cprmv-serve:reference-format "{baseuri}/rules/{path}".
 @base <http://example.com/> .
@@ -229,8 +227,8 @@ cprmvmethods:cvdr a cprmv:AnalysisMethod;
 
 cprmvmethods:dmn13 a cprmv:FormalisationMethod;
     a cprmv-serve:core-xml;
-    cprmv:id "DMN 1.3"@en;
-    cprmv:id "DMN 1.3"@nl;
+    cprmv:id "dmn13"@en;
+    cprmv:id "dmn13"@nl;
     cprmv:label "DMN 1.3 on operaton.open-regels.nl (experimental)";
     cprmv:comment "see https://www.omg.org/spec/DMN/1.3/About-DMN";
     cprmv-serve:xslt "dmn13operaton2cprmv.xsl".
@@ -240,15 +238,15 @@ cprmvmethods:dmn13 a cprmv:FormalisationMethod;
 @prefix cprmvmethods: <https://cprmv.open-regels.nl/0.4.2/methods/> .
 
 cprmvmethods:elifmx4 a cprmv:ReferenceMethod;
-    cprmv:id "ELIFMX4 on EU CELLAR"@en;
-    cprmv:id "ELIFMX4 on EU CELLAR"@nl;
+    cprmv:id "elifmx4"@en;
+    cprmv:id "elifmx4 on EU CELLAR"@nl;
     cprmv:comment "ELI references to Formex 4 documents in EU CELLAR";
     cprmv-serve:reference-format "http://data.europa.eu/eli/{typedoc}/{year}/{naturalnumber}/{start-date}".
 
 cprmvmethods:elinl a cprmv:ReferenceMethod;
-    cprmv:id "ELI for BWB and CVDR"@en;
-    cprmv:id "ELI for BWB and CVDR"@nl;
-    cprmv:comment "Experimental ELI for NL";
+    cprmv:id "elinl"@en;
+    cprmv:id "elinl"@nl;
+    cprmv:comment "Experimental ELI for BWB and CVDR (Dutch standards)";
     cprmv-serve:reference-format "https://wetten.overheid.nl/{path}".
 @base <http://example.com/> .
 @prefix cprmv: <https://standaarden.open-regels.nl/standards/cprmv/0.4.2#> .
@@ -257,10 +255,12 @@ cprmvmethods:elinl a cprmv:ReferenceMethod;
 
 cprmvmethods:eucellar-fmx4 a cprmv-serve:core-web;
     a cprmvmethods:fmx4;
-    cprmv:id "eucellarfmx4"@en;
-    cprmv:id "eucellarfmx4"@nl;
+    cprmv:id "eucellar-fmx4"@en;
+    cprmv:id "eucellar-fmx4"@nl;
     cprmv:label "Formex v4 from EU CELLAR";
     cprmv:comment "see: ... "@en;
+    cprmv-serve:publication-id-format "CFMX4{rulesetid}_{docid}";
+    cprmv-serve:normalized-id-format "CFMX4{rulesetid}_{docid}";
     cprmv-serve:repository-publication-location-format "https://publications.europa.eu/resource/cellar/{rulesetid}/{docid}".
 @base <http://example.com/> .
 @prefix cprmv: <https://standaarden.open-regels.nl/standards/cprmv/0.4.2#> .
@@ -277,14 +277,11 @@ cprmvmethods:flint a cprmv:AnalysisMethod;
 @prefix cprmvmethods: <https://cprmv.open-regels.nl/0.4.2/methods/> .
 
 cprmvmethods:fmx4 a cprmv:AnalysisMethod;
-    a cprmv:PublicationMethod;
     a cprmv-serve:core-xml;
     cprmv:id "fmx4"@en;
     cprmv:id "fmx4"@nl;
     cprmv:label "Formex v4 (EU)";
     cprmv:comment "see: ... "@en;
-    cprmv-serve:publication-id-format "FMX4{rulesetid}_{docid}";
-    cprmv-serve:normalized-id-format "FMX4{rulesetid}_{docid}";
     cprmv-serve:xslt "fmx42cprmv.xsl".
 @base <http://example.com/> .
 @prefix cprmv: <https://standaarden.open-regels.nl/standards/cprmv/0.4.2#> .
@@ -344,8 +341,8 @@ cprmvmethods:jas a cprmv:AnalysisMethod;
 @prefix cprmvmethods: <https://cprmv.open-regels.nl/0.4.2/methods/> .
 
 cprmvmethods:juriconnect a cprmv:ReferenceMethod;
-    cprmv:id "Juriconnect"@en;
-    cprmv:id "Juriconnect"@nl;
+    cprmv:id "juriconnect"@en;
+    cprmv:id "juriconnect"@nl;
     cprmv:comment "Juriconnect (not fully supported yet)";
     cprmv-serve:reference-format 'jci1.{subversion}:c:BWB{bwbid}&{locatie-string}';
     cprmv-serve:reference-mapping (

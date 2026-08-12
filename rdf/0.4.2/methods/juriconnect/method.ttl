@@ -4,8 +4,8 @@
 @prefix cprmvmethods: <https://cprmv.open-regels.nl/0.4.2/methods/> .
 
 cprmvmethods:juriconnect a cprmv:ReferenceMethod;
-    cprmv:id "Juriconnect"@en;
-    cprmv:id "Juriconnect"@nl;
+    cprmv:id "juriconnect"@en;
+    cprmv:id "juriconnect"@nl;
     cprmv:comment "Juriconnect (not fully supported yet)";
     cprmv-serve:reference-format 'jci1.{subversion}:c:BWB{bwbid}&{locatie-string}';
     cprmv-serve:reference-mapping (

@@ -5,8 +5,10 @@
 
 cprmvmethods:eucellar-fmx4 a cprmv-serve:core-web;
     a cprmvmethods:fmx4;
-    cprmv:id "eucellarfmx4"@en;
-    cprmv:id "eucellarfmx4"@nl;
+    cprmv:id "eucellar-fmx4"@en;
+    cprmv:id "eucellar-fmx4"@nl;
     cprmv:label "Formex v4 from EU CELLAR";
     cprmv:comment "see: ... "@en;
+    cprmv-serve:publication-id-format "CFMX4{rulesetid}_{docid}";
+    cprmv-serve:normalized-id-format "CFMX4{rulesetid}_{docid}";
     cprmv-serve:repository-publication-location-format "https://publications.europa.eu/resource/cellar/{rulesetid}/{docid}".

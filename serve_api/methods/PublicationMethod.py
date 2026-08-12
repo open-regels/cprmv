@@ -31,6 +31,9 @@ class PublicationMethod(RuleMethod):
         print("normalizedid: "+rulesetid)
         return rulesetid
 
+    def interpret_publication(self, publication):
+        return publication
+
     def interpret_publication_id(self, publication_id):
         cprmvMethods = self.app.cprmvsettings["CPRMVMETHODS_KG"]
         idformat = cprmvMethods.value(self.config, CPRMVSERVE["publication-id-format"])
@@ -45,18 +48,18 @@ class PublicationMethod(RuleMethod):
                 publication = {}
                 publication[CPRMVSERVE['id_parts']] = result.named
                 if 'index' in publication[CPRMVSERVE['id_parts']] and publication[CPRMVSERVE['id_parts']]['index'] == 'latest':
-                    if 'date' in publication[CPRMVSERVE['id_parts']] and valid_date(publication[CPRMVSERVE['id_parts']]['date']):
+                    if 'date' in publication[CPRMVSERVE['id_parts']] and self.valid_date(publication[CPRMVSERVE['id_parts']]['date']):
                         publication[CPRMVSERVE['id_parts']]['valid-on'] = publication[CPRMVSERVE['id_parts']]['date']
                     else:
                         publication[CPRMVSERVE['id_parts']]['valid-on'] = datetime.now().strftime('%Y-%m-%d')
                     print(f"searching latest version valid on date: {publication[CPRMVSERVE['id_parts']]['valid-on']}")
                     # note the following call is publication method dependent
-                    version = self.find_publication_version_valid_on_date(publication[CPRMVSERVE['id_parts']]['valid-on'])
+                    version = self.find_publication_version_valid_on_date(publication)
                     publication[CPRMVSERVE['id_parts']]['date'] = version['date']
                     publication[CPRMVSERVE['id_parts']]['index'] = version['index']
                     cprmvid_official = idformat.format_map(publication[CPRMVSERVE['id_parts']])
                 publication[CPRMVSERVE['id_parts']]['cprmvid'] = cprmvid_official
-                return publication
+                return self.interpret_publication(publication)
         return None
 
     # Finds the publication date and index of the publication on that date and which was in effect on a given date
@@ -64,9 +67,9 @@ class PublicationMethod(RuleMethod):
     # were published lateron to become in effect in the past.
     # NOTE This functionality might not make sense for all publication methods in the end, but for the currently
     # supported ones it does.
-    def find_publication_version_valid_on_date(self, date, as_seen_on=datetime.now().strftime('%Y-%m-%d')):
+    def find_publication_version_valid_on_date(self, publication, as_seen_on=datetime.now().strftime('%Y-%m-%d')):
         # method = self.config
-        found_date = date
+        found_date = publication[CPRMVSERVE['id_parts']]['valid-on']
         found_index = 1
         return {"date" : found_date, "index" : found_index}
 
@@ -75,7 +78,7 @@ class PublicationMethod(RuleMethod):
         return ""
 
     # load the given raw publication (path to a file) into the given graph as cprmv knowledge
-    #def get_cprmv_rule_set_from_raw_publication(self, g, raw, publication):
+    # def get_cprmv_rule_set_from_raw_publication(self, g, raw, publication):
     #    return
 
     # load the publication into the given graph as cprmv knowledge (and clean up resources)

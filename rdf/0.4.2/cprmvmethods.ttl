@@ -32,7 +32,7 @@
         cprmvmethods:core.web,
         cprmvmethods:core.xml,
         cprmvmethods:core.yaml,
-        cprmvmethods:cprmvidpath,
+        cprmvmethods:cprmvapi,
         cprmvmethods:cvdr,
         cprmvmethods:dmn13,
         cprmvmethods:eli,
@@ -113,7 +113,6 @@ cprmvmethods:executionmethods a owl:Class;
 
 cprmvmethods:publicationmethods a owl:Class;
     cprmv:acknowledged (
-        cprmvmethods:operaton
         cprmvmethods:repository-overheid-nl-bwb
         cprmvmethods:repository-overheid-nl-cvdr
         cprmvmethods:eucellar-fmx4

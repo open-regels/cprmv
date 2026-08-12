@@ -4,12 +4,9 @@
 @prefix cprmvmethods: <https://cprmv.open-regels.nl/0.4.2/methods/> .
 
 cprmvmethods:fmx4 a cprmv:AnalysisMethod;
-    a cprmv:PublicationMethod;
     a cprmv-serve:core-xml;
     cprmv:id "fmx4"@en;
     cprmv:id "fmx4"@nl;
     cprmv:label "Formex v4 (EU)";
     cprmv:comment "see: ... "@en;
-    cprmv-serve:publication-id-format "FMX4{rulesetid}_{docid}";
-    cprmv-serve:normalized-id-format "FMX4{rulesetid}_{docid}";
     cprmv-serve:xslt "fmx42cprmv.xsl".

@@ -306,7 +306,7 @@ def get_method_config(methodid):
                     stack.append(parent)
                     for p, o in cprmvMethods.predicate_objects(parent):
                         if p != RDF.type and not p.startswith(CPRMV):
-                            print(f"adding {method} {p} {o}")
+                            #print(f"adding {method} {p} {o}")
                             cprmvMethods.add((method, p, o))
                 stack.pop(0)
             return method
@@ -328,13 +328,13 @@ def load_methods():
             continue
         module_name = file_path.stem
         # Dynamically import the module
-        #print(f"Loading method: {module_name}")
+        print(f"Loading method: {module_name}")
         module = importlib.import_module(module_name)
         for name, obj in inspect.getmembers(module, inspect.isclass):
-            #print(f"checking {name} member")
+            # print(f"checking {name} member")
             # Check if the class inherits from the RuleMethod class
-            if name.startswith(module_name): # and issubclass(obj, RuleMethod) and obj is not RuleMethod:
-                #print(f"loading RDF config for {name}")
+            if name.startswith(module_name) or name.endswith(module_name): # and issubclass(obj, RuleMethod) and obj is not RuleMethod:
+                print(f"loading RDF config for {name}")
                 config = get_method_config(name)
                 if config is not None:
                     loaded_methods[name] = obj(app, config)
@@ -415,29 +415,6 @@ def load_rule_set(publication):
 @with_pattern(r".+")
 def param_value(pvalue):
     return pvalue
-
-# detect any supported type of Analysis and or Formalisation methods) for given cprmvid (id of a cprmv:RuleSet)
-# Note this partly must be moved to corresponding method module code (the Operaton stuff)
-def detect_cprmv_serve_method(cprmvid):
-
-    method = detect_cprmv_serve_acknowledged_method(cprmvid, CPRMVMETHODS.analysismethods)
-    print('A method detected')
-    if method is None:
-        # currently this implies dmn13 method which needs to split up the rulesetid in a deployment and resource id. TODO This should be supported in a better way than the quick hack below
-        originalId = cprmvid
-        deploymentid = ''
-        resourceid = ''
-        cprmvid = cprmvid.split('_')
-        if len(cprmvid) == 4:
-            operatonids = cprmvid[1].split('R')
-            if len(operatonids) == 2:
-                deploymentid = operatonids[0]
-                resourceid = operatonids[1]
-        method = detect_cprmv_serve_acknowledged_method(originalId, CPRMVMETHODS.formalisationmethods)
-        if method is not None:
-            method[CPRMVSERVE["id_parts"]]['deploymentid'] = deploymentid
-            method[CPRMVSERVE["id_parts"]]['resourceid'] = resourceid
-    return method
 
 def get_rules(
     rule_id_path="",

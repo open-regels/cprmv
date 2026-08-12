@@ -1,10 +1,13 @@
+from datetime import datetime
 from ReferenceMethod import ReferenceMethod
+from utils.constants import CPRMVSERVE, CPRMVMETHODS
+from rdflib.namespace import RDF
 
 class juriconnect(ReferenceMethod):
     # helper method
-    def get_mapping():
+    def get_mapping(self):
         referencemethod = self.config
-        cprmvMethods = app.cprmvsettings["CPRMVMETHODS_KG"]
+        cprmvMethods = self.app.cprmvsettings["CPRMVMETHODS_KG"]
         result = {}
         mapping = cprmvMethods.value(predicate=CPRMVSERVE["reference-mapping"], subject=referencemethod, any=False)
         while mapping is not None and mapping != RDF.nil:
@@ -20,8 +23,10 @@ class juriconnect(ReferenceMethod):
         return result
 
     # note that JuriConnect implies BWB
-    def transform_reference(reference):
-        reference_parts = parse_reference(reference)
+    def transform_reference(self, reference):
+        reference_parts = self.parse_reference(reference)
+        if reference_parts is None:
+            return None
         if 'subversion' not in reference_parts:
             print("Invalid call to transform_jci_reference. No subversion part in reference parts...")
             return None
@@ -29,8 +34,8 @@ class juriconnect(ReferenceMethod):
             print("No valid juriconnect version (must be 1.3 or 1.31)")
             return None
         path = '/rules/'
-        cprmvMethods = app.cprmvsettings["CPRMVMETHODS_KG"]
-        id_format = str(cprmvMethods.value(CPRMVMETHODS.bwb, CPRMVSERVE['normalized-id-format']))
+        cprmvMethods = self.app.cprmvsettings["CPRMVMETHODS_KG"]
+        id_format = str(cprmvMethods.value(CPRMVMETHODS['repository-overheid-nl-bwb'], CPRMVSERVE['normalized-id-format']))
         id_parts = {}
         mapping = self.get_mapping()
         if len(reference_parts['bwbid']) != 8:
