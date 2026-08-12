@@ -1,6 +1,6 @@
+from ReferenceMethod import ReferenceMethod
 
 class elifmx4(ReferenceMethod):
-    # NOTE this is ELI as referencemethod specific and will have to move to corresponding method module
     # Also note this method seems specific to ELI in CELLAR context
     def transform_reference(reference):
         result = None
@@ -17,7 +17,4 @@ class elifmx4(ReferenceMethod):
         return result
 
 class elinl(ReferenceMethod):
-    # NOTE this is ELI as referencemethod specific and will have to move to corresponding method module
-    def transform_reference(reference_parts):
-        path = reference_parts['path'].replace('/',', ')
-        return '/rules/'+path
+    pass

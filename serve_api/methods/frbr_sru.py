@@ -1,5 +1,14 @@
+from datetime import datetime
+from core_web import core_web
 
-class frbr_sru(PublicationMethod):
+class frbr_sru(core_web):
+
+    def valid_date(self, datestr):
+        try:
+            datetime.fromisoformat(datestr)
+        except:
+            return False
+        return True
 
     # as_seen_on (zichtdatum) argument not implemented. Always defaults to default used in SRU service which is "today" ..
     # only implemented for AnalysisMethods, not the non-FRBR methods
@@ -37,7 +46,7 @@ class frbr_sru(PublicationMethod):
                     found_index = 'unknown'
                     for expr in xml.xpath(frbr_valid_from_xpath, namespaces={fvft_prefix : frbr_valid_from_term_ns}):
                         found_date = expr.text
-                        if not valid_date(found_date):
+                        if not self.valid_date(found_date):
                             print("invalid publication valid-from date found: "+found_date)
                             raise Exception('SRU response contained invalid publication valid-from date.')
                         break

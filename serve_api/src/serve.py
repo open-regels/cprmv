@@ -1,7 +1,7 @@
 from fastapi_mcp import FastApiMCP
 from rdflib import Graph, BNode, URIRef
 from rdflib.term import Literal
-from rdflib.namespace import RDF
+from rdflib.namespace import RDF, RDFS
 from typing import Union
 from fastapi import FastAPI
 from fastapi.staticfiles import StaticFiles
@@ -20,9 +20,11 @@ import json
 from datetime import datetime
 from pathlib import Path
 import time
+import sys
 import importlib
+import inspect
 import pkgutil
-import methods  # Import the methods plugin directory as a package
+
 
 import locale
 from .utils.constants import (
@@ -73,7 +75,7 @@ except locale.Error:
 
 app = FastAPI(
     title="CPRMV Rules Serve API",
-    description="This experimental API allows fetching single CPRMV Rules from locally provided CPRMV RuleSets in a desired RDF format.",
+    description="This API allows fetching single CPRMV Rules from locally provided CPRMV RuleSets in a desired RDF format.",
     version="0.4.2",
     contact={
         "name": "Bas Kaptijn",
@@ -86,6 +88,7 @@ app = FastAPI(
     },
 )
 
+# load knowledge about CPRMV and CPRMV Methods into memory
 def set_CPRMVMETHODSKG(path, additive=True):
     print("loading cprmvmethods.ttl from path: "+path)
     if not additive:
@@ -99,6 +102,8 @@ def set_CPRMVMETHODSKG(path, additive=True):
 set_CPRMVMETHODSKG("./data/cprmvmethods.ttl", False)
 set_CPRMVMETHODSKG("./data/cprmv.ttl", True)
 
+app.SSL_CONTEXT = SSL_CONTEXT
+
 @app.get("/")
 def cprmv_info():
     """
@@ -106,14 +111,15 @@ def cprmv_info():
     """
     return {app.title: app.version}
 
-
+# respec documentation on CPRMV and CPRMV Methods endpoint
 app.mount("/respec", StaticFiles(directory="respec", html=True, follow_symlink=True), name="respec")
 
+# endpoint for retrieving all information on CPRMV Methods and CPRMV itself
+# which can be combined with information retrieved through the /rules endpoint
 @app.get("/methods")
 def methods(format: str = "json-ld"):
     if format in ["json-ld", "xml", "turtle", "ttl", "n3", "turtle2"]:
         return PlainTextResponse(app.cprmvsettings["CPRMVMETHODS_KG"].serialize(format=format))
-
 
 @app.get("/rules/{rule_id_path}")
 def rules(
@@ -177,7 +183,7 @@ def ref(reference : str = ""):
         return response
     return {"error": "not a valid or supported reference..."}
 
-# helper endpoint, which should get moved somehow to method implementations
+# helper endpoint
 @app.get("/cellar-by-eli/{elipath:path}/{language}/{format}")
 def eli(elipath: str = "http://data.europa.eu/eli/reg/2018/1805/oj", language: str = "NLD", format: str = "fmx4"):
     """
@@ -196,7 +202,7 @@ def eli(elipath: str = "http://data.europa.eu/eli/reg/2018/1805/oj", language: s
     response = RedirectResponse(url=cellarurl)
     return response
 
-# helper endpoint, which should get moved somehow to method implementations
+# helper endpoint
 @app.get("/cellar-by-celex/{celexid}")
 def celex(celexid: str = "32018R1805", language: str = "NLD", format: str = "fmx4"):
     """
@@ -230,7 +236,6 @@ def celex(celexid: str = "32018R1805", language: str = "NLD", format: str = "fmx
     print(cellarurl)
     response = RedirectResponse(url=cellarurl)
     return response
-
 
 # Tip: use https://publications.europa.eu/webapi/rdf/sparql to edit the SPARQL query in the URL above (you get the URI in a new browser window by executing the query):
 """
@@ -267,76 +272,75 @@ FILTER(str(?langCode)="NLD" && str(?format)="fmx4")
 
 # abstract base class for all methods
 class RuleMethod:
-    # the constructor is given the reference to the method definition within the CPRMV standard knowledge graph the API loads
-    def __init__(self, method_config):
+    # the constructor is given the reference to the method definition node within the CPRMV standard
+    # knowledge graph the API loads and self.config can be used in inherited methods as how it gets passed to child class instances
+    def __init__(self, app, method_config):
+        self.app = app
         self.config = method_config
 
-# publication method implementations must override / define the (abstract) methods in this class
-class PublicationMethod:
-    def __init__(self, method_config):
-        self.config = method_config
+app.acknowledged_methods = {}
 
-    # Finds the publication date and index of the publication on that date and which was in effect on a given date
-    # as could have been seen on a given second date which defaults to today, ignoring publications that possibly
-    # were published lateron to become in effect in the past.
-    # NOTE This functionality might not make sense for all publication methods in the end, but for the currently
-    # supported ones it does.
-    def find_publication_version_valid_on_date(date, as_seen_on=datetime.now().strftime('%Y-%m-%d')):
-        # method = self.config
-        found_date = date
-        found_index = 1
-        return {"date" : found_date, "index" : found_index}
-
-# reference method implementations must define the abstract methods in this class
-class ReferenceMethod:
-    def ___init___(self, method_config):
-        self.config = method_config
-
-    # transforms a reference string that is unformatted into reference parts into
-    # a reference that can be used within the CPRMV API internally
-    def transform_reference(reference_parts):
-        return None
-
-# serialisation method implementations must define the abstract methods in this class
-class SerialisationMethod:
-    def ___init___(self, method_config):
-        self.config = method_config
-
-    # adds the publication as cprmv information to the given RDFlib graph
-    def get_cprmv_rule_set_from_publication(g):
-        return
+def get_acknowledged_methods(category):
+    cprmvMethods = app.cprmvsettings["CPRMVMETHODS_KG"]
+    result = []
+    if category in app.acknowledged_methods:
+        return app.acknowledged_methods[category]
+    methods = cprmvMethods.value(category, CPRMV.acknowledged)
+    while methods != RDF.nil:
+        method = cprmvMethods.value(methods, RDF.first)
+        result.append(method)
+        methods = cprmvMethods.value(methods, RDF.rest)
+    app.acknowledged_methods[category] = result
+    return result
 
 def get_method_config(methodid):
-    methods_config = app.cprmvsettings["CPRMVMETHODS_KG"]
-    pubmethods = methods_config.value(CPRMVMETHODS.publicationmethods, CPRMV.acknowledged)
-    while pubmethods != RDF.nil:
-        method = methods_config.value(pubmethods, RDF.first)
-        id = str(methods_config.value(method, CPRMV.id))
+    cprmvMethods = app.cprmvsettings["CPRMVMETHODS_KG"]
+    for method in get_acknowledged_methods(CPRMVMETHODS.rulemethods):
+        # note that python class names can not contain the characters '.' and '-' for which the underscore must be used instead
+        id = str(cprmvMethods.value(method, CPRMV.id)).replace('.','_').replace('-','_')
         if id == methodid:
+            # copy config for easy access in base classes (which they rely on)
+            stack = [method]
+            while len(stack) > 0 and len(stack) < 10:
+                for parent in cprmvMethods.objects(stack[0], RDF.type):
+                    stack.append(parent)
+                    for p, o in cprmvMethods.predicate_objects(parent):
+                        if p != RDF.type and not p.startswith(CPRMV):
+                            print(f"adding {method} {p} {o}")
+                            cprmvMethods.add((method, p, o))
+                stack.pop(0)
             return method
-        pubmethods = methods_config.value(pubmethods, RDF.rest)
-    print(f"Warning: no configuration found for method with id: {methodid}")
+    #print(f"Warning: no configuration found for method with id: {methodid}")
     return None
 
-def load_methods:
-    """Scans the methods directory and imports all plugin modules found inside."""
+# scans the methods directory for method implementation modules related to ackknowledged cprmv:RuleMethod's
+def load_methods():
     loaded_methods = {}
-    # Iterate over all modules inside the methods path
-    for _, module_name, is_pkg in pkgutil.iter_modules(methods.__path__):
-        if not is_pkg:
-            # Construct full absolute module path (e.g., 'methods.dmn13')
-            full_module_name = f"{methods.__name__}.{module_name}"
-            # Dynamically import the module
-            module = importlib.import_module(full_module_name)
-            for name, obj in inspect.getmembers(module, inspect.isclass):
-                # Check if the class inherits from the RuleMethod class
-                if issubclass(obj, RuleMethod) and obj is not RuleMethod:
-                    config = get_method_config(module_name)
-                    if config not is None:
-                        loaded_methods[module_name] = obj(config)
-                        print(f"Loaded method: {module_name}")
-                    else:
-                        print(f"Could not load method: {module_name} as no configuration as an acknowledged publication method could be found.")
+    current_dir = Path(__file__).resolve().parent
+    parent_dir = current_dir.parent
+    target_dir = parent_dir / "methods"
+    if str(current_dir) not in sys.path:
+        sys.path.append(str(current_dir))
+    if str(target_dir) not in sys.path:
+        sys.path.append(str(target_dir))
+    for file_path in target_dir.glob("*.py"):
+        if file_path.name == "__init__.py":
+            continue
+        module_name = file_path.stem
+        # Dynamically import the module
+        #print(f"Loading method: {module_name}")
+        module = importlib.import_module(module_name)
+        for name, obj in inspect.getmembers(module, inspect.isclass):
+            #print(f"checking {name} member")
+            # Check if the class inherits from the RuleMethod class
+            if name.startswith(module_name): # and issubclass(obj, RuleMethod) and obj is not RuleMethod:
+                #print(f"loading RDF config for {name}")
+                config = get_method_config(name)
+                if config is not None:
+                    loaded_methods[name] = obj(app, config)
+                    print(f"Loaded method: {module_name}.{name}")
+                    #else:
+                    #print(f"Could not load method: {module_name} as no configuration as an acknowledged rule method could be found.")
     return loaded_methods
 
 # Load all methods that have specific python implementations for the functionality of the CPRMV API
@@ -346,103 +350,57 @@ def load_methods:
 # have RuleMethod as base class (indirectly) as value
 app.cprmvmethods = load_methods()
 
-def valid_date(datestr):
-    try:
-        datetime.fromisoformat(datestr)
-    except:
-        return False
-    return True
-
 # NOTE this depends on supported reference methods which are modular so this python method needs to traverse those
 def detect_cprmv_serve_reference_method_and_transform(reference):
     cprmvMethods = app.cprmvsettings["CPRMVMETHODS_KG"]
     result = None
-    methods = cprmvMethods.value(CPRMVMETHODS.referencemethods, CPRMV.acknowledged)
-    while methods != RDF.nil:
-        # no need for this if moved to reference method implementation
-        method_config = cprmvMethods.value(methods, RDF.first)
-        # the id could be get from the reference method implementation
-        reference_method_id = str(cprmvMethods.value(method_config , CPRMV["id"]))
-        # the reference format could be set once in the constructor of the constructor of the reference method implementation class
-        referenceformat = str(cprmvMethods.value(method_config , CPRMVSERVE["reference-format"]))
-        # move to reference method implementation
-        refresult = parse(referenceformat, reference)
-        print(reference_method_id+' '+referenceformat+' '+reference)
-        if refresult is not None:
-            if reference_method_id == 'Juriconnect':
-                result = transform_jci_reference(method_config , refresult)
-            elif reference_method_id == 'ELIFMX4 on EU CELLAR':
-                result = transform_eli_reference(method_config , reference)
-            elif reference_method_id == 'ELI for BWB and CVDR':
-                result = transform_elinl_reference(method_config , refresult)
-            elif reference_method_id == 'CPRMV API - rule id path':
-                result = transform_cprmvapi_reference(method_config , refresult)
-            print(refresult)
-            if result is not None:
-                break
-        methods = cprmvMethods.value(methods, RDF.rest)
+    for method in get_acknowledged_methods(CPRMVMETHODS.referencemethods):
+        reference_method_id = str(cprmvMethods.value(method , CPRMV["id"]))
+        method_module = app.cprmvmethods[reference_method_id]
+        result = method_module.transform_reference(reference)
+        if result is not None:
+            break
     if result is None:
         print('Could not detect reference: invalid, unknown or unsupported reference type')
     return result
-
-# nasty method to support different ruleset id formats by transforming them to a "normalized" one
-def normalize_ruleset_id(rulesetid):
-    print("normalizing id: "+rulesetid)
-    if rulesetid.find('_') < 0:
-        rulesetid = rulesetid+'_now_latest'
-    splitted = rulesetid.split('_')
-    if len(splitted) == 2:
-        rulesetid = splitted[0]+'_na_'+splitted[1]
-    print("normalizedid: "+rulesetid)
-    return rulesetid
 
 # NOTE isn't this more related to all publication methods combined with analysis/formalisation (or serialisation)?
 # finds the first acknowledged RuleMethod of given category (AnalysisMethod (default) / FormalisationMethod uri's) supported by CPRMV Serve
 # for which the given cprmvid matches the id format defined in the cprmvmethods value lists
 # returns all the information on the matching method as a Dictionary in which also the unformatted cprmvid (one or more key/values)
 # is added under the CPRMV.id key
-def detect_cprmv_serve_acknowledged_method(cprmvid, category = CPRMVMETHODS.analysismethods):
+def detect_publication(cprmvid):
     cprmvMethods = app.cprmvsettings["CPRMVMETHODS_KG"]
     result = None
-    methods = cprmvMethods.value(category, CPRMV.acknowledged)
-    while methods != RDF.nil:
-        method = cprmvMethods.value(methods, RDF.first)
-        idformat = cprmvMethods.value(method, CPRMVSERVE["publication-id-format"])
-        normalized_idformat = cprmvMethods.value(method, CPRMVSERVE["normalized-id-format"])
-        if idformat is not None and normalized_idformat is not None:
-            cprmvid_official = cprmvid
-            print(f"detect for {cprmvid}")
-            cprmvid_normalized = normalize_ruleset_id(cprmvid)
-            print(f"Parsing {normalized_idformat} on value {cprmvid_normalized}")
-            result = parse(normalized_idformat, cprmvid_normalized)
-            if result is not None:
-                methodTriples = {}
-                for p, o in cprmvMethods.predicate_objects(method):
-                    methodTriples[p] = o
-                methodTriples[CPRMVSERVE['id_parts']] = result.named
-                if 'index' in methodTriples[CPRMVSERVE['id_parts']] and methodTriples[CPRMVSERVE['id_parts']]['index'] == 'latest':
-                    if 'date' in methodTriples[CPRMVSERVE['id_parts']] and valid_date(methodTriples[CPRMVSERVE['id_parts']]['date']):
-                        methodTriples[CPRMVSERVE['id_parts']]['valid-on'] = methodTriples[CPRMVSERVE['id_parts']]['date']
-                    else:
-                        methodTriples[CPRMVSERVE['id_parts']]['valid-on'] = datetime.now().strftime('%Y-%m-%d')
-                    print(f"searching latest version valid on date: {methodTriples[CPRMVSERVE['id_parts']]['valid-on']}")
-                    # note the following call is publication method dependent
-                    version = find_publication_version_valid_on_date(methodTriples[CPRMVSERVE['id_parts']]['valid-on'], methodTriples)
-                    methodTriples[CPRMVSERVE['id_parts']]['date'] = version['date']
-                    methodTriples[CPRMVSERVE['id_parts']]['index'] = version['index']
-                    cprmvid_official = idformat.format_map(methodTriples[CPRMVSERVE['id_parts']])
-                methodTriples[CPRMVSERVE['id_parts']]['cprmvid'] = cprmvid_official
-                result = methodTriples
-                break
-        methods = cprmvMethods.value(methods, RDF.rest)
+    for method in get_acknowledged_methods(CPRMVMETHODS.publicationmethods):
+
+        publication_method_id = str(cprmvMethods.value(method , CPRMV["id"])).replace('-','_').replace('.','_')
+        print(publication_method_id)
+        if publication_method_id in app.cprmvmethods:
+            method_module = app.cprmvmethods[publication_method_id]
+        else:
+            print(app.cprmvmethods.keys())
+            continue
+
+        print(method_module.interpret_publication_id)
+
+        result = method_module.interpret_publication_id(cprmvid)
+
+        print(f"RESULT: {result}")
+
+        if result is not None:
+            result['method_module'] = method_module
+            break
+    if result is None:
+        print('Could not detect publication: invalid, unknown or unsupported publication method matching given publication id')
     return result
 
 # load the requested publication from the official repository and transform it to CPRMV and load it
-def load_rule_set(method):
+def load_rule_set(publication):
+    cprmvMethods = app.cprmvsettings["CPRMVMETHODS_KG"]
     g = Graph()
     try:
-        # the following call should be dependent on the serialisation method, which currently only is core.xml based
-        get_cprmv_rule_set_from_publication(g, method)
+        publication['method_module'].get_cprmv_rule_set_from_publication(g, publication)
     except Exception as e:
         if (
             "unbound prefix" in str(e).lower()
@@ -461,6 +419,7 @@ def param_value(pvalue):
 # detect any supported type of Analysis and or Formalisation methods) for given cprmvid (id of a cprmv:RuleSet)
 # Note this partly must be moved to corresponding method module code (the Operaton stuff)
 def detect_cprmv_serve_method(cprmvid):
+
     method = detect_cprmv_serve_acknowledged_method(cprmvid, CPRMVMETHODS.analysismethods)
     print('A method detected')
     if method is None:
@@ -497,11 +456,11 @@ def get_rules(
         else:
             rulesetid = rule_id_path.strip()
         print(f"Info: retrieving info for cprmv:RuleSet : {rulesetid}")
-        method = detect_cprmv_serve_method(rulesetid)
-        if method is not None:
-            g = load_rule_set(method)
-            print(f"replacing {rulesetid} with {method[CPRMVSERVE['id_parts']]['cprmvid']} in {rule_id_path}")
-            rule_id_path = rule_id_path.replace(rulesetid, method[CPRMVSERVE["id_parts"]]['cprmvid']) # the actual latest rulesetid might have been searched and found
+        publication = detect_publication(rulesetid)
+        if publication is not None:
+            g = load_rule_set(publication)
+            print(f"replacing {rulesetid} with {publication[CPRMVSERVE['id_parts']]['cprmvid']} in {rule_id_path}")
+            rule_id_path = rule_id_path.replace(rulesetid, publication[CPRMVSERVE["id_parts"]]['cprmvid']) # the actual latest rulesetid might have been searched and found
         else:
             raise Exception(
                 "No supported publication repository use identifiers with the format of the given Ruleset Id."

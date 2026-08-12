@@ -1,6 +1,6 @@
+from ReferenceMethod import ReferenceMethod
 
-class juriconnect:
-
+class juriconnect(ReferenceMethod):
     # helper method
     def get_mapping():
         referencemethod = self.config
@@ -19,8 +19,9 @@ class juriconnect:
             mapping = cprmvMethods.value(mapping, RDF.rest)
         return result
 
-    # NOTE this is juriconnect as referencemethod specific and will have to move to corresponding method module
-    def transform_reference(reference_parts):
+    # note that JuriConnect implies BWB
+    def transform_reference(reference):
+        reference_parts = parse_reference(reference)
         if 'subversion' not in reference_parts:
             print("Invalid call to transform_jci_reference. No subversion part in reference parts...")
             return None
@@ -28,7 +29,6 @@ class juriconnect:
             print("No valid juriconnect version (must be 1.3 or 1.31)")
             return None
         path = '/rules/'
-        # bwb specific code?
         cprmvMethods = app.cprmvsettings["CPRMVMETHODS_KG"]
         id_format = str(cprmvMethods.value(CPRMVMETHODS.bwb, CPRMVSERVE['normalized-id-format']))
         id_parts = {}

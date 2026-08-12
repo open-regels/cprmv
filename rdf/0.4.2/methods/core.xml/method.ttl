@@ -6,3 +6,8 @@ cprmv-serve:core-xml a cprmv:SerialisationMethod;
     cprmv:id "core.xml"@nl;
     cprmv:label "CPRMV API - Generic XML Serialisation Method";
     cprmv:comment "CPRMV API - Generic XML Serialisation  Method".
+
+cprmv-serve:xslt a owl:ObjectProperty;
+    skos:prefLabel "xslt"@en;
+    skos:definition "The name of the XSLT file to apply to transform the raw XML publication into RDF for use within the CPRMV API"@en;
+    rdfs:domain cprmv-serve:core-xml.

@@ -113,10 +113,6 @@ cprmvmethods:executionmethods a owl:Class;
 
 cprmvmethods:publicationmethods a owl:Class;
     cprmv:acknowledged (
-        cprmvmethods:bwb
-        cprmvmethods:cvdr
-        cprmvmethods:fmx4
-        cprmvmethods:dmn13
         cprmvmethods:operaton
         cprmvmethods:repository-overheid-nl-bwb
         cprmvmethods:repository-overheid-nl-cvdr

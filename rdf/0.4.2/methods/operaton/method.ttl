@@ -3,7 +3,7 @@
 @prefix cprmv-serve: <https://cprmv.open-regels.nl/0.4.2/serve-api/> .
 @prefix cprmvmethods: <https://cprmv.open-regels.nl/0.4.2/methods/> .
 
-cprmvmethods:operaton a cprmv-serve:core-web;
+cprmvmethods:operaton a cprmv-serve:core.web;
     a cprmvmethods:dmn13;
     a cprmv:ExecutionMethod;
     cprmv:id "Operaton"@nl;
