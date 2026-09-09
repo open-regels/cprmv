@@ -5,5 +5,8 @@ install:
 deps:
 	./pip-compile.sh
 
+deps-upgrade:
+	./pip-compile.sh --upgrade
+
 tests:
 	pytest test

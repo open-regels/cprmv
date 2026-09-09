@@ -2,20 +2,34 @@
 name = "cprmv"
 version = "0.4.1"
 description = "CPRMV - <short description>"
-authors = ["Bas Kaptijn <bas.kaptijn@ictu.nl>", "Peter de Ruijter <peter.deruijter@ictu.nl>"]
+authors = [
+  "Bas Kaptijn <bas.kaptijn@ictu.nl>",
+  "Peter de Ruijter <peter.deruijter@ictu.nl>",
+]
 dependencies = [
-  "fastapi[standard]==0.116.1",
-  "rdflib==7.1.4",
-  "parse==1.20.2",
-  "lxml==6.0.0",
-  "ciso8601==2.3.3",
-  "fastapi-mcp"
+  "fastapi[standard]>=0.116.1",
+  "rdflib>=7.1",
+  "parse>=1.20",
+  "lxml>=6.0",
+  "ciso8601>=2.3",
+  "fastapi-mcp>=0.4",
 ]
 
 [project.optional-dependencies]
-dev = ["pytest", "pytest-cov", "httpx", "pre-commit"]
-tools = ["bandit", "black", "mypy", "ruff", "safety", "vulture"]
-
+dev = [
+  "pytest>=9",
+  "pytest-cov>=7.1.0",
+  "httpx>=0.28.1",
+  "pre-commit>=4.5.1",
+]
+tools = [
+  "bandit>=1.9.4",
+  "black>=26.3.1",
+  "mypy>=1.20.1",
+  "ruff>=0.15.11",
+  "safety>=3.7.0",
+  "vulture>=2.16",
+]
 
 [tools.ruff]
 line-length = 120
