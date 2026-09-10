@@ -69,7 +69,7 @@ run () {
     eval "$*"
 }
 
-common="--allow-unsafe --generate-hashes${upgrade_args}"
+common="--generate-hashes${upgrade_args}"
 
 # Update the compiled requirements files
 run pip-compile $common --output-file requirements.txt pyproject.toml "$@"
