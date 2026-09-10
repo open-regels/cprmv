@@ -49,7 +49,7 @@ create-pages:
 # Test the CPRMV API code
 test-cprmv-api:
   stage: test
-  image: python:3.12-bookworm
+  image: python:3.14-bookworm
   before_script:
     - cd serve_api
     - apt-get update && apt-get install -y libxml2-dev libxslt-dev

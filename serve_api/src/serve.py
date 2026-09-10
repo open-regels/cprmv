@@ -1,9 +1,9 @@
-from fastapi_mcp import FastApiMCP
+from fastmcp import FastMCP
+from fastapi import FastAPI
 from rdflib import Graph, BNode, URIRef
 from rdflib.term import Literal
 from rdflib.namespace import RDF
 from typing import Union
-from fastapi import FastAPI
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import RedirectResponse
 from fastapi.responses import PlainTextResponse
@@ -19,7 +19,6 @@ import ciso8601
 import json
 from datetime import datetime
 from pathlib import Path
-import time
 
 import locale
 from .utils.constants import (
@@ -73,6 +72,8 @@ except locale.Error:
     except locale.Error:
         print("Warning: Dutch locale not available, using system default")
 
+
+
 app = FastAPI(
     title="CPRMV Rules Serve API",
     description="This experimental API allows fetching single CPRMV Rules from locally provided CPRMV RuleSets in a desired RDF format.",
@@ -88,6 +89,21 @@ app = FastAPI(
     },
 )
 
+# Create MCP server
+mcp = FastMCP.from_fastapi(app=app, name="CPRMV")
+
+# 2. Create the MCP's ASGI app
+mcp_app = mcp.http_app(path='/mcp')
+
+# 3. Create a new FastAPI app that combines both sets of routes
+combined_app = FastAPI(
+    title="CPRMV",
+    routes=[
+        *mcp_app.routes,  # MCP routes
+        *app.routes,      # Original API routes
+    ],
+    lifespan=mcp_app.lifespan,
+)
 
 def set_CPRMVMETHODSKG(path, additive=True):
     print("loading cprmvmethods.ttl from path: "+path)
@@ -734,7 +750,3 @@ def get_rule(g, rule, includeSubRules=True):
         else:
             r[p] = o
     return r
-
-
-mcp = FastApiMCP(app)
-mcp.mount_http()

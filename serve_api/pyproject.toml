@@ -12,24 +12,12 @@ dependencies = [
   "parse",
   "lxml",
   "ciso8601",
-  "fastmcp"
+  "fastmcp",
 ]
 
 [project.optional-dependencies]
-dev = [
-  "pytest",
-  "pytest-cov",
-  "httpx",
-  "pre-commit",
-]
-tools = [
-  "bandit",
-  "black",
-  "mypy",
-  "ruff",
-  "safety",
-  "vulture",
-]
+dev = ["pytest", "pytest-cov", "httpx", "pre-commit"]
+tools = ["bandit", "black", "mypy", "ruff", "safety", "vulture"]
 
 [tools.ruff]
 line-length = 120
