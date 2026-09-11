@@ -4,8 +4,8 @@
 @prefix cprmvmethods: <https://cprmv.open-regels.nl/0.4.2/methods/> .
 
 cprmvmethods:regelrecht a cprmvmethods:git;
-    a cprmvmethods:nrml;
+    a cprmv:FormalisationMethod;
     cprmv:id "RegelRecht git repository"@nl;
-    cprmv:label "NRML files on RegelRecht Git Repository";
+    cprmv:label "corpus of RegelRecht Git Repository";
     cprmv:comment "zie https://regelrecht.rijks.app"@nl;
     cprmv-serve:repository-publication-location-format "https://github/regelrecht...".

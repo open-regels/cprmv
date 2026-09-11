@@ -6,6 +6,14 @@ Note that CPRMV / CPRMV API still is highly subjected to change.
 
 
 **v0.4.2 CPRMV**  
+- **Improved and more complete cprmv methods knowledge / value lists**
+- **Adds acknowledgement of Catala as a FormalisationMethod and tooling related to it**
+- **Adds acknowledgement of ALEF with RegelSpraak as a FormalisationMethod and ALEF providing a testmethod as well as webservices generated through ALEF as codification method**
+- **Adds acknowledgement of OpenFisca as a FormalisationMethod and tooling related to it**
+- **Adds acknowledgement of MC/DC as a testmethod (irt DMN)**
+- **Adds acknowledgement of Legifrance as a publicationmethod**
+- **Adds acknowledgement of DSO as a publicationmethod**
+- **Adds acknowledgement of RegelRecht as an analysis, formalisation, test and publicationmethod**
 - **updates URI's and documentation to mention 0.4.2 instead of 0.4.1**
 - **adds improved compatibility : the SHACL shapes now do not include a recursive definition**
 - **makes the output of the API validate against the cprmv SHACL shapes, which failed due to compatibility problems, but also the DMN and FMX4 methods are now made conformant (using dummy properties for the moment though)**
@@ -14,6 +22,8 @@ Note that CPRMV / CPRMV API still is highly subjected to change.
 - **removes old deprecated project folders: /example and /tools**
 
 **v0.4.2 CPRMV API**
+- **Refactored code base that supports the support of rule methods as separate modules**
+- **Improved use of the API as mcp service**
 - **Updates URI's and documentation to mention 0.4.2 instead of 0.4.1**
 - **removes some old deprecated project files** 
 
