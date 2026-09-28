@@ -1,0 +1,13 @@
+@base <http://example.com/> .
+@prefix cprmv: <https://standaarden.open-regels.nl/standards/cprmv/0.4.2#> .
+@prefix cprmv-serve: <https://cprmv.open-regels.nl/0.4.2/serve-api/> .
+@prefix cprmvmethods: <https://cprmv.open-regels.nl/0.4.2/methods/> .
+
+cprmvmethods:dso a cprmv-serve:core-web;
+    a cprmvmethods:sttr;
+    cprmv:id "DSO"@nl;
+    cprmv:label "DSO";
+    cprmv:comment "see https://iplo.nl/digitaal-stelsel/";
+    cprmv-serve:publication-id-format "DSO_{rulesetid}_{date}_{index}";
+    cprmv-serve:normalized-id-format "DSO_{rulesetid}_{date}_{index}";
+    cprmv-serve:repository-publication-location-format "https://service.omgevingswet.overheid.nl/publiek/toepasbare-regels/api/toepasbareregelsuitvoerengegevens/v1/toepasbareRegels/{rulesetid}/sttrBestand".

@@ -1,0 +1,14 @@
+@base <http://example.com/> .
+@prefix cprmv: <https://standaarden.open-regels.nl/standards/cprmv/0.4.2#> .
+@prefix cprmv-serve: <https://cprmv.open-regels.nl/0.4.2/serve-api/> .
+@prefix cprmvmethods: <https://cprmv.open-regels.nl/0.4.2/methods/> .
+
+cprmvmethods:normenbrief a cprmvmethods:web;
+    a cprmv:FormalisationMethod;
+    a cprmv-serve:core-json;
+    cprmv:id "Normenbrief git repository"@nl;
+    cprmv:label "repository of the Normenbrief showcase";
+    cprmv:comment "zie https://git.open-regels.nl/showcases/amsterdam/-/tree/normenbrief-jul-2025?ref_type=heads";
+    cprmv-serve:publication-id-format "NORMENBRIEF_{rulesetid}_{date}_{index}";
+    cprmv-serve:normalized-id-format "NORMENBRIEF_{rulesetid}_{date}_{index}";
+    cprmv-serve:repository-publication-location-format "https://standaarden.open-regels.nl/showcases/amsterdam/{date}-normenbrief.json".

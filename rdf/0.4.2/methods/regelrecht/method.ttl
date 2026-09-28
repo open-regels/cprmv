@@ -7,5 +7,7 @@ cprmvmethods:regelrecht a cprmvmethods:git;
     a cprmv:FormalisationMethod;
     cprmv:id "RegelRecht git repository"@nl;
     cprmv:label "corpus of RegelRecht Git Repository";
-    cprmv:comment "zie https://regelrecht.rijks.app"@nl;
-    cprmv-serve:repository-publication-location-format "https://github/regelrecht...".
+    cprmv:comment "zie https://regelrecht.rijks.app";
+    cprmv-serve:publication-id-format "RR_{rulesetid}_{date}_{index}";
+    cprmv-serve:normalized-id-format "RR_{rulesetid}_{date}_{index}";
+    cprmv-serve:repository-publication-location-format "https://github.com/MinBZK/regelrecht/tree/main/corpus".

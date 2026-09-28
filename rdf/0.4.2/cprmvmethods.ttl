@@ -35,6 +35,7 @@
         cprmvmethods:cprmvapi,
         cprmvmethods:cvdr,
         cprmvmethods:dmn13,
+        cprmvmethods:sttr,
         cprmvmethods:eli,
         cprmvmethods:eucellar,
         cprmvmethods:flint,
@@ -47,12 +48,13 @@
         cprmvmethods:legifrance,
         cprmvmethods:mcdc,
         cprmvmethods:mnm,
-        cprmvmethods:nrml,
         cprmvmethods:open-regels.nl,
         cprmvmethods:openfisca,
         cprmvmethods:operaton,
+        cprmvmethods:dso,
         cprmvmethods:regalgo,
         cprmvmethods:regelrecht,
+        cprmvmethods:normenbrief,
         cprmvmethods:repository.overheid.nl .
 
 cprmv:acknowledged a owl:ObjectProperty;
@@ -67,11 +69,14 @@ cprmvmethods:rulemethods a owl:Class;
         cprmvmethods:cvdr
         cprmvmethods:fmx4
         cprmvmethods:dmn13
+        cprmvmethods:sttr
         cprmvmethods:operaton
         cprmvmethods:repository-overheid-nl-bwb
         cprmvmethods:repository-overheid-nl-cvdr
         cprmvmethods:eucellar-fmx4
         cprmvmethods:operaton.open-regels.nl
+        cprmvmethods:dso
+        cprmvmethods:normenbrief
         cprmvmethods:cprmvapi
         cprmvmethods:juriconnect
         cprmvmethods:elifmx4
@@ -90,6 +95,8 @@ cprmvmethods:analysismethods a owl:Class;
 cprmvmethods:formalisationmethods a owl:Class;
     cprmv:acknowledged (
         cprmvmethods:dmn13
+        cprmvmethods:sttr
+        cprmvmethods:normenbrief
     ).
 
 cprmvmethods:serialisationmethods a owl:Class;
@@ -98,6 +105,8 @@ cprmvmethods:serialisationmethods a owl:Class;
         cprmvmethods:cvdr
         cprmvmethods:fmx4
         cprmvmethods:dmn13
+        cprmvmethods:sttr
+        cprmvmethods:normenbrief
     ).
 
 cprmvmethods:codificationmethods a owl:Class;
@@ -117,6 +126,8 @@ cprmvmethods:publicationmethods a owl:Class;
         cprmvmethods:repository-overheid-nl-cvdr
         cprmvmethods:eucellar-fmx4
         cprmvmethods:operaton.open-regels.nl
+        cprmvmethods:dso
+        cprmvmethods:normenbrief
     ).
 
 cprmvmethods:referencemethods a owl:Class;
