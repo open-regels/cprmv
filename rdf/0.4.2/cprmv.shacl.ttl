@@ -11,12 +11,18 @@ cprmv:RuleSetShape
     sh:property [
         sh:path cprmv:id ;
         sh:minCount 1 ;
+        sh:or (
+           [ sh:datatype xsd:string ]
+           [ sh:datatype rdf:langString ]
+        ) ;
     ] ;
     sh:property [
         sh:path cprmv:comment ;
         sh:minCount 0 ;
-        sh:maxCount 1 ;
-        sh:datatype xsd:string ;
+        sh:or (
+           [ sh:datatype xsd:string ]
+           [ sh:datatype rdf:langString ]
+        ) ;
     ] ;
     sh:property [
         sh:path cprmv:validFrom ;
@@ -82,14 +88,18 @@ cprmv:RuleShape
     sh:property [
         sh:path cprmv:sourceQuote ;
         sh:minCount 0 ;
-        sh:maxCount 1 ;
-        sh:datatype xsd:string ;
+        sh:or (
+           [ sh:datatype xsd:string ]
+           [ sh:datatype rdf:langString ]
+        ) ;
     ] ;
     sh:property [
         sh:path cprmv:comment ;
         sh:minCount 0 ;
-        sh:maxCount 1 ;
-        sh:datatype xsd:string ;
+        sh:or (
+           [ sh:datatype xsd:string ]
+           [ sh:datatype rdf:langString ]
+        ) ;
     ] ;
     sh:property [
         sh:path cprmv:isBasedOn ;
@@ -111,8 +121,10 @@ cprmv:RuleMethodShape
     sh:property [
         sh:path cprmv:comment ;
         sh:minCount 0 ;
-        sh:maxCount 1 ;
-        sh:datatype xsd:string ;
+        sh:or (
+           [ sh:datatype xsd:string ]
+           [ sh:datatype rdf:langString ]
+        ) ;
     ] .
 
 cprmv:AnalysisMethod

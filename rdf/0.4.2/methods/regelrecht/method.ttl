@@ -5,6 +5,7 @@
 
 cprmvmethods:regelrecht a cprmvmethods:git;
     a cprmv:FormalisationMethod;
+    a cprmv:ExecutionMethod;
     cprmv:id "RegelRecht git repository"@nl;
     cprmv:label "corpus of RegelRecht Git Repository";
     cprmv:comment "zie https://regelrecht.rijks.app";

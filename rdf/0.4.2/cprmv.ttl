@@ -26,7 +26,7 @@
   rdfs:seeAlso <https://www.open-regels.nl/standards/cprmv> .
 
 cprmv:RuleSet a owl:Class;
-    skos:prefLabel "Rule Set"@en;
+    skos:prefLabel "RuleSet"@en;
     skos:definition "A set of Rule's. Which is produced as cv:Ouput within a cpsv:Publicservice. While not always being a eli:LegalResource, a eli:LegalResource is to be seen as a cprmv:RuleSet. Just like eli:Work, CPRMV defines RuleSet's as FRBR Work (frboo F1_work).  eli:LegalResource's are eli:Work's too and more formalised versions thereof are to be seen as a derivation of those eli:Work's' too but separate Works. Also, being a cv:Ouput, a cprmv:RuleSet cprmv:is_part_of a dcat.Dataset "@en;
     rdfs:subClassOf frbroo:F1_Work;
     rdfs:subClassOf cv:Output.
@@ -37,7 +37,7 @@ cprmv:Analysis a owl:Class;
     rdfs:subClassOf cprmv:RuleSet.
 
 cprmv:DecisionModel a owl:Class;
-    skos:prefLabel "Decision Model"@en;
+    skos:prefLabel "DecisionModel"@en;
     skos:definition "A Rule Set that has been produced by following a Formalisation Method."@en;
     rdfs:subClassOf cprmv:RuleSet.
 
@@ -62,7 +62,7 @@ cprmv:isBasedOn a owl:ObjectProperty;
     rdfs:range (owl:unionOf (cprmv:Rule cprmv:RuleSet)).
 
 cprmv:isOutputOf a owl:ObjectProperty;
-    skos:prefLabel "output of"@en;
+    skos:prefLabel "isOutputOf"@en;
     skos:definition "denotes a cprmv:RuleSet to be produced as cv:Ouput of a cpsv:PublicService"@en;
     rdfs:subPropertyOf [ owl:inverseOf schema:serviceOutput ];
     rdfs:subPropertyOf prov:wasGeneratedBy;
@@ -131,26 +131,31 @@ cprmv:Parameter a owl:Class;
     rdfs:subClassOf cprmv:Rule.
 
 cprmv:RuleMethod a owl:Class;
-    skos:prefLabel "Rule Method"@en;
+    skos:prefLabel "RuleMethod"@en;
     skos:definition "A Rule Method is a acknowledged known method for defining Rule's, either from scratch through deliberation and / or based on existing Rule's."@en.
 
 cprmv:AnalysisMethod a owl:Class;
-    skos:prefLabel "Analysis Method"@en;
+    skos:prefLabel "AnalysisMethod"@en;
     skos:definition "A Rule Method with which an existing Rule is extended through analysis, which does not yet entirely formalises a Rule semantically but only defines what is to be seen as a separate Rule and adds metadata to it or normalises its form etcetera."@en;
     rdfs:subClassOf cprmv:RuleMethod.
 
 cprmv:FormalisationMethod a owl:Class;
-    skos:prefLabel "Formalisation Method"@en;
+    skos:prefLabel "FormalisationMethod"@en;
     skos:definition "A Rule Method with which an existing Rule is extended through formalisation, which entirely formalises a Rule semantically as far as possible and makes it represented in a interoperable way to the point cprmv compatible systems can comsume them within processes for delivering Public Services."@en;
+    rdfs:subClassOf cprmv:RuleMethod.
+    
+cprmv:SerialisationMethod a owl:Class;
+    skos:prefLabel "SerialisationMethod"@en;
+    skos:definition "A Rule Method with which an existing Rule is serialised as a textual file that can be stored. Think about XML, JSON, YAML, Turtle as common ways to do this."@en;
     rdfs:subClassOf cprmv:RuleMethod.
 
 cprmv:CodificationMethod a owl:Class;
-    skos:prefLabel "Codification Method"@en;
+    skos:prefLabel "CodificationMethod"@en;
     skos:definition "A Rule Method with which an existing Rule is extended through codification, which entirely formalises a Rule semantically if necesary as well as codifies them into an executable form that can be utilised by specific systems within processes for delivering Public Services."@en;
     rdfs:subClassOf cprmv:RuleMethod.
 
 cprmv:ExecutionMethod a owl:Class;
-    skos:prefLabel "Execution Method"@en;
+    skos:prefLabel "ExecutionMethod"@en;
     skos:definition "A Rule Method with which an existing Rule is executed in the context of delivering a Public Service."@en;
     rdfs:subClassOf cprmv:RuleMethod.
 
@@ -169,7 +174,7 @@ cprmv:PublicationMethod a owl:Class;
     skos:definition "A Rule Method for publication of the definition of Rule(Set)'s apart from the Execution of them..."@en;
     rdfs:subClassOf cprmv:RuleMethod.
 
-cprmv:ReferencenMethod a owl:Class;
+cprmv:ReferenceMethod a owl:Class;
     skos:prefLabel "ReferenceMethod"@en;
     skos:definition "A Rule Method for the referencing of Rule(Set)'s apart from the Execution of them..."@en;
     rdfs:subClassOf cprmv:RuleMethod.

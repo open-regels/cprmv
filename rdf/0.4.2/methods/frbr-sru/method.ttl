@@ -3,6 +3,9 @@
 @prefix cprmv-serve: <https://cprmv.open-regels.nl/0.4.2/serve-api/> .
 @prefix cprmvmethods: <https://cprmv.open-regels.nl/0.4.2/methods/> .
 @prefix frbr-sru: <https://cprmv.open-regels.nl/0.4.2/methods/frbr-sru/> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 
 cprmvmethods:frbr-sru a cprmv-serve:core-web;
     cprmv:id "FRBR SRU"@nl;

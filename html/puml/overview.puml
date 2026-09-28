@@ -10,7 +10,7 @@ package cprmv {
         validFrom : xsd:date
         validUntil : xsd:date
         publishedOn : xsd:date
-        comment : xsd:string
+        comment
     }
     object "Analysis" as Analysis {
     }
@@ -20,18 +20,20 @@ package cprmv {
         id
         definition
         postDefinition
-        comment : xsd:string
+        comment
         sourcequote
     }
     object "Parameter" as Parameter {
     }
     object "RuleMethod" as RuleMethod {
         id
-        comment : xsd:string
+        comment
     }
     object "AnalysisMethod" as AnalysisMethod {
     }
     object "FormalisationMethod" as FormalisationMethod {
+    }
+    object "SerialisationMethod" as SerialisationMethod {
     }
     object "CodificationMethod" as CodificationMethod {
     }
@@ -43,7 +45,7 @@ package cprmv {
     }
     object "PublicationMethod" as PublicationMethod {
     }
-    object "ReferencenMethod" as ReferencenMethod {
+    object "ReferenceMethod" as ReferenceMethod {
     }
     object "Explanation" as Explanation {
     }
@@ -70,12 +72,13 @@ package cprmv {
     Parameter --|> Rule
     AnalysisMethod --|> RuleMethod
     FormalisationMethod --|> RuleMethod
+    SerialisationMethod --|> RuleMethod
     CodificationMethod --|> RuleMethod
     ExecutionMethod --|> RuleMethod
     ExplanationMethod --|> RuleMethod
     TestMethod --|> RuleMethod
     PublicationMethod --|> RuleMethod
-    ReferencenMethod --|> RuleMethod
+    ReferenceMethod --|> RuleMethod
     Explanation --> "1..1" RuleSet : explains
     Explanation --> "1..1" Rule : explains
     Explanation --|> Rule

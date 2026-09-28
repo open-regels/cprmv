@@ -1,6 +1,7 @@
 @base <http://example.com/> .
 @prefix cprmv: <https://standaarden.open-regels.nl/standards/cprmv/0.4.2#> .
 @prefix cprmv-serve: <https://cprmv.open-regels.nl/0.4.2/serve-api/> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 
 cprmv-serve:core-json a cprmv:SerialisationMethod;
     cprmv:id "core.json"@nl;
