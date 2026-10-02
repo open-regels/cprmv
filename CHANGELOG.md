@@ -4,6 +4,34 @@ This changelog is going to be maintained starting from CPRMV / CPRMV API v0.4.0.
 Usage of earlier versions is deprecated and at own risk.   
 Note that CPRMV / CPRMV API still is highly subjected to change.   
 
+
+**v0.4.2 CPRMV**  
+- **Adds concepts about Echelons to which RuleMethod's can be related and categorised linked to Service Management and Design Science Research**
+- **Adds concpets about acknowledgements of Services and Organisations as rules in catalogs as RuleSet's published in registers forming official publication methods**
+- **Improvements in respec documentation generation from the RDF specification**
+- **Improved and more complete cprmv methods knowledge / value lists**
+- **Adds acknowledgement of Catala as a FormalisationMethod and tooling related to it**
+- **Adds acknowledgement of ALEF with RegelSpraak as a FormalisationMethod and ALEF providing a testmethod as well as webservices generated through ALEF as codification method**
+- **Adds acknowledgement of OpenFisca as a FormalisationMethod and tooling related to it**
+- **Adds acknowledgement of MC/DC as a testmethod (irt DMN)**
+- **Adds acknowledgement of Legifrance as a publicationmethod**
+- **Adds acknowledgement of DSO as a publicationmethod**
+- **Adds acknowledgement of STTR as an formalisationmethod**
+- **Adds acknowledgement of Normenbrief as a publication and formalisation method**
+- **Adds acknowledgement of RegelRecht as an analysis, formalisation, test and publicationmethod**
+- **updates URI's and documentation to mention 0.4.2 instead of 0.4.1**
+- **adds improved compatibility : the SHACL shapes now do not include a recursive definition**
+- **makes the output of the API validate against the cprmv SHACL shapes, which failed due to compatibility problems, but also the DMN and FMX4 methods are now made conformant (using dummy properties for the moment though)**
+- **updates tests for the API output against SHACL shapes (tests in the rdf folder)** 
+- **improves the npm run build script in the full-package.json to create folders if they do not exist**
+- **removes old deprecated project folders: /example and /tools**
+
+**v0.4.2 CPRMV API**
+- **Refactored code base that supports the support of rule methods as separate modules**
+- **Improved use of the API as mcp service**
+- **Updates URI's and documentation to mention 0.4.2 instead of 0.4.1**
+- **removes some old deprecated project files** 
+
 **v0.4.1 CPRMV**  
 - **Updates URI's and documentation to mention 0.4.1 instead of 0.4.0**
 - **The CPRMV now defines a RuleSet to be a subclass of FRBR Work (frbroo:F1_Work) instead of an eli:LegalResource as Formalisations like business rules are not to be seen as legal resources in the context of ELI up until further notice. Note that eli:LegalResources are defined as a subclass of FRBR Work too.**
@@ -40,6 +68,4 @@ Note that CPRMV / CPRMV API still is highly subjected to change.
 -  **bugfixes around support for BWB schema (now supports circulaire’s)**  
 -  **Adds /respec section hosting the respec documentation (besides the official URI) **  
 -  **Adds /ref endpoint which is going to support all reference methods (but currently only implements juriconnect at a basic level)**  
--  **Allows for retrieving DMN 1.3 rulesets published in acknowledged (in value list in cprmvmethods.ttl) Operaton servers (currently only [operaton.open-regels.nl](http://operaton.open-regels.nl))**  
-  
-
+-  **Allows for retrieving DMN 1.3 rulesets published in acknowledged (in value list in cprmvmethods.ttl) Operaton servers (currently only [operaton.open-regels.nl](http://operaton.open-regels.nl))**

@@ -1,11 +1,11 @@
 {
   "name": "cprmv",
-  "version": "0.4.1",
+  "version": "0.4.2",
   "description": "Core Public Rule Management Vocabulary ReSpec specification",
-  "main": "0.4.1",
+  "main": "0.4.2",
   "scripts": {
     "get-plantuml": "curl -L -o plantuml.jar $npm_package_config_plantuml_jar",
-    "build": "python shaclgen.py && npx respec --no-sandbox --localhost --src index.html --out ./public/$npm_package_version/index.html && sed -r -i '' 's/file...//g' ./public/$npm_package_version/index.html && java -jar plantuml.jar --format png --output-dir ../media puml/overview.puml && cp -f -R template/* public/$npm_package_version && cp -f -R media public/$npm_package_version && cd ./public/$npm_package_version && pandoc index.html -t latex -o cprmv.pdf && cd ../.. && cp -f -R public/$npm_package_version/* ../serve_api/respec/$npm_package_version && cp -f -R public/$npm_package_version/* ../serve_api/respec"
+    "build": "mkdir -p ./public/$npm_package_version && python shaclgen.py && npx respec --no-sandbox --localhost --src index.html --out ./public/$npm_package_version/index.html && sed -r -i '' 's/file...//g' ./public/$npm_package_version/index.html && java -jar plantuml.jar --format png --output-dir ../media puml/overview.puml && cp -f -R template/* public/$npm_package_version && cp -f -R media public/$npm_package_version && cd ./public/$npm_package_version && pandoc index.html -t latex -o cprmv.pdf && cd ../.. && mkdir -p ../serve_api/respec/$npm_package_version && cp -f -R public/$npm_package_version/* ../serve_api/respec/$npm_package_version && cp -f -R public/$npm_package_version/* ../serve_api/respec"
   },
   "author": "Bas Kaptijn",
   "license": "CC0",

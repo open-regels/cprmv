@@ -9,18 +9,18 @@ let respecConfig = {
 
   // shortName = Repository name
   shortName: "cprmv",
-  publishDate: "2026-04-20",
-  publishVersion: "0.4.1",
+  publishDate: "2026-10-02",
+  publishVersion: "0.4.2",
 
-  previousPublishVersion: "0.4.0",
-  previousPublishDate: "2026-02-09",
+  previousPublishVersion: "0.4.1",
+  previousPublishDate: "2026-04-20",
   previousMaturity: "fpwd",
   title: "CPRMV",
   subtitle:
     "Core Public Rule Management Vocabulary (CPRMV), extending the Interoperable Europe standards towards a standard for Public Rule Management",
 
   // Content
-  content: { ch01: "informative", ch02: "informative", ch03: "conformance"},
+  content: { ch01: "informative", ch02: "informative", ch03: "conformance", methods: "conformance", api: "conformance"},
   editors: [
     {
       name: "Steven Gort",
@@ -47,7 +47,7 @@ let respecConfig = {
     {
       name: "Andre van Brussel",
       url: "https://www.ictu.nl",
-    }
+    },
   ],
   // Note that github and gitlab urls are compatible (except for the pulls), however respec prevents gitlab url's to be set
   github: "https://github.com/standards/cprmv/",

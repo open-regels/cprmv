@@ -1,0 +1,184 @@
+@base <https://standaarden.open-regels.nl/standards/cprmv/0.4.2/> .
+@prefix cprmv: <https://standaarden.open-regels.nl/standards/cprmv/0.4.2#> .
+@prefix cprmv-serve: <https://cprmv.open-regels.nl/0.4.2/serve-api/> .
+@prefix cprmvmethods: <https://cprmv.open-regels.nl/0.4.2/methods/> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix vann: <http://purl.org/vocab/vann/> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+
+<https://standaarden.open-regels.nl/standards/cprmv/0.4.2/methods> a owl:Ontology;
+  vann:preferredNamespaceURI "https://standaarden.open-regels.nl/standards/cprmv/0.4.2/methods";
+  vann:preferredNamespacePrefix "cprmvmethods";
+  dct:title "CPRMV Methods";
+  dct:description "CPRMV Methods vocabulary and value lists for CPRMV. Core Public Rule Management Vocabulary (CPRMV) is a vocabulary for expressing knowledge about agreements published as rules which can both be expressed in natural language like articles in laws as well as more formal business rules for automation of decisions, and also how all these rules relate. This vocabulary defines all kinds of Rule Methods applied on this knowledge. Knowledge about these methods are contained in the CPRMV Methods vocabulary and value lists";
+  owl:versionIRI <https://standaarden.open-regels.nl/standards/cprmv/0.4.2/methods>;
+  owl:versionInfo "0.4.2";
+  dct:created "2026-04-20"^^xsd:date;
+  dct:creator <https://www.ictu.nl/>;
+  dct:license <https://creativecommons.org/licenses/by/4.0/>;
+  rdfs:seeAlso <https://www.open-regels.nl/standards/cprmv/methods>;
+  owl:imports
+        cprmvmethods:alef-regelspraak,
+        cprmvmethods:alef-test,
+        cprmvmethods:alef-webservice,
+        cprmvmethods:bwb,
+        cprmvmethods:catala,
+        cprmv-serve:core-json,
+        cprmv-serve:core-markdown,
+        cprmv-serve:core-python,
+        cprmv-serve:core-web,
+        cprmv-serve:core-xml,
+        cprmv-serve:core-yaml,
+        cprmvmethods:cprmvapi,
+        cprmvmethods:cvdr,
+        cprmvmethods:dmn13,
+        cprmvmethods:sttr,
+        cprmvmethods:eli,
+        cprmvmethods:eucellar,
+        cprmvmethods:flint,
+        cprmvmethods:fmx4,
+        cprmvmethods:frbr-sru,
+        cprmvmethods:git,
+        cprmvmethods:jas,
+        cprmvmethods:jrm,
+        cprmvmethods:juriconnect,
+        cprmvmethods:legifrance,
+        cprmvmethods:mcdc,
+        cprmvmethods:mnm,
+        cprmvmethods:open-regels.nl,
+        cprmvmethods:openfisca,
+        cprmvmethods:operaton,
+        cprmvmethods:dso,
+        cprmvmethods:regalgo,
+        cprmvmethods:regelrecht,
+        cprmvmethods:normenbrief,
+        cprmvmethods:repository.overheid.nl .
+
+cprmvmethods:acknowledged a owl:ObjectProperty;
+    skos:prefLabel "acknowledged"@en;
+    skos:definition "a list with RuleMethod's that are acknowledged as part of the rule methods value list."@en;
+    rdfs:domain (
+        owl:unionOf (
+            cprmvmethods:rulemethods
+            cprmvmethods:analysismethods
+            cprmvmethods:formalisationmethods
+            cprmvmethods:serialisationmethods
+            cprmvmethods:codificationmethods
+            cprmvmethods:testmethods
+            cprmvmethods:executionmethods
+            cprmvmethods:publicationmethods
+            cprmvmethods:referencemethods
+        )
+    );
+    rdfs:range cprmv:RuleMethod .
+
+cprmvmethods:rulemethods a owl:Class;
+    skos:prefLabel "rulemethods"@en;
+    skos:definition "Value list of acknowledged rule methods."@en;
+    cprmvmethods:acknowledged (
+        cprmvmethods:alef-regelspraak
+        cprmvmethods:jas
+        cprmvmethods:flint
+        cprmvmethods:bwb
+        cprmvmethods:cvdr
+        cprmvmethods:fmx4
+        cprmvmethods:dmn13
+        cprmvmethods:sttr
+        cprmvmethods:operaton
+        cprmvmethods:repository-overheid-nl-bwb
+        cprmvmethods:repository-overheid-nl-cvdr
+        cprmvmethods:eucellar-fmx4
+        cprmvmethods:operaton.open-regels.nl
+        cprmvmethods:dso
+        cprmvmethods:normenbrief
+        cprmvmethods:regelrecht
+        cprmvmethods:cprmvapi
+        cprmvmethods:juriconnect
+        cprmvmethods:elifmx4
+        cprmvmethods:elinl
+        cprmvmethods:catala
+        cprmvmethods:openfisca
+        cprmvmethods:regalgo
+    ).
+
+cprmvmethods:analysismethods a owl:Class;
+    skos:prefLabel "analysismethods"@en;
+    skos:definition "Value list of acknowledged analysis methods."@en;
+    cprmvmethods:acknowledged (
+        cprmvmethods:jas
+        cprmvmethods:flint
+        cprmvmethods:bwb
+        cprmvmethods:cvdr
+        cprmvmethods:fmx4
+    ).
+
+cprmvmethods:formalisationmethods a owl:Class;
+    skos:prefLabel "formalisationmethods"@en;
+    skos:definition "Value list of acknowledged formalisation methods."@en;
+    cprmvmethods:acknowledged (
+        cprmvmethods:dmn13
+        cprmvmethods:sttr
+        cprmvmethods:normenbrief
+        cprmvmethods:regelrecht
+        cprmvmethods:alef-regelspraak
+        cprmvmethods:catala
+        cprmvmethods:openfisca
+        cprmvmethods:regalgo
+    ).
+
+cprmvmethods:serialisationmethods a owl:Class;
+    skos:prefLabel "serialisationmethods"@en;
+    skos:definition "Value list of acknowledged serialisation methods."@en;
+    cprmvmethods:acknowledged (
+        cprmvmethods:bwb
+        cprmvmethods:cvdr
+        cprmvmethods:fmx4
+        cprmvmethods:dmn13
+        cprmvmethods:sttr
+        cprmvmethods:normenbrief
+        cprmvmethods:regelrecht
+    ).
+
+cprmvmethods:codificationmethods a owl:Class;
+    skos:prefLabel "codificationmethods"@en;
+    skos:definition "Value list of acknowledged codification methods."@en;
+    cprmvmethods:acknowledged ().
+
+cprmvmethods:testmethods a owl:Class;
+    skos:prefLabel "testmethods"@en;
+    skos:definition "Value list of acknowledged test methods."@en;
+    cprmvmethods:acknowledged ().
+
+cprmvmethods:executionmethods a owl:Class;
+    skos:prefLabel "executionmethods"@en;
+    skos:definition "Value list of acknowledged execution methods."@en;
+    cprmvmethods:acknowledged (
+        cprmvmethods:operaton
+        cprmvmethods:regelrecht
+    ).
+
+cprmvmethods:publicationmethods a owl:Class;
+    skos:prefLabel "publicationmethods"@en;
+    skos:definition "Value list of acknowledged publication methods."@en;
+    cprmvmethods:acknowledged (
+        cprmvmethods:repository-overheid-nl-bwb
+        cprmvmethods:repository-overheid-nl-cvdr
+        cprmvmethods:eucellar-fmx4
+        cprmvmethods:operaton.open-regels.nl
+        cprmvmethods:dso
+        cprmvmethods:normenbrief
+        cprmvmethods:regelrecht
+    ).
+
+cprmvmethods:referencemethods a owl:Class;
+    skos:prefLabel "referencemethods"@en;
+    skos:definition "Value list of acknowledged reference methods."@en;
+    cprmvmethods:acknowledged (
+        cprmvmethods:cprmvapi
+        cprmvmethods:juriconnect
+        cprmvmethods:elifmx4
+        cprmvmethods:elinl
+    ).

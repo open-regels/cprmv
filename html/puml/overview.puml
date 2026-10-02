@@ -6,11 +6,10 @@ left to right direction
 package cprmv {
     object "RuleSet" as RuleSet {
         id
-        isOutputOf
         validFrom : xsd:date
         validUntil : xsd:date
         publishedOn : xsd:date
-        comment : xsd:string
+        hasPart
     }
     object "Analysis" as Analysis {
     }
@@ -18,20 +17,18 @@ package cprmv {
     }
     object "Rule" as Rule {
         id
-        definition
-        postDefinition
-        comment : xsd:string
-        sourcequote
+        hasPart
     }
     object "Parameter" as Parameter {
     }
     object "RuleMethod" as RuleMethod {
         id
-        comment : xsd:string
     }
     object "AnalysisMethod" as AnalysisMethod {
     }
     object "FormalisationMethod" as FormalisationMethod {
+    }
+    object "SerialisationMethod" as SerialisationMethod {
     }
     object "CodificationMethod" as CodificationMethod {
     }
@@ -43,7 +40,21 @@ package cprmv {
     }
     object "PublicationMethod" as PublicationMethod {
     }
-    object "ReferencenMethod" as ReferencenMethod {
+    object "OrganisationRegister" as OrganisationRegister {
+    }
+    object "AcknowledgedOrganisation" as AcknowledgedOrganisation {
+        acknowledges
+    }
+    object "OrganisationCatalog" as OrganisationCatalog {
+    }
+    object "ServiceRegister" as ServiceRegister {
+    }
+    object "AcknowledgedService" as AcknowledgedService {
+        acknowledges
+    }
+    object "ServiceCatalog" as ServiceCatalog {
+    }
+    object "ReferenceMethod" as ReferenceMethod {
     }
     object "Explanation" as Explanation {
     }
@@ -55,27 +66,53 @@ package cprmv {
     }
     object "Case" as Case {
     }
+    object "Echelon" as Echelon {
+    }
+    object "AgreementEchelon" as AgreementEchelon {
+    }
+    object "SemanticEchelon" as SemanticEchelon {
+    }
+    object "OntologicEchelon" as OntologicEchelon {
+    }
+    object "LogicEchelon" as LogicEchelon {
+    }
+    object "OperableEchelon" as OperableEchelon {
+    }
+    object "SupportEchelon" as SupportEchelon {
+    }
     RuleSet --> "0..*" RuleSet : isBasedOn
-    RuleSet --> "0..*" Rule : isBasedOn
+    RuleSet --> "1..*" PublicService : isOutputOf
     RuleSet --> "1..*" RuleMethod : hasMethod
-    RuleSet --> "1..1" RuleSet : hasPart
-    RuleSet --> "1..1" Rule : hasPart
+    RuleSet --> "0..*" Resource : comment
     Analysis --|> RuleSet
     DecisionModel --> "0..*" Analysis : hasAnalysis
     DecisionModel --|> RuleSet
-    Rule --> "0..*" RuleSet : isBasedOn
     Rule --> "0..*" Rule : isBasedOn
-    Rule --> "0..1" RuleSet : hasPart
-    Rule --> "0..1" Rule : hasPart
+    Rule --> "0..1" Resource : definition
+    Rule --> "0..1" Resource : postDefinition
+    Rule --> "0..*" Resource : comment
+    Rule --> "0..*" Resource : sourcequote
     Parameter --|> Rule
+    RuleMethod --> "0..*" Resource : comment
+    RuleMethod --> "0..*" Echelon : refinesTowards
+    RuleMethod --> "0..*" Echelon : refinesFrom
     AnalysisMethod --|> RuleMethod
     FormalisationMethod --|> RuleMethod
+    SerialisationMethod --|> RuleMethod
     CodificationMethod --|> RuleMethod
     ExecutionMethod --|> RuleMethod
     ExplanationMethod --|> RuleMethod
     TestMethod --|> RuleMethod
     PublicationMethod --|> RuleMethod
-    ReferencenMethod --|> RuleMethod
+    OrganisationRegister --|> PublicationMethod
+    AcknowledgedOrganisation --|> Rule
+    OrganisationCatalog --> "1..*" OrganisationRegister : hasMethod
+    OrganisationCatalog --|> RuleSet
+    ServiceRegister --|> PublicationMethod
+    AcknowledgedService --|> Rule
+    ServiceCatalog --> "1..*" ServiceRegister : hasMethod
+    ServiceCatalog --|> RuleSet
+    ReferenceMethod --|> PublicationMethod
     Explanation --> "1..1" RuleSet : explains
     Explanation --> "1..1" Rule : explains
     Explanation --|> Rule
@@ -83,6 +120,12 @@ package cprmv {
     TestSet --|> RuleSet
     Decision --|> Rule
     Case --|> Rule
+    AgreementEchelon --|> Echelon
+    SemanticEchelon --|> Echelon
+    OntologicEchelon --|> Echelon
+    LogicEchelon --|> Echelon
+    OperableEchelon --|> Echelon
+    SupportEchelon --|> Echelon
 
 }
 
@@ -92,7 +135,7 @@ package "cpsv-ap v3.2.0 (relevant part)" as cpsv-ap {
     object "cpsv-ap:PublicService" as service
     service "0..*" -u-> cpsvrule : follows
 
-    object "frbroo:F1_Work" as frbrooWork    
+    object "frbroo:F1_Work" as frbrooWork
     object "eli:LegalResource" as legalresource
     frbrooWork <|-- legalresource
     legalresource <-[dotted]- "0..*" cpsvrule : implements

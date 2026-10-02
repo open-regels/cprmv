@@ -1,0 +1,27 @@
+@prefix ns1: <https://standaarden.open-regels.nl/standards/cprmv/0.4.2#> .
+@prefix ns2: <http://purl.org/vocab/cpsv#> .
+@prefix ns3: <http://standaarden.overheid.nl/owms/terms/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+<http://operaton.open-regels.nl/DMN1.3_e62cb254-0e74-11f1-a5e9-f68ed60940f5Re62cb255-0e74-11f1-a5e9-f68ed60940f5_2026-01-01_1> a ns1:DecisionModel ;
+    prov:wasDerivedFrom <https://operaton.open-regels.nl/engine-rest/deployment/e62cb254-0e74-11f1-a5e9-f68ed60940f5/resources/e62cb255-0e74-11f1-a5e9-f68ed60940f5/data> ;
+    ns1:hasMethod <https://cprmv.open-regels.nl/0.4.2/methods/dmn13> ;
+    ns1:hasPart ( [ a ns1:Rule ;
+                ns1:definition "66 * 12 + 7" ;
+                ns1:id "LiteralExpression_2021"@nl ] ) ;
+    ns1:id "DMN1.3_e62cb254-0e74-11f1-a5e9-f68ed60940f5Re62cb255-0e74-11f1-a5e9-f68ed60940f5_2026-01-01_1"@nl ;
+    ns1:isOutputOf [ a ns2:PublicService ;
+            ns2:produces <http://operaton.open-regels.nl/DMN1.3_e62cb254-0e74-11f1-a5e9-f68ed60940f5Re62cb255-0e74-11f1-a5e9-f68ed60940f5_2026-01-01_1> ;
+            ns1:id <https://identifier.overheid.nl/tooi/id/upl/provincie/flevoland/thuisbatterij/> ;
+            ns1:providedBy [ ns3:authority "Provincie Flevoland (oid)" ] ] ;
+    ns1:validFrom "2026-01-01"^^xsd:date .
+
+<https://cprmv.open-regels.nl/0.4.2/methods/dmn13> a ns1:FormalisationMethod,
+        ns1:PublicationMethod,
+        ns1:RuleMethod ;
+    ns1:id "DMN 1.3"@en,
+        "DMN 1.3"@nl .
+
+

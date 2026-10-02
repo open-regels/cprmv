@@ -1,0 +1,30 @@
+@prefix ns1: <https://standaarden.open-regels.nl/standards/cprmv/0.4.2#> .
+@prefix ns2: <https://identifier.overheid.nl/tooi/thes/> .
+@prefix ns3: <http://purl.org/vocab/cpsv#> .
+@prefix ns4: <http://standaarden.overheid.nl/owms/terms/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+<http://cprmv.open-regels.nl/CVDR677883_1> a ns1:RuleSet ;
+    prov:wasDerivedFrom <https://repository.officiele-overheidspublicaties.nl/cvdr/CVDR677883/1/xml/CVDR677883_1.xml> ;
+    ns2:cvdrid "CVDR677883_1" ;
+    ns2:cvdrinwerkingtreding "2015-01-01" ;
+    ns2:cvdrterugwerkendekrachtDatum "" ;
+    ns2:cvdrtitle "Beleidsregels Individuele Inkomenstoeslag gemeente Pekela 2015" ;
+    ns1:hasMethod <https://cprmv.open-regels.nl/0.4.2/methods/cvdr> ;
+    ns1:hasPart ( [ a ns1:Rule ;
+                ns1:definition "1. Wanneer de belanghebbende 36 maanden of langer voorafgaande aan de peildatum heeft geleefd van een bijstandsuitkering, hoeven er geen bewijsstukken worden aangeleverd. "@nl ;
+                ns1:id "Artikel 5."@nl ] ) ;
+    ns1:id "CVDR677883_1"@nl ;
+    ns1:isOutputOf [ a ns3:PublicService ;
+            ns3:produces <http://opencatalogi.open-regels.nl/CVDR677883_1> ;
+            ns1:id <https://identifier.overheid.nl/tooi/id/upl/cvdr/CVDR677883_1> ;
+            ns1:providedBy [ ns4:authority [ ns4:Gemeente "Pekela" ] ] ] ;
+    ns1:validFrom "2015-01-01"^^xsd:date .
+
+<https://cprmv.open-regels.nl/0.4.2/methods/cvdr> a ns1:AnalysisMethod,
+        ns1:PublicationMethod,
+        ns1:RuleMethod ;
+    ns1:id "cvdr"@nl .
+

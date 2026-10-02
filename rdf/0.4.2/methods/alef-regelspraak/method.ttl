@@ -1,0 +1,17 @@
+@base <http://example.com/> .
+@prefix cprmv: <https://standaarden.open-regels.nl/standards/cprmv/0.4.2#> .
+@prefix cprmv-serve: <https://cprmv.open-regels.nl/0.4.2/serve-api/> .
+@prefix cprmvmethods: <https://cprmv.open-regels.nl/0.4.2/methods/> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+
+cprmvmethods:regelspraak a cprmv:FormalisationMethod;
+    cprmv:id "RegelSpraak"@en;
+    cprmv:id "RegelSpraak"@fr;
+    cprmv:id "RegelSpraak"@nl;
+    cprmv:label "RegelSpraak";
+    skos:prefLabel "RegelSpraak";
+    skos:definition """# ALEF RegelSpraak
+
+The alef-regelspraak method is a formalisation method that can be used within the ALEF IDE by the Dutch national tax authority.
+It is to some extend analogous to RuleSpeak and defines a controlled Dutch natural language.""";
+    cprmv:comment "see https://regelspraak.nl".
