@@ -19,7 +19,7 @@ stages:
     - docker:24.0.5-dind
 
 # ============================================================================
-# RESPEC PUBLICATION JOB
+# RESPEC PUBLICATION JOB 
 # ============================================================================
 
 # The Docker image that will be used to build your app
