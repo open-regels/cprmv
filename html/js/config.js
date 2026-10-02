@@ -9,7 +9,7 @@ let respecConfig = {
 
   // shortName = Repository name
   shortName: "cprmv",
-  publishDate: "2026-06-16",
+  publishDate: "2026-10-02",
   publishVersion: "0.4.2",
 
   previousPublishVersion: "0.4.1",
@@ -47,7 +47,7 @@ let respecConfig = {
     {
       name: "Andre van Brussel",
       url: "https://www.ictu.nl",
-    }
+    },
   ],
   // Note that github and gitlab urls are compatible (except for the pulls), however respec prevents gitlab url's to be set
   github: "https://github.com/standards/cprmv/",
