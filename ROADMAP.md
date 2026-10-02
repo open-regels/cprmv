@@ -2,22 +2,10 @@
 
 Note: this roadmap can change at any moment without prior notice  
 
-Expected by end of September 2026:
-  
-**v0.4.2 CPRMV**  
--  **Adds acknowledgement of STTR as a formalisationmethod (relating to DSO)**
--  **Adds acknowledgement of Normenbrief as a formalisation- and publicationmethod**
-  
-**v0.4.2 CPRMV API**  
--  **respec documentation also includes information on methods (the cprmvmethods namespace)**
--  **Adds that the API properly and always references to a service (which can be an unknown however) but with always the right competent authority.**
--  **Support for using the /rules endpoint to find multiple published ruleset’s, which is a modus separate from referencing a single published ruleset. In the case of multiple ruleset’s the CPRMV API returns a list with references RuleSets which can be used with the CPRMV API to retrieve them.**
--  **Support for utilizing organisation and product and services catalog information within references in the /rules endpoint.** 
-
 Expected by 15 November 2026:
 
 **0.4.3 CPRMV**
--  **Improvement on relation with FRBR ans ELI: a RuleSet can both be seen as a frbr Work as well as an frbr Expression. Currently it is defined as a frbr:F1_Work (similar as eli:legalResource), but also Expressions thereof can form RuleSets with similar properties as that of RuleSet's as Work.
+-  **Improvement on relation with FRBR ans ELI: a RuleSet can both be seen as a frbr Work as well as an frbr Expression. Currently it is defined as a frbr:F1_Work (similar as eli:legalResource), but also Expressions thereof can form RuleSets with similar properties as that of RuleSet's as Work.**
 -  **Support for Dutch parliamentary documents that are officially published and the linkage of rulesets that relate to them using the :isBasedOn relation**
 -  **Adds example of a fully traceable piece of law, from parliament  to execution of formalised rules (Article 7a of the Dutch Old Age Pension law)**
 -  **Adds example of a fully traceable piece of law, from parliament to execution of formalised rules (Home Battery Subsidy Flevoland)**
@@ -29,6 +17,9 @@ Expected by 15 November 2026:
 -  **Improvement of Operaton method to reference rulesets more easily on name then using references that contain two long reference id's that can not easily be found**
 
 **0.4.3 CPRMV API**
+-  **Adds that the API properly and always references to a service (which can be an unknown however) but with always the right competent authority.**
+-  **Support for using the /rules endpoint to find multiple published ruleset’s, which is a modus separate from referencing a single published ruleset. In the case of multiple ruleset’s the CPRMV API returns a list with references RuleSets which can be used with the CPRMV API to retrieve them.**
+-  **Support for utilizing organisation and product and services catalog information within references in the /rules endpoint.** 
 -  **Adds basic support for DSO as source for STTR rulesets**
 -  **Adds basic support for MC/DC as test method**
 -  **Adds basic support for RegelSpraak sources (depending on where these will get published)**

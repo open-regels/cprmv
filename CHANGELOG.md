@@ -6,6 +6,9 @@ Note that CPRMV / CPRMV API still is highly subjected to change.
 
 
 **v0.4.2 CPRMV**  
+- **Adds concepts about Echelons to which RuleMethod's can be related and categorised linked to Service Management and Design Science Research**
+- **Adds concpets about acknowledgements of Services and Organisations as rules in catalogs as RuleSet's published in registers forming official publication methods**
+- **Improvements in respec documentation generation from the RDF specification**
 - **Improved and more complete cprmv methods knowledge / value lists**
 - **Adds acknowledgement of Catala as a FormalisationMethod and tooling related to it**
 - **Adds acknowledgement of ALEF with RegelSpraak as a FormalisationMethod and ALEF providing a testmethod as well as webservices generated through ALEF as codification method**
@@ -13,6 +16,8 @@ Note that CPRMV / CPRMV API still is highly subjected to change.
 - **Adds acknowledgement of MC/DC as a testmethod (irt DMN)**
 - **Adds acknowledgement of Legifrance as a publicationmethod**
 - **Adds acknowledgement of DSO as a publicationmethod**
+- **Adds acknowledgement of STTR as an formalisationmethod**
+- **Adds acknowledgement of Normenbrief as a publication and formalisation method**
 - **Adds acknowledgement of RegelRecht as an analysis, formalisation, test and publicationmethod**
 - **updates URI's and documentation to mention 0.4.2 instead of 0.4.1**
 - **adds improved compatibility : the SHACL shapes now do not include a recursive definition**
@@ -63,6 +68,4 @@ Note that CPRMV / CPRMV API still is highly subjected to change.
 -  **bugfixes around support for BWB schema (now supports circulaire’s)**  
 -  **Adds /respec section hosting the respec documentation (besides the official URI) **  
 -  **Adds /ref endpoint which is going to support all reference methods (but currently only implements juriconnect at a basic level)**  
--  **Allows for retrieving DMN 1.3 rulesets published in acknowledged (in value list in cprmvmethods.ttl) Operaton servers (currently only [operaton.open-regels.nl](http://operaton.open-regels.nl))**  
-  
-
+-  **Allows for retrieving DMN 1.3 rulesets published in acknowledged (in value list in cprmvmethods.ttl) Operaton servers (currently only [operaton.open-regels.nl](http://operaton.open-regels.nl))**
