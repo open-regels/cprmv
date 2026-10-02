@@ -1,3 +1,4 @@
+@prefix cv: <http://data.europa.eu/m8g/> .
 @prefix sh:   <http://www.w3.org/ns/shacl#> .
 @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
@@ -271,6 +272,36 @@ cprmv:PublicationMethodShape
             [ sh:class cprmv:OperableEchelon ]
         ) ;
     ] .
+
+cprmv:OrganisationCatalogShape
+    a sh:NodeShape ;
+    sh:targetClass cprmv:OrganisationCatalog ;
+    sh:property [
+        sh:path cprmv:hasMethod ;
+        sh:minCount 1 ;
+        sh:class cprmv:OrganisationRegister ;
+    ] .
+
+cprmv:ServiceCatalogShape
+    a sh:NodeShape ;
+    sh:targetClass cprmv:ServiceCatalog ;
+    sh:property [
+        sh:path cprmv:hasMethod ;
+        sh:minCount 1 ;
+        sh:class cprmv:ServiceRegister ;
+    ] .
+
+cprmv:acknowledgesServiceShape a sh:PropertyShape ;
+  sh:targetClass cprmv:AcknowledgedService ;
+  sh:path cprmv:acknowledges ;
+  sh:minCount 1 ;
+  sh:class cpsv:PublicService .
+
+cprmv:acknowledgesOrganisationShape a sh:PropertyShape ;
+  sh:targetClass cprmv:AcknowledgedOrganisation ;
+  sh:path cprmv:acknowledges ;
+  sh:minCount 1 ;
+  sh:class cv:PublicOrganisation .
 
 cprmv:ReferenceMethodShape
     a sh:NodeShape ;

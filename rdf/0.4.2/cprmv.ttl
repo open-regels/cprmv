@@ -175,6 +175,41 @@ cprmv:PublicationMethod a owl:Class;
     skos:definition "A Rule Method for publication of the definition of Rule(Set)'s apart from the Execution of them..."@en;
     rdfs:subClassOf cprmv:RuleMethod.
 
+cprmv:OrganisationRegister a owl:Class;
+    skos:prefLabel "OrganisationRegister"@en;
+    skos:definition "A Rule Method for publication of a catalog of organisations thet produce RuleSet's as part of their service delivery."@en;
+    rdfs:subClassOf cprmv:PublicationMethod.
+
+cprmv:AcknowledgedOrganisation a owl:Class;
+    skos:prefLabel "AcknowledgedOrganisation"@en;
+    skos:definition "A Rule denoting the official acknowledgement of an organisation (cv:PublicOrganisation) that produce RuleSet's as part of their service delivery."@en;
+    rdfs:subClassOf cprmv:Rule.
+
+cprmv:OrganisationCatalog a owl:Class;
+    skos:prefLabel "OrganisationCatalog"@en;
+    skos:definition "A RuleSet that forms a catalog of officially acknowledged organisations (cv:PublicOrganisation) that produce RuleSet's as part of their service delivery."@en;
+    rdfs:subClassOf cprmv:RuleSet.
+
+cprmv:ServiceRegister a owl:Class;
+    skos:prefLabel "ServiceRegister"@en;
+    skos:definition "A Rule Method for publication of a catalog of services (CPSV-AP:PublicService) in which RuleSet's are produced. There is none that does not."@en;
+    rdfs:subClassOf cprmv:PublicationMethod.
+
+cprmv:AcknowledgedService a owl:Class;
+    skos:prefLabel "AcknowledgedService"@en;
+    skos:definition "A Rule denoting the official acknowledgement of a service (CPSV-AP:PublicService) in which RuleSet's are produced."@en;
+    rdfs:subClassOf cprmv:Rule.
+
+cprmv:acknowledges a owl:ObjectProperty;
+    skos:prefLabel "acknowledges"@en;
+    skos:definition "Denotes the CPSV-AP:PublicOrganisation / CV:PublicService an AcknowledgedOrganisation / AcknowledgedService acknowledges as a Rule"@en;
+    rdfs:domain (owl:unionOf (cprmv:AcknowledgedOrganisation cprmv:AcknowledgedService)).
+
+cprmv:ServiceCatalog a owl:Class;
+    skos:prefLabel "ServiceCatalog"@en;
+    skos:definition "A RuleSet that forms a catalog of officially acknowledged services (CPSV-AP:PublicService) in which RuleSet's are produced."@en;
+    rdfs:subClassOf cprmv:RuleSet.
+
 cprmv:ReferenceMethod a owl:Class;
     skos:prefLabel "ReferenceMethod"@en;
     skos:definition "A meta Rule Method for the referencing of Rule(Set)'s apart from the operationalisation of them..."@en;

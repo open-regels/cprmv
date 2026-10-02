@@ -40,6 +40,20 @@ package cprmv {
     }
     object "PublicationMethod" as PublicationMethod {
     }
+    object "OrganisationRegister" as OrganisationRegister {
+    }
+    object "AcknowledgedOrganisation" as AcknowledgedOrganisation {
+        acknowledges
+    }
+    object "OrganisationCatalog" as OrganisationCatalog {
+    }
+    object "ServiceRegister" as ServiceRegister {
+    }
+    object "AcknowledgedService" as AcknowledgedService {
+        acknowledges
+    }
+    object "ServiceCatalog" as ServiceCatalog {
+    }
     object "ReferenceMethod" as ReferenceMethod {
     }
     object "Explanation" as Explanation {
@@ -90,6 +104,14 @@ package cprmv {
     ExplanationMethod --|> RuleMethod
     TestMethod --|> RuleMethod
     PublicationMethod --|> RuleMethod
+    OrganisationRegister --|> PublicationMethod
+    AcknowledgedOrganisation --|> Rule
+    OrganisationCatalog --> "1..*" OrganisationRegister : hasMethod
+    OrganisationCatalog --|> RuleSet
+    ServiceRegister --|> PublicationMethod
+    AcknowledgedService --|> Rule
+    ServiceCatalog --> "1..*" ServiceRegister : hasMethod
+    ServiceCatalog --|> RuleSet
     ReferenceMethod --|> PublicationMethod
     Explanation --> "1..1" RuleSet : explains
     Explanation --> "1..1" Rule : explains
