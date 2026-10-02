@@ -2,6 +2,7 @@
 @prefix schema: <http://schema.org/> .
 @prefix cpsv: <http://purl.org/vocab/cpsv#> .
 @prefix cprmv: <https://standaarden.open-regels.nl/standards/cprmv/0.4.2#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix owl: <http://www.w3.org/2002/07/owl#> .
 @prefix vann: <http://purl.org/vocab/vann/> .
@@ -30,7 +31,7 @@ cprmv:RuleSet a owl:Class;
     skos:definition "A set of Rule's. Which is produced as cv:Ouput within a cpsv:Publicservice. While not always being a eli:LegalResource, a eli:LegalResource is to be seen as a cprmv:RuleSet. Just like eli:Work, CPRMV defines RuleSet's as FRBR Work (frboo F1_work).  eli:LegalResource's are eli:Work's too and more formalised versions thereof are to be seen as a derivation of those eli:Work's' too but separate Works. Also, being a cv:Ouput, a cprmv:RuleSet cprmv:is_part_of a dcat.Dataset "@en;
     rdfs:subClassOf frbroo:F1_Work;
     rdfs:subClassOf cv:Output.
-    
+
 cprmv:Analysis a owl:Class;
     skos:prefLabel "Analysis"@en;
     skos:definition "A Rule Set that has been produced by following a Analysis Method."@en;
@@ -52,7 +53,7 @@ cprmv:id a owl:ObjectProperty;
     skos:prefLabel "id"@en;
     skos:definition "denotes a universal unique id with which to refer to what the cprmv object like RuleMethod's Explanation's, RuleSet's and Rule's represents."@en;
     rdfs:domain (owl:unionOf (cprmv:Rule cprmv:RuleSet cprmv:RuleMethod)).
-    
+
 cprmv:isBasedOn a owl:ObjectProperty;
     skos:prefLabel "isBasedOn"@en;
     skos:definition "In the case of a RuleSet this property states the RuleSet to be derived from the RuleSet(s) in their entirety (all cprmv:Rules contained in the cprmv:RuleSet that is derived from, depending on whether they are defined with the same cprmv:hasMethod or not, can or must have matching ones in the cprmv:RuleSet that derives) possibly aggregated by analysis or formalisation (not codification). In the case of a cprmv:Rule it refers to the matching cprmv:Rule contained in a cprmv:RuleSet that is derived from by the RuleSet that contains the deriving cprmv:Rule (this must be the case). A cprmv:Rule in the cprmv:RuleSet that is derived from does not have to be referred by a cprmv:Rule contained in the deriving cprmv:RuleSet if both RuleSet's contain only cprmv:Rule's defined with the same cprmv:method, in which case this implies the cprmv:Rule implicitly becomes part of the deriving cprmv:RuleSet as is. Multiple cprmv:Rule's / cprmv:RuleSet's can be derived from within the same cprmv:Rule / cprmv:RuleSet"@en;
@@ -79,7 +80,7 @@ cprmv:validFrom a owl:ObjectProperty;
     skos:prefLabel "validFrom"@en;
     skos:definition "denotes the date from which day on the RuleSet is to be held valid."@en;
     rdfs:domain cprmv:RuleSet.
-    
+
 cprmv:validUntil a owl:ObjectProperty;
     skos:prefLabel "validUntil"@en;
     skos:definition "denotes the date until which day on the RuleSet is to be held valid. On the day of this date, the RuleSet is no longer valid. If no date value is set, this means the RuleSet is valid until further notice."@en;
@@ -96,7 +97,7 @@ cprmv:hasPart a owl:ObjectProperty;
     skos:definition "denotes the ordered list of Rule's as the parts a Rule(Set) can have and together with the cprmv:definition and cprmv:postDefinition properties (in case of Rule's') define the Rule(Set) by concatenating the definition, the definitions of the cprmv:Rule's that are part of it (recursively in order) and their postDefinition's"@en;
     rdfs:domain (owl:unionOf (cprmv:Rule cprmv:RuleSet));
     rdfs:range (owl:unionOf (cprmv:Rule cprmv:RuleSet)).
-    
+
 cprmv:definition a owl:ObjectProperty;
     skos:prefLabel "definition"@en;
     skos:definition "denotes the head part of the definition of a cprmv:Rule which is either a rdfs:text or any representation of knowledge in the form of rdf"@en;
@@ -108,7 +109,7 @@ cprmv:postDefinition a owl:ObjectProperty;
     skos:definition "denotes the tail part of the definition of a cprmv:Rule which is either a rdfs:text or any representation of knowledge in the form of rdf. This property is only to be used when there are one or more cprmv:Rule's contained by the cprmv:Rule this property belongs to"@en;
     rdfs:domain cprmv:Rule ;
     rdfs:range rdfs:Resource .
-       
+
 cprmv:comment a owl:ObjectProperty;
     skos:prefLabel "comment"@en;
     skos:definition "denotes information as comment for a cprmv:Rule, cprmv:RuleSet or cprmv:RuleMethod"@en;
@@ -120,11 +121,11 @@ cprmv:sourcequote a owl:ObjectProperty;
     skos:definition "replicates (a part of) the definition of the cprmv:Rule that is being extended"@en;
     rdfs:domain cprmv:Rule;
     rdfs:range rdfs:Resource .
-    
+
 cprmv:Rule a owl:Class;
     skos:prefLabel "Rule"@en;
     skos:definition "A Rule denotes a official expression of an agreement which can both be expressed in natural language like articles in laws as well as more formal business rules for automation of decisions"@en.
-    
+
 cprmv:Parameter a owl:Class;
     skos:prefLabel "Parameter"@en;
     skos:definition "A Rule that forms a parameter. Normally these are specific small parts of a Rule Set that are changed more often than the rest of a Rule Set. They normally have a definition holding information that is of a simple type like a number, date etc."@en;
@@ -143,10 +144,10 @@ cprmv:FormalisationMethod a owl:Class;
     skos:prefLabel "FormalisationMethod"@en;
     skos:definition "A Rule Method with which an existing Rule is extended through formalisation, which entirely formalises a Rule semantically as far as possible and makes it represented in a interoperable way to the point cprmv compatible systems can comsume them within processes for delivering Public Services."@en;
     rdfs:subClassOf cprmv:RuleMethod.
-    
+
 cprmv:SerialisationMethod a owl:Class;
     skos:prefLabel "SerialisationMethod"@en;
-    skos:definition "A Rule Method with which an existing Rule is serialised as a textual file that can be stored. Think about XML, JSON, YAML, Turtle as common ways to do this."@en;
+    skos:definition "A meta Rule Method with which an existing Rule is serialised as a textual file that can be stored. Think about XML, JSON, YAML, Turtle as common ways to do this."@en;
     rdfs:subClassOf cprmv:RuleMethod.
 
 cprmv:CodificationMethod a owl:Class;
@@ -176,8 +177,8 @@ cprmv:PublicationMethod a owl:Class;
 
 cprmv:ReferenceMethod a owl:Class;
     skos:prefLabel "ReferenceMethod"@en;
-    skos:definition "A Rule Method for the referencing of Rule(Set)'s apart from the Execution of them..."@en;
-    rdfs:subClassOf cprmv:RuleMethod.
+    skos:definition "A meta Rule Method for the referencing of Rule(Set)'s apart from the operationalisation of them..."@en;
+    rdfs:subClassOf cprmv:PublicationMethod.
 
 cprmv:Explanation a owl:Class;
     skos:prefLabel "TestCase"@en;
@@ -188,17 +189,17 @@ cprmv:TestCase a owl:Class;
     skos:prefLabel "TestCase"@en;
     skos:definition "A TestCase is a cprmv:Case defined for and following a TestMethod"@en;
     rdfs:subClassOf cprmv:Case.
-    
+
 cprmv:TestSet a owl:Class;
     skos:prefLabel "TestSet"@en;
     skos:definition "A TestSet is a cprmv:RuleSet containing cprmv:TestCase's defined for following a TestMethod"@en;
     rdfs:subClassOf cprmv:RuleSet.
-    
+
 cprmv:Decision a owl:Class;
     skos:prefLabel "Decision"@en;
     skos:definition "A Decision is a cprmv:Rule defined following a ExecutionMethod"@en;
     rdfs:subClassOf cprmv:Rule.
-    
+
 cprmv:Case a owl:Class;
     skos:prefLabel "Case"@en;
     skos:definition "A Case is a cprmv:Rule containing a list of Decisions defined following a ExecutionMethod"@en;
@@ -209,3 +210,49 @@ cprmv:explains a owl:ObjectProperty;
     skos:definition "denotes the cprmv:Rule(Set) a cprmv:Eplanation holds explanatory content of for the use of explaining them in the systems that use them for delivering Public Services"@en;
     rdfs:domain cprmv:Explanation;
     rdfs:range (owl:unionOf (cprmv:Rule cprmv:RuleSet)).
+
+cprmv:Echelon a owl:Class;
+    skos:prefLabel "echelon"@en;
+    skos:definition "An echelon is a category in which a RuleSet can be categorized in the context of service delivery, loosely based on the Theory of Hierarchical, Multilevel Systems (M. D. Mesarovic, D. Macko, Y. Takahara)."@en.
+
+cprmv:AgreementEchelon a owl:Class;
+    skos:prefLabel "AgreementEchelon"@en;
+    skos:definition "Echelon tied to the contract management process of a service based on USM in which solutions are designed as descriptions in natural language and it's grammar."@en;
+    rdfs:subClassOf cprmv:Echelon.
+
+cprmv:SemanticEchelon a owl:Class;
+    skos:prefLabel "SemanticEchelon"@en;
+    skos:definition "Echelon tied to the contract management process of a service based on USM in which solutions are designed in terms of Concepts (What is) and Norms (What needs to be) based on descriptions in natural language."@en;
+    rdfs:subClassOf cprmv:Echelon.
+
+cprmv:OntologicEchelon a owl:Class;
+    skos:prefLabel "OntologicEchelon"@en;
+    skos:definition "Echelon tied to the contract management process of a service based on USM in which solutions are designed in terms of information models consisting of related to Concepts and Norms (defined within the context of the semantic echelon)."@en;
+    rdfs:subClassOf cprmv:Echelon.
+
+cprmv:LogicEchelon a owl:Class;
+    skos:prefLabel "LogicEchelon"@en;
+    skos:definition "Echelon tied to the contract management process of a service based on USM in which solutions are designed in terms of logically formalised models such that they are operable, like decision and process models, based on related Concepts and Norms (defined within the context of the ontologic / semantic echelon)."@en;
+    rdfs:subClassOf cprmv:Echelon.
+
+cprmv:OperableEchelon a owl:Class;
+    skos:prefLabel "OperableEchelon"@en;
+    skos:definition "Echelon tied to the operations process of a service based on USM in which operable solutions from echelons tied to the contract management process of a service based on USM are followed in service delivery."@en;
+    rdfs:subClassOf cprmv:Echelon.
+
+cprmv:SupportEchelon a owl:Class;
+    skos:prefLabel "SupportEchelon"@en;
+    skos:definition "Echelon tied to the three support processes of a service based on USM in which solutions are evaluated."@en;
+    rdfs:subClassOf cprmv:Echelon.
+
+cprmv:refinesTowards a owl:ObjectProperty;
+    skos:prefLabel "refinesTowards"@en;
+    skos:definition "Denotes the Echelon a RuleMethod refines RuleSets towards."@en;
+    rdfs:domain cprmv:RuleMethod;
+    rdfs:range cprmv:Echelon.
+
+cprmv:refinesFrom a owl:ObjectProperty;
+    skos:prefLabel "refinesFrom"@en;
+    skos:definition "Denotes the Echelon a RuleMethod refines RuleSets from."@en;
+    rdfs:domain cprmv:RuleMethod;
+    rdfs:range cprmv:Echelon.

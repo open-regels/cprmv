@@ -22,7 +22,7 @@ package "cpsv-ap v3.2.0 (relevant part)" as cpsv-ap {
     object "cpsv-ap:PublicService" as service
     service "0..*" -u-> cpsvrule : follows
 
-    object "frbroo:F1_Work" as frbrooWork    
+    object "frbroo:F1_Work" as frbrooWork
     object "eli:LegalResource" as legalresource
     frbrooWork <|-- legalresource
     legalresource <-[dotted]- "0..*" cpsvrule : implements
@@ -54,6 +54,7 @@ frbrooWork <|--  RuleSet
 """
 
 def asList(kg, obj, prop = None):
+    #print(f"ASLIST CALL obj:{obj} prop:{prop}")
     if obj is None:
         return []
     if obj == RDF.nil:
@@ -64,7 +65,8 @@ def asList(kg, obj, prop = None):
         list.extend(asList(kg, kg.value(obj, OWL.unionOf)))
         if prop is not None:
             list.extend(asList(kg, kg.value(obj, prop)))
-        return list
+        if len(list) > 0:
+            return list
     if prop is not None:
         return asList(kg, kg.value(obj, prop))
     return [obj]
@@ -147,7 +149,6 @@ def loadmethods():
                 print(f"found information for {domain}.{prop}")
                 classes[domain]['properties'][prop] = {}
                 for p, o in vocabkg.predicate_objects(prop):
-                    #print(f"property as subject has: PRED - OBJ: {p} - {o}")
                     if p in [SKOS.prefLabel, SKOS.definition, RDFS.subPropertyOf]:
                         classes[domain]['properties'][prop][p] = o
                 if SKOS.prefLabel not in classes[domain]['properties'][prop].keys():
@@ -161,7 +162,7 @@ def loadmethods():
                         classes[domain]['properties'][prop][RDFS.range].append(range)
                         print(f"range class : {range}")
                 classes[domain]['properties'][prop]['value list'] = asList(vocabkg, vocabkg.value(domain, prop))
-            
+
     for shape in vocabkg.subjects(RDF.type, SH.NodeShape):
         target = vocabkg.value(shape, SH.targetClass)
         if target in classes.keys():
@@ -171,8 +172,16 @@ def loadmethods():
                     if path in classes[target]['properties'].keys():
                         print(f"processing additional information from shapes for {target}.{path}")
                         for p, o in vocabkg.predicate_objects(prop):
-                            if p in [SH.minCount, SH.maxCount, SH.datatype]:
+                            if p in [SH.minCount, SH.maxCount, SH.datatype, SH['class']]:
                                 classes[target]['properties'][path][p] = o
+                            if p in [SH['class']]:
+                                classes[target]['properties'][path][p] = o
+                                for c in asList(vocabkg, prop, p):
+                                    if c in classes.keys():
+                                        if RDFS.range not in classes[target]['properties'][path]:
+                                            classes[target]['properties'][path][RDFS.range] = []
+                                        classes[target]['properties'][path][RDFS.range].append(c)
+                                        print(f"range class : {c}")
     return classes
 
 def load():
@@ -195,7 +204,7 @@ def load():
     for prop in vocabkg.subjects(RDF.type, OWL.ObjectProperty):
         print(f"Processing property {prop}")
         for domain in asList(vocabkg, prop, RDFS.domain):
-            print(f"property {prop} has a rdfs.domain class: {domain}")
+            #print(f"property {prop} has a rdfs.domain class: {domain}")
             if domain in classes.keys():
                 print(f"found information for {domain}.{prop}")
                 classes[domain]['properties'][prop] = {}
@@ -207,23 +216,45 @@ def load():
                 if SKOS.definition not in classes[domain]['properties'][prop].keys():
                         print(f"Warning: property {prop} does not define a skos:definition...")
                 for range in asList(vocabkg, prop, RDFS.range):
-                    if range in classes.keys():
+                    if range not in classes.keys() and range not in OWL:
                         if RDFS.range not in classes[domain]['properties'][prop]:
                             classes[domain]['properties'][prop][RDFS.range] = []
-                        classes[domain]['properties'][prop][RDFS.range].append(range)
-                        print(f"range class : {range}")
-            
+                        if range not in classes[domain]['properties'][prop][RDFS.range]:
+                            classes[domain]['properties'][prop][RDFS.range].append(range)
+                            print(f"range class : {range}")
+
     for shape in vocabkg.subjects(RDF.type, SH.NodeShape):
         target = vocabkg.value(shape, SH.targetClass)
         if target in classes.keys():
             for prop in vocabkg.objects(shape, SH.property):
                 path = vocabkg.value(prop, SH.path)
-                if path is not None:
-                    if path in classes[target]['properties'].keys():
-                        print(f"processing additional information from shapes for {target}.{path}")
-                        for p, o in vocabkg.predicate_objects(prop):
-                            if p in [SH.minCount, SH.maxCount, SH.datatype]:
+                if path is not None and not isinstance(path, BNode): # we do not support complex path definitions
+                    print(f"processing additional information from shapes for {target}.{path}")
+                    if path not in classes[target]['properties'].keys():
+                        classes[target]['properties'][path] = {}
+                        for p, o in vocabkg.predicate_objects(path):
+                            if p in [SKOS.prefLabel, SKOS.definition, RDFS.subPropertyOf]:
                                 classes[target]['properties'][path][p] = o
+                    for p, o in vocabkg.predicate_objects(prop):
+                        if p in [SH.minCount, SH.maxCount, SH.datatype]:
+                            classes[target]['properties'][path][p] = o
+                        if p == SH['class']:
+                            for c in asList(vocabkg, o):
+                                if RDFS.range not in classes[target]['properties'][path]:
+                                    classes[target]['properties'][path][RDFS.range] = []
+                                if c not in classes[target]['properties'][path][RDFS.range]:
+                                    classes[target]['properties'][path][RDFS.range].append(c)
+                                    print(f"range class : {c}")
+                        if p == SH['or']:
+                            for c in asList(vocabkg, o):
+                                for p2, c2 in vocabkg.predicate_objects(c):
+                                    if p2 == SH['class']:
+                                        if RDFS.range not in classes[target]['properties'][path]:
+                                            classes[target]['properties'][path][RDFS.range] = []
+                                        if c2 not in classes[target]['properties'][path][RDFS.range]:
+                                            classes[target]['properties'][path][RDFS.range].append(c2)
+                                            print(f"range class : {c2}")
+
     return classes
 
 def genmd(classes, out='ch03.md', title='CPRMV Specification', filter=CPRMV):
@@ -242,7 +273,6 @@ def genmd(classes, out='ch03.md', title='CPRMV Specification', filter=CPRMV):
                     print(f"## <dfn>{URIRef(c).fragment}</dfn>\n {classes[c][SKOS.definition]}\n\n")
                 else:
                     print(f"## <dfn>{classes[c][SKOS.prefLabel]}</dfn>\n {classes[c][SKOS.definition]}\n\n")
-                #link = '-'.join(classes[c][SKOS.prefLabel].split())
                 if RDFS.subClassOf in classes[c].keys():
                     if classes[c][RDFS.subClassOf] in classes.keys():
                         print(f"subclass of: <a>{classes[classes[c][RDFS.subClassOf]][SKOS.prefLabel]}</a>\n\n")
@@ -250,11 +280,15 @@ def genmd(classes, out='ch03.md', title='CPRMV Specification', filter=CPRMV):
                         print(f"subclass of: <a>{URIRef(classes[c][RDFS.subClassOf]).fragment}</a>\n\n")
                     else:
                         print(f"subclass of: [{classes[c][RDFS.subClassOf]}]({classes[c][RDFS.subClassOf]})\n\n")
-                print("properties (excluding inherited):\n\n")
+                print("properties:\n\n")
                 print("| Property | Type/Range | Cardinality | Definition |")
                 print("| --- | --- | --- | --- |")
                 for p in classes[c]['properties'].keys():
                     prop = classes[c]['properties'][p]
+                    if SKOS.prefLabel not in prop.keys():
+                        prop[SKOS.prefLabel] = 'unknown, no SKOS.prefLabel for property '+p
+                    if SKOS.definition not in prop.keys():
+                        prop[SKOS.definition] = 'unknown, no SKOS.definition for property'+p
                     range = ''
                     if (RDFS.range not in prop.keys()) or (len(prop[RDFS.range]) == 0):
                         range = ' '
@@ -266,7 +300,10 @@ def genmd(classes, out='ch03.md', title='CPRMV Specification', filter=CPRMV):
                     else:
                         delim = ''
                         for rangeclass in prop[RDFS.range]:
-                            range = range + delim + ' ' + classes[rangeclass][SKOS.prefLabel]
+                            if rangeclass not in classes.keys():
+                                range = range + delim + ' ' + rangeclass
+                            else:
+                                range = range + delim + ' ' + classes[rangeclass][SKOS.prefLabel]
                             delim = ','
                         if SH.maxCount not in prop.keys():
                             prop[SH.maxCount] = '*'
@@ -279,7 +316,7 @@ def genmd(classes, out='ch03.md', title='CPRMV Specification', filter=CPRMV):
                                 print(f"| | | | <a>{classes[value][SKOS.prefLabel]}</a> |")
                 print('\n\n')
 
-def genpuml(classes, out='puml/overview.puml'):
+def genpuml(classes, out='puml/overview.puml', filter={ CPRMV.refinesFrom : CPRMV.RuleMethod, CPRMV.refinesTowards : CPRMV.RuleMethod}):
     with open(out, 'w') as f:
         with redirect_stdout(f):
             n = 0
@@ -302,6 +339,8 @@ def genpuml(classes, out='puml/overview.puml'):
                         print(f"        {URIRef(p).fragment}{t}")
                     else:
                         for rangeclass in prop[RDFS.range]:
+                            if p in filter and c != filter[p]:
+                               continue
                             if SH.minCount not in prop.keys():
                                 prop[SH.minCount] = 0
                             if SH.maxCount not in prop.keys():
@@ -321,6 +360,7 @@ def genpuml(classes, out='puml/overview.puml'):
 
 def main():
     classes = load()
+    print(classes[CPRMV.RuleSet]['properties'][CPRMV.hasMethod])
     genpuml(classes)
     genmd(classes)
     classes = loadmethods()

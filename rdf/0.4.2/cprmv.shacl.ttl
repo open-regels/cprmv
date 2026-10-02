@@ -86,7 +86,7 @@ cprmv:RuleShape
         sh:maxCount 1 ;
     ] ;
     sh:property [
-        sh:path cprmv:sourceQuote ;
+        sh:path cprmv:sourcequote ;
         sh:minCount 0 ;
         sh:or (
            [ sh:datatype xsd:string ]
@@ -107,7 +107,7 @@ cprmv:RuleShape
         sh:minCount 0 ;
     ] ;
     sh:property [
-        sh:path cprmv:hasPartShape ;
+        sh:path cprmv:hasPart ;
         sh:minCount 0 ;
     ] .
 
@@ -125,37 +125,154 @@ cprmv:RuleMethodShape
            [ sh:datatype xsd:string ]
            [ sh:datatype rdf:langString ]
         ) ;
+    ] ;
+    sh:property [
+        sh:path cprmv:refinesTowards ;
+        sh:minCount 0 ;
+        sh:class cprmv:Echelon ;
+    ] ;
+    sh:property [
+        sh:path cprmv:refinesFrom ;
+        sh:minCount 0 ;
+        sh:class cprmv:Echelon ;
     ] .
 
-cprmv:AnalysisMethod
+cprmv:AnalysisMethodShape
     a sh:NodeShape ;
-    sh:targetClass cprmv:AnalysisMethod .
+    sh:targetClass cprmv:AnalysisMethod ;
+    sh:property [
+        sh:path cprmv:refinesTowards ;
+        sh:minCount 0 ;
+        sh:or (
+            [ sh:class cprmv:AgreementEchelon ]
+            [ sh:class cprmv:SemanticEchelon ]
+            [ sh:class cprmv:OntologicEchelon ]
+        ) ;
+    ] ;
+    sh:property [
+        sh:path cprmv:refinesFrom ;
+        sh:minCount 0 ;
+        sh:or (
+            [ sh:class cprmv:AgreementEchelon ]
+            [ sh:class cprmv:SemanticEchelon ]
+            [ sh:class cprmv:OntologicEchelon ]
+        ) ;
+    ] .
 
-cprmv:FormalisationMethod
+cprmv:FormalisationMethodShape
     a sh:NodeShape ;
-    sh:targetClass cprmv:FormalisationMethod .
-    
-cprmv:CodificationMethod
-    a sh:NodeShape ;
-    sh:targetClass cprmv:CodificationMethod .
+    sh:targetClass cprmv:FormalisationMethod ;
+    sh:property [
+        sh:path cprmv:refinesTowards ;
+        sh:minCount 0 ;
+        sh:or (
+            [ sh:class cprmv:LogicEchelon ]
+            [ sh:class cprmv:OperableEchelon ]
+        ) ;
+    ] ;
+    sh:property [
+        sh:path cprmv:refinesFrom ;
+        sh:minCount 0 ;
+        sh:or (
+            [ sh:class cprmv:AgreementEchelon ]
+            [ sh:class cprmv:SemanticEchelon ]
+            [ sh:class cprmv:OntologicEchelon ]
+            [ sh:class cprmv:LogicEchelon ]
+        ) ;
+    ] .
 
-cprmv:ExecutionMethod
+cprmv:CodificationMethodShape
     a sh:NodeShape ;
-    sh:targetClass cprmv:ExecutionMethod.
-    
-cprmv:ExplanationMethod
+    sh:targetClass cprmv:CodificationMethod ;
+    sh:property [
+        sh:path cprmv:refinesTowards ;
+        sh:minCount 0 ;
+        sh:class cprmv:OperableEchelon ;
+    ] ;
+    sh:property [
+        sh:path cprmv:refinesFrom ;
+        sh:minCount 0 ;
+        sh:or (
+            [ sh:class cprmv:AgreementEchelon ]
+            [ sh:class cprmv:SemanticEchelon ]
+            [ sh:class cprmv:OntologicEchelon ]
+            [ sh:class cprmv:LogicEchelon ]
+        ) ;
+    ] .
+
+cprmv:ExecutionMethodShape
     a sh:NodeShape ;
-    sh:targetClass cprmv:ExplanationMethod .
-    
-cprmv:TestMethod
+    sh:targetClass cprmv:ExecutionMethod ;
+    sh:property [
+        sh:path cprmv:refinesTowards ;
+        sh:minCount 0 ;
+        sh:class cprmv:OperableEchelon ;
+    ] ;
+    sh:property [
+        sh:path cprmv:refinesFrom ;
+        sh:minCount 0 ;
+        sh:or (
+            [ sh:class cprmv:AgreementEchelon ]
+            [ sh:class cprmv:LogicEchelon ]
+            [ sh:class cprmv:OperableEchelon ]
+        ) ;
+    ] .
+
+cprmv:ExplanationMethodShape
     a sh:NodeShape ;
-    sh:targetClass cprmv:TestMethod .
-    
-cprmv:PublicationMethod
+    sh:targetClass cprmv:ExplanationMethod ;
+    sh:property [
+        sh:path cprmv:refinesTowards ;
+        sh:minCount 0 ;
+        sh:class cprmv:OperableEchelon ;
+    ] ;
+    sh:property [
+        sh:path cprmv:refinesFrom ;
+        sh:minCount 0 ;
+        sh:or (
+            [ sh:class cprmv:AgreementEchelon ]
+            [ sh:class cprmv:SemanticEchelon ]
+            [ sh:class cprmv:OntologicEchelon ]
+            [ sh:class cprmv:LogicEchelon ]
+            [ sh:class cprmv:OperableEchelon ]
+        ) ;
+    ] .
+
+cprmv:TestMethodShape
     a sh:NodeShape ;
-    sh:targetClass cprmv:PublicationMethod .
-    
-cprmv:ReferenceMethod
+    sh:targetClass cprmv:TestMethod ;
+    sh:property [
+        sh:path cprmv:refinesTowards ;
+        sh:minCount 0 ;
+        sh:class cprmv:SupportEchelon ;
+    ] ;
+    sh:property [
+        sh:path cprmv:refinesFrom ;
+        sh:minCount 0 ;
+        sh:class cprmv:OperableEchelon ;
+    ] .
+
+cprmv:PublicationMethodShape
+    a sh:NodeShape ;
+    sh:targetClass cprmv:PublicationMethod ;
+    sh:property [
+        sh:path cprmv:refinesTowards ;
+        sh:minCount 0 ;
+        sh:class cprmv:OperableEchelon ;
+    ] ;
+    sh:property [
+        sh:path cprmv:refinesFrom ;
+        sh:minCount 0 ;
+        sh:or (
+            [ sh:class cprmv:AgreementEchelon ]
+            [ sh:class cprmv:SemanticEchelon ]
+            [ sh:class cprmv:OntologicEchelon ]
+            [ sh:class cprmv:LogicEchelon ]
+            [ sh:class cprmv:OperableEchelon ]
+        ) ;
+    ] .
+
+cprmv:ReferenceMethodShape
     a sh:NodeShape ;
     sh:targetClass cprmv:ReferenceMethod .
 
@@ -164,7 +281,7 @@ cprmv:hasPartShape a sh:PropertyShape ;
   sh:minCount 1 ;
   sh:class cprmv:Rule .
 
-cprmv:Explanation
+cprmv:ExplanationShape
     a sh:NodeShape ;
     sh:targetClass cprmv:Explanation ;
     sh:property [
@@ -177,19 +294,22 @@ cprmv:Explanation
         sh:maxCount 1 ;
     ] .
 
-cprmv:TestCase
+cprmv:TestCaseShape
     a sh:NodeShape ;
     sh:targetClass cprmv:TestCase .
 
-cprmv:TestSet
+cprmv:TestSetShape
     a sh:NodeShape ;
     sh:targetClass cprmv:TestSet.
 
-cprmv:Decision
+cprmv:DecisionShape
     a sh:NodeShape ;
     sh:targetClass cprmv:Decision .
 
-cprmv:Case
+cprmv:CaseShape
     a sh:NodeShape ;
     sh:targetClass cprmv:Case .
 
+cprmv:EchelonShape
+    a sh:NodeShape ;
+    sh:targetClass cprmv:Echelon .

@@ -5,7 +5,7 @@
  Value list of acknowledged rule methods.
 
 
-properties (excluding inherited):
+properties:
 
 
 | Property | Type/Range | Cardinality | Definition |
@@ -34,7 +34,7 @@ properties (excluding inherited):
  Value list of acknowledged analysis methods.
 
 
-properties (excluding inherited):
+properties:
 
 
 | Property | Type/Range | Cardinality | Definition |
@@ -52,7 +52,7 @@ properties (excluding inherited):
  Value list of acknowledged formalisation methods.
 
 
-properties (excluding inherited):
+properties:
 
 
 | Property | Type/Range | Cardinality | Definition |
@@ -72,7 +72,7 @@ properties (excluding inherited):
  Value list of acknowledged serialisation methods.
 
 
-properties (excluding inherited):
+properties:
 
 
 | Property | Type/Range | Cardinality | Definition |
@@ -92,7 +92,7 @@ properties (excluding inherited):
  Value list of acknowledged codification methods.
 
 
-properties (excluding inherited):
+properties:
 
 
 | Property | Type/Range | Cardinality | Definition |
@@ -105,7 +105,7 @@ properties (excluding inherited):
  Value list of acknowledged test methods.
 
 
-properties (excluding inherited):
+properties:
 
 
 | Property | Type/Range | Cardinality | Definition |
@@ -118,7 +118,7 @@ properties (excluding inherited):
  Value list of acknowledged execution methods.
 
 
-properties (excluding inherited):
+properties:
 
 
 | Property | Type/Range | Cardinality | Definition |
@@ -133,7 +133,7 @@ properties (excluding inherited):
  Value list of acknowledged publication methods.
 
 
-properties (excluding inherited):
+properties:
 
 
 | Property | Type/Range | Cardinality | Definition |
@@ -149,7 +149,7 @@ properties (excluding inherited):
  Value list of acknowledged reference methods.
 
 
-properties (excluding inherited):
+properties:
 
 
 | Property | Type/Range | Cardinality | Definition |
@@ -166,7 +166,7 @@ It is to some extend analogous to RuleSpeak and defines a controlled Dutch natur
 
 
 
-properties (excluding inherited):
+properties:
 
 
 | Property | Type/Range | Cardinality | Definition |
@@ -182,7 +182,7 @@ properties (excluding inherited):
 subclass of: <a>CPRMV API - Generic XML Serialisation Method</a>
 
 
-properties (excluding inherited):
+properties:
 
 
 | Property | Type/Range | Cardinality | Definition |
@@ -198,7 +198,7 @@ properties (excluding inherited):
 subclass of: <a>FormalisationMethod</a>
 
 
-properties (excluding inherited):
+properties:
 
 
 | Property | Type/Range | Cardinality | Definition |
@@ -216,7 +216,7 @@ This reference method is defined for support within API's that serve CPRMV metad
 subclass of: <a>ReferenceMethod</a>
 
 
-properties (excluding inherited):
+properties:
 
 
 | Property | Type/Range | Cardinality | Definition |
@@ -232,7 +232,7 @@ properties (excluding inherited):
 subclass of: <a>CPRMV API - Generic XML Serialisation Method</a>
 
 
-properties (excluding inherited):
+properties:
 
 
 | Property | Type/Range | Cardinality | Definition |
@@ -249,7 +249,7 @@ It typically uses XML as a serialisation format.
 subclass of: <a>CPRMV API - Generic XML Serialisation Method</a>
 
 
-properties (excluding inherited):
+properties:
 
 
 | Property | Type/Range | Cardinality | Definition |
@@ -265,7 +265,7 @@ properties (excluding inherited):
 subclass of: <a>CPRMV API - Generic XML Serialisation Method</a>
 
 
-properties (excluding inherited):
+properties:
 
 
 | Property | Type/Range | Cardinality | Definition |
@@ -278,7 +278,7 @@ properties (excluding inherited):
 
 
 
-properties (excluding inherited):
+properties:
 
 
 | Property | Type/Range | Cardinality | Definition |
@@ -291,7 +291,7 @@ properties (excluding inherited):
 
 
 
-properties (excluding inherited):
+properties:
 
 
 | Property | Type/Range | Cardinality | Definition |
@@ -307,7 +307,7 @@ properties (excluding inherited):
 subclass of: <a>AnalysisMethod</a>
 
 
-properties (excluding inherited):
+properties:
 
 
 | Property | Type/Range | Cardinality | Definition |
@@ -323,7 +323,7 @@ properties (excluding inherited):
 subclass of: <a>CPRMV API - Generic XML Serialisation Method</a>
 
 
-properties (excluding inherited):
+properties:
 
 
 | Property | Type/Range | Cardinality | Definition |
@@ -344,7 +344,7 @@ In the context of CPRMV this publication method defines a set of properties whic
 subclass of: <a>CPRMV API - Generic Web Publication Method</a>
 
 
-properties (excluding inherited):
+properties:
 
 
 | Property | Type/Range | Cardinality | Definition |
@@ -365,7 +365,7 @@ properties (excluding inherited):
 subclass of: <a>CPRMV API - Generic Web Publication Method</a>
 
 
-properties (excluding inherited):
+properties:
 
 
 | Property | Type/Range | Cardinality | Definition |
@@ -381,7 +381,7 @@ properties (excluding inherited):
 subclass of: <a>AnalysisMethod</a>
 
 
-properties (excluding inherited):
+properties:
 
 
 | Property | Type/Range | Cardinality | Definition |
@@ -397,7 +397,7 @@ properties (excluding inherited):
 subclass of: <a>ReferenceMethod</a>
 
 
-properties (excluding inherited):
+properties:
 
 
 | Property | Type/Range | Cardinality | Definition |
@@ -410,7 +410,7 @@ properties (excluding inherited):
 
 
 
-properties (excluding inherited):
+properties:
 
 
 | Property | Type/Range | Cardinality | Definition |
@@ -426,7 +426,7 @@ properties (excluding inherited):
 subclass of: <a>FormalisationMethod</a>
 
 
-properties (excluding inherited):
+properties:
 
 
 | Property | Type/Range | Cardinality | Definition |
@@ -443,7 +443,7 @@ It can be combined with the dmn13 method as such.
 subclass of: <a>ExecutionMethod</a>
 
 
-properties (excluding inherited):
+properties:
 
 
 | Property | Type/Range | Cardinality | Definition |
@@ -460,7 +460,7 @@ It can be combined with the sttr method as such. See for more information: https
 subclass of: <a>STTR</a>
 
 
-properties (excluding inherited):
+properties:
 
 
 | Property | Type/Range | Cardinality | Definition |
@@ -476,7 +476,7 @@ properties (excluding inherited):
 subclass of: <a>ExecutionMethod</a>
 
 
-properties (excluding inherited):
+properties:
 
 
 | Property | Type/Range | Cardinality | Definition |
@@ -492,7 +492,7 @@ properties (excluding inherited):
 subclass of: <a>CPRMV API - Generic JSON Serialisation Method</a>
 
 
-properties (excluding inherited):
+properties:
 
 
 | Property | Type/Range | Cardinality | Definition |
@@ -505,7 +505,7 @@ properties (excluding inherited):
 
 
 
-properties (excluding inherited):
+properties:
 
 
 | Property | Type/Range | Cardinality | Definition |

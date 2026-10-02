@@ -6,11 +6,10 @@ left to right direction
 package cprmv {
     object "RuleSet" as RuleSet {
         id
-        isOutputOf
         validFrom : xsd:date
         validUntil : xsd:date
         publishedOn : xsd:date
-        comment
+        hasPart
     }
     object "Analysis" as Analysis {
     }
@@ -18,16 +17,12 @@ package cprmv {
     }
     object "Rule" as Rule {
         id
-        definition
-        postDefinition
-        comment
-        sourcequote
+        hasPart
     }
     object "Parameter" as Parameter {
     }
     object "RuleMethod" as RuleMethod {
         id
-        comment
     }
     object "AnalysisMethod" as AnalysisMethod {
     }
@@ -57,19 +52,36 @@ package cprmv {
     }
     object "Case" as Case {
     }
+    object "Echelon" as Echelon {
+    }
+    object "AgreementEchelon" as AgreementEchelon {
+    }
+    object "SemanticEchelon" as SemanticEchelon {
+    }
+    object "OntologicEchelon" as OntologicEchelon {
+    }
+    object "LogicEchelon" as LogicEchelon {
+    }
+    object "OperableEchelon" as OperableEchelon {
+    }
+    object "SupportEchelon" as SupportEchelon {
+    }
     RuleSet --> "0..*" RuleSet : isBasedOn
-    RuleSet --> "0..*" Rule : isBasedOn
+    RuleSet --> "1..*" PublicService : isOutputOf
     RuleSet --> "1..*" RuleMethod : hasMethod
-    RuleSet --> "0..*" RuleSet : hasPart
-    RuleSet --> "0..*" Rule : hasPart
+    RuleSet --> "0..*" Resource : comment
     Analysis --|> RuleSet
     DecisionModel --> "0..*" Analysis : hasAnalysis
     DecisionModel --|> RuleSet
-    Rule --> "0..*" RuleSet : isBasedOn
     Rule --> "0..*" Rule : isBasedOn
-    Rule --> "0..*" RuleSet : hasPart
-    Rule --> "0..*" Rule : hasPart
+    Rule --> "0..1" Resource : definition
+    Rule --> "0..1" Resource : postDefinition
+    Rule --> "0..*" Resource : comment
+    Rule --> "0..*" Resource : sourcequote
     Parameter --|> Rule
+    RuleMethod --> "0..*" Resource : comment
+    RuleMethod --> "0..*" Echelon : refinesTowards
+    RuleMethod --> "0..*" Echelon : refinesFrom
     AnalysisMethod --|> RuleMethod
     FormalisationMethod --|> RuleMethod
     SerialisationMethod --|> RuleMethod
@@ -78,7 +90,7 @@ package cprmv {
     ExplanationMethod --|> RuleMethod
     TestMethod --|> RuleMethod
     PublicationMethod --|> RuleMethod
-    ReferenceMethod --|> RuleMethod
+    ReferenceMethod --|> PublicationMethod
     Explanation --> "1..1" RuleSet : explains
     Explanation --> "1..1" Rule : explains
     Explanation --|> Rule
@@ -86,6 +98,12 @@ package cprmv {
     TestSet --|> RuleSet
     Decision --|> Rule
     Case --|> Rule
+    AgreementEchelon --|> Echelon
+    SemanticEchelon --|> Echelon
+    OntologicEchelon --|> Echelon
+    LogicEchelon --|> Echelon
+    OperableEchelon --|> Echelon
+    SupportEchelon --|> Echelon
 
 }
 
@@ -95,7 +113,7 @@ package "cpsv-ap v3.2.0 (relevant part)" as cpsv-ap {
     object "cpsv-ap:PublicService" as service
     service "0..*" -u-> cpsvrule : follows
 
-    object "frbroo:F1_Work" as frbrooWork    
+    object "frbroo:F1_Work" as frbrooWork
     object "eli:LegalResource" as legalresource
     frbrooWork <|-- legalresource
     legalresource <-[dotted]- "0..*" cpsvrule : implements

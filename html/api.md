@@ -13,7 +13,7 @@ This serialisation method is defined for support within API's that serve CPRMV m
 subclass of: <a>SerialisationMethod</a>
 
 
-properties (excluding inherited):
+properties:
 
 
 | Property | Type/Range | Cardinality | Definition |
@@ -33,7 +33,7 @@ This serialisation method is defined for support within API's that serve CPRMV m
 subclass of: <a>PublicationMethod</a>
 
 
-properties (excluding inherited):
+properties:
 
 
 | Property | Type/Range | Cardinality | Definition |
@@ -54,7 +54,7 @@ This serialisation method is defined for support within API's that serve CPRMV m
 subclass of: <a>SerialisationMethod</a>
 
 
-properties (excluding inherited):
+properties:
 
 
 | Property | Type/Range | Cardinality | Definition |
@@ -75,7 +75,7 @@ This serialisation method is defined for support within API's that serve CPRMV m
 subclass of: <a>SerialisationMethod</a>
 
 
-properties (excluding inherited):
+properties:
 
 
 | Property | Type/Range | Cardinality | Definition |
