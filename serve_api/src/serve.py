@@ -91,22 +91,6 @@ app = FastAPI(
 )
 
 # load knowledge about CPRMV and CPRMV Methods into memory
-# Create MCP server
-mcp = FastMCP.from_fastapi(app=app, name="CPRMV")
-
-# 2. Create the MCP's ASGI app
-mcp_app = mcp.http_app(path='/mcp')
-
-# 3. Create a new FastAPI app that combines both sets of routes
-combined_app = FastAPI(
-    title="CPRMV",
-    routes=[
-        *mcp_app.routes,  # MCP routes
-        *app.routes,      # Original API routes
-    ],
-    lifespan=mcp_app.lifespan,
-)
-
 def set_CPRMVMETHODSKG(path, additive=True):
     print("loading cprmvmethods.ttl from path: "+path)
     if not additive:
@@ -593,3 +577,30 @@ def get_rule(g, rule, includeSubRules=True):
         else:
             r[p] = o
     return r
+
+
+# MCP server. This block must stay at the end of the module, after every route
+# and mount: FastMCP.from_fastapi() turns only the routes that exist when it is
+# called into tools, and combined_app copies app.routes when it is created.
+# Built before the routes (as it was until #31), the MCP server had no tools and
+# combined_app had none of the API.
+mcp = FastMCP.from_fastapi(app=app, name="CPRMV")
+
+# The MCP's ASGI app
+mcp_app = mcp.http_app(path='/mcp')
+
+# A FastAPI app that combines both sets of routes. This is the app to serve
+# (see the Dockerfile's --app combined_app); `app` alone has no /mcp.
+combined_app = FastAPI(
+    # Served in app's place, so /docs and /openapi.json keep app's name and version.
+    title=app.title,
+    description=app.description,
+    version=app.version,
+    contact=app.contact,
+    license_info=app.license_info,
+    routes=[
+        *mcp_app.routes,  # MCP routes
+        *app.routes,      # Original API routes
+    ],
+    lifespan=mcp_app.lifespan,
+)
