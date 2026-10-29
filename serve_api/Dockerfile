@@ -48,4 +48,6 @@ EXPOSE 8000
 HEALTHCHECK --interval=30s --timeout=30s --start-period=5s --retries=3 \
   CMD python -c "from urllib.request import urlopen; urlopen('http://localhost:8000/', timeout=5)" || exit 1
 
-CMD ["fastapi", "run", "src/serve.py", "--port", "8000", "--host", "0.0.0.0"]
+# --app combined_app: without it fastapi-cli serves the object named `app`, which
+# has the REST API but not /mcp (fastapi_cli/discover.py prefers "app", then "api").
+CMD ["fastapi", "run", "src/serve.py", "--app", "combined_app", "--port", "8000", "--host", "0.0.0.0"]
