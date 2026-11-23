@@ -56,6 +56,3 @@ App will be available at: http://{NAS-IP}:8000/
 ### How This Works
 - The .xsl file should go in `/volume2/docker/cprmv/` on Synology NAS.
 - Inside the container, these files will be available at /app/data/.
-
-
-
