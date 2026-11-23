@@ -1,0 +1,10 @@
+@base <http://example.com/> .
+@prefix cprmv: <https://standaarden.open-regels.nl/standards/cprmv/0.4.4#> .
+@prefix cprmv-serve: <https://cprmv.open-regels.nl/0.4.4/serve-api/> .
+@prefix cprmvmethods: <https://cprmv.open-regels.nl/0.4.4/methods/> .
+
+cprmvmethods:cprmvapi a cprmv:ReferenceMethod;
+    cprmv:id "cprmvapi"@en;
+    cprmv:id "cprmvapi"@nl;
+    cprmv:comment "CPRMV API functions as a Reference resolver but to enable this harbours it's own way of referencing (rule id path). Also it allows for additional functionality on top of what methods like juriconnect and eli offer";
+    cprmv-serve:reference-format "{baseuri}/rules/{path}".

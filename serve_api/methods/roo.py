@@ -11,7 +11,7 @@ class roo(OrganisationRegister, core_api, core_json):
         return AcknowledgedOrganisation()
 
     def determin_method(self, json_data, publication):
-        return URIRef("https://cprmv.open-regels.nl/0.4.3/methods/roo")
+        return URIRef("https://cprmv.open-regels.nl/0.4.4/methods/roo")
 
     def get_cprmv_rule_set_from_raw_publication(self, g, raw, publication):
         super().get_cprmv_rule_set_from_raw_publication(g, raw, publication)

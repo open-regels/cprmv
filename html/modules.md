@@ -13,7 +13,7 @@ See method repository-overheid-nl fore more information
  zie: https://www.overheid.nl/sites/default/files/wetten/Procedurehandboek_BWB_3.7.pdf and https://www.overheid.nl/sites/default/files/pdf/Handleiding%2BSRU%2BBWB.pdf
 
 
-subclass of: [https://cprmv.open-regels.nl/0.4.3/methods/module](https://cprmv.open-regels.nl/0.4.3/methods/module)
+subclass of: [https://cprmv.open-regels.nl/0.4.4/methods/module](https://cprmv.open-regels.nl/0.4.4/methods/module)
 
 
 subclass of: <a>AnalysisMethod</a>
@@ -43,7 +43,7 @@ See method repository-overheid-nl fore more information
  zie: https://www.overheid.nl/sites/default/files/pdf/Handleiding%2BSRU%2BBWB.pdf
 
 
-subclass of: [https://cprmv.open-regels.nl/0.4.3/methods/module](https://cprmv.open-regels.nl/0.4.3/methods/module)
+subclass of: [https://cprmv.open-regels.nl/0.4.4/methods/module](https://cprmv.open-regels.nl/0.4.4/methods/module)
 
 
 subclass of: <a>AnalysisMethod</a>
@@ -72,7 +72,7 @@ It typically uses XML as a serialisation format.
  see https://www.omg.org/spec/DMN/1.3/About-DMN
 
 
-subclass of: [https://cprmv.open-regels.nl/0.4.3/methods/module](https://cprmv.open-regels.nl/0.4.3/methods/module)
+subclass of: [https://cprmv.open-regels.nl/0.4.4/methods/module](https://cprmv.open-regels.nl/0.4.4/methods/module)
 
 
 subclass of: <a>FormalisationMethod</a>
@@ -100,7 +100,7 @@ The STTR method is a formalisation method based on DMN used within the Dutch env
  see https://iplo.nl/digitaal-stelsel/aansluiten/standaarden/sttr-imtr/
 
 
-subclass of: [https://cprmv.open-regels.nl/0.4.3/methods/module](https://cprmv.open-regels.nl/0.4.3/methods/module)
+subclass of: [https://cprmv.open-regels.nl/0.4.4/methods/module](https://cprmv.open-regels.nl/0.4.4/methods/module)
 
 
 subclass of: <a>FormalisationMethod</a>
@@ -165,7 +165,7 @@ properties:
  see: ... 
 
 
-subclass of: [https://cprmv.open-regels.nl/0.4.3/methods/module](https://cprmv.open-regels.nl/0.4.3/methods/module)
+subclass of: [https://cprmv.open-regels.nl/0.4.4/methods/module](https://cprmv.open-regels.nl/0.4.4/methods/module)
 
 
 subclass of: <a>core.web</a>
@@ -193,7 +193,7 @@ The fmx4 method is a well known analysis and serialisation method for, though mo
  see: ... 
 
 
-subclass of: [https://cprmv.open-regels.nl/0.4.3/methods/module](https://cprmv.open-regels.nl/0.4.3/methods/module)
+subclass of: [https://cprmv.open-regels.nl/0.4.4/methods/module](https://cprmv.open-regels.nl/0.4.4/methods/module)
 
 
 subclass of: <a>AnalysisMethod</a>
@@ -221,7 +221,7 @@ The juriconnect method is a well known Dutch reference method.
  Juriconnect (not fully supported yet)
 
 
-subclass of: [https://cprmv.open-regels.nl/0.4.3/methods/module](https://cprmv.open-regels.nl/0.4.3/methods/module)
+subclass of: [https://cprmv.open-regels.nl/0.4.4/methods/module](https://cprmv.open-regels.nl/0.4.4/methods/module)
 
 
 subclass of: <a>ReferenceMethod</a>
@@ -284,10 +284,10 @@ It can be combined with the dmn13 method as such.
  
 
 
-subclass of: [https://cprmv.open-regels.nl/0.4.3/methods/module](https://cprmv.open-regels.nl/0.4.3/methods/module)
+subclass of: [https://cprmv.open-regels.nl/0.4.4/methods/module](https://cprmv.open-regels.nl/0.4.4/methods/module)
 
 
-subclass of: [https://cprmv.open-regels.nl/0.4.3/serve-api/core.web](https://cprmv.open-regels.nl/0.4.3/serve-api/core.web)
+subclass of: [https://cprmv.open-regels.nl/0.4.4/serve-api/core.web](https://cprmv.open-regels.nl/0.4.4/serve-api/core.web)
 
 
 subclass of: <a>dmn13</a>
@@ -503,7 +503,7 @@ The repository.overheid.nl method is an official Dutch publication method (a web
  zie repository.overheid.nl
 
 
-subclass of: [https://cprmv.open-regels.nl/0.4.3/methods/frbr-sru](https://cprmv.open-regels.nl/0.4.3/methods/frbr-sru)
+subclass of: [https://cprmv.open-regels.nl/0.4.4/methods/frbr-sru](https://cprmv.open-regels.nl/0.4.4/methods/frbr-sru)
 
 
 subclass of: <a>cvdr</a>
@@ -522,7 +522,7 @@ properties:
  zie repository.overheid.nl
 
 
-subclass of: [https://cprmv.open-regels.nl/0.4.3/methods/frbr-sru](https://cprmv.open-regels.nl/0.4.3/methods/frbr-sru)
+subclass of: [https://cprmv.open-regels.nl/0.4.4/methods/frbr-sru](https://cprmv.open-regels.nl/0.4.4/methods/frbr-sru)
 
 
 subclass of: <a>bwb</a>

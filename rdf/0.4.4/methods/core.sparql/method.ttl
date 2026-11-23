@@ -1,0 +1,16 @@
+@base <http://example.com/> .
+@prefix cprmv: <https://standaarden.open-regels.nl/standards/cprmv/0.4.4#> .
+@prefix cprmv-serve: <https://cprmv.open-regels.nl/0.4.4/serve-api/> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+
+cprmv-serve:core-sparql a cprmv-serve:core-web;
+    cprmv:id "core.sparql"@nl;
+    cprmv:label "CPRMV API - Generic SPARQL Publication Method";
+    cprmv:comment "CPRMV API - Generic SPARQL Publication Method".
+
+cprmv-serve:sparql-query a owl:ObjectProperty;
+    skos:prefLabel "query"@en;
+    skos:definition "The SPARQL query used to retrieve rulesets"@en;
+    rdfs:domain cprmv-serve:core-sparql.

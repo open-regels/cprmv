@@ -1,0 +1,8 @@
+@base <http://example.com/> .
+@prefix cprmv: <https://standaarden.open-regels.nl/standards/cprmv/0.4.4#> .
+@prefix cprmv-serve: <https://cprmv.open-regels.nl/0.4.4/serve-api/> .
+
+cprmv-serve:core-yaml a cprmv:SerialisationMethod;
+    cprmv:id "core.yaml"@nl;
+    cprmv:label "CPRMV API - Generic YAML Serialisation Method";
+    cprmv:comment "CPRMV API - Generic YAML Serialisation  Method".

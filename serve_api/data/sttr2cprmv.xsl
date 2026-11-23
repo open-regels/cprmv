@@ -7,10 +7,10 @@
   <xsl:template match="text()"/>
 
   <xsl:template match="/dmn:definitions" priority="2">
-    <xsl:text xml:space="preserve">@base &lt;https://cprmv.open-regels.nl/0.4.3/methods/dso/&gt; .
+    <xsl:text xml:space="preserve">@base &lt;https://cprmv.open-regels.nl/0.4.4/methods/dso/&gt; .
 @prefix cpsv: &lt;http://purl.org/vocab/cpsv#&gt; .
-@prefix cprmv: &lt;https://standaarden.open-regels.nl/standards/cprmv/0.4.3#&gt; .
-@prefix cprmvmethods: &lt;https://cprmv.open-regels.nl/0.4.3/methods/&gt; .
+@prefix cprmv: &lt;https://standaarden.open-regels.nl/standards/cprmv/0.4.4#&gt; .
+@prefix cprmvmethods: &lt;https://cprmv.open-regels.nl/0.4.4/methods/&gt; .
 @prefix prov: &lt;http://www.w3.org/ns/prov#&gt; .
 @prefix xsd: &lt;http://www.w3.org/2001/XMLSchema#&gt; .
 @prefix overheid: &lt;http://standaarden.overheid.nl/owms/terms/&gt; .

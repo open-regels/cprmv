@@ -11,7 +11,7 @@ from utils.constants import CPRMV, CPRMVSERVE
 from rdflib import Namespace
 import os
 
-FRBR_SRU = Namespace("https://cprmv.open-regels.nl/0.4.3/methods/frbr-sru/")
+FRBR_SRU = Namespace("https://cprmv.open-regels.nl/0.4.4/methods/frbr-sru/")
 
 class frbr_sru(core_web):
 

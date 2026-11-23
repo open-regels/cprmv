@@ -1,0 +1,14 @@
+@base <http://example.com/> .
+@prefix cprmv: <https://standaarden.open-regels.nl/standards/cprmv/0.4.4#> .
+@prefix cprmv-serve: <https://cprmv.open-regels.nl/0.4.4/serve-api/> .
+@prefix cprmvmethods: <https://cprmv.open-regels.nl/0.4.4/methods/> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+
+cprmv-serve:core-json a cprmvmethods:module;
+    a cprmv:SerialisationMethod;
+    cprmv:id "core.json"@nl;
+    cprmv:label "CPRMV API - Generic JSON Serialisation Method";
+    cprmv:comment "CPRMV API - Generic JSON Serialisation  Method";
+    cprmvmethods:hasMethods (
+        cprmv-serve:core-json
+    ).

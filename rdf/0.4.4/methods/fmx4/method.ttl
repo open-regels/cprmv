@@ -1,0 +1,16 @@
+@base <http://example.com/> .
+@prefix cprmv: <https://standaarden.open-regels.nl/standards/cprmv/0.4.4#> .
+@prefix cprmv-serve: <https://cprmv.open-regels.nl/0.4.4/serve-api/> .
+@prefix cprmvmethods: <https://cprmv.open-regels.nl/0.4.4/methods/> .
+
+cprmvmethods:fmx4 a cprmvmethods:module;
+    a cprmv:AnalysisMethod;
+    a cprmv-serve:core-xml;
+    cprmv:id "fmx4"@en;
+    cprmv:id "fmx4"@nl;
+    cprmv:label "Formex v4 (EU)";
+    cprmv:comment "see: ... "@en;
+    cprmv-serve:xslt "fmx42cprmv.xsl";
+    cprmvmethods:hasMethods (
+        cprmvmethods:fmx4
+    ).

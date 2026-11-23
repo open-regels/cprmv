@@ -1,0 +1,9 @@
+@base <http://example.com/> .
+@prefix cprmv: <https://standaarden.open-regels.nl/standards/cprmv/0.4.4#> .
+@prefix cprmv-serve: <https://cprmv.open-regels.nl/0.4.4/serve-api/> .
+@prefix cprmvmethods: <https://cprmv.open-regels.nl/0.4.4/methods/> .
+
+cprmvmethods:git a cprmv-serve:core-web;
+    cprmv:id "Git"@nl;
+    cprmv:label "Git";
+    cprmv:comment "Public Git repository as ruleset publication repository".

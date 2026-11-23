@@ -2,3 +2,7 @@
 node_modules
 __pycache__
 .pytest_cache
+method-xapikey.ttl
+method-orig.ttl
+.*.DS_Store
+._*

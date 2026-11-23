@@ -1,0 +1,11 @@
+@base <http://example.com/> .
+@prefix cprmv: <https://standaarden.open-regels.nl/standards/cprmv/0.4.4#> .
+@prefix cprmv-serve: <https://cprmv.open-regels.nl/0.4.4/serve-api/> .
+@prefix cprmvmethods: <https://cprmv.open-regels.nl/0.4.4/methods/> .
+
+cprmvmethods:catala a cprmv:FormalisationMethod;
+    cprmv:id "Catala"@en;
+    cprmv:id "Catala"@fr;
+    cprmv:id "Catala"@nl;
+    cprmv:label "Catala";
+    cprmv:comment "See https://catala-lang.org".

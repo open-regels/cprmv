@@ -1,0 +1,10 @@
+@base <http://example.com/> .
+@prefix cprmv: <https://standaarden.open-regels.nl/standards/cprmv/0.4.4#> .
+@prefix cprmv-serve: <https://cprmv.open-regels.nl/0.4.4/serve-api/> .
+@prefix cprmvmethods: <https://cprmv.open-regels.nl/0.4.4/methods/> .
+
+cprmvmethods:flint a cprmv:AnalysisMethod;
+    cprmv:id "Calculemus / FLINT"@en;
+    cprmv:id "Calculemus / FLINT"@nl;
+    cprmv:comment "zie: https://normativesystems.gitlab.io/knowledge-modeling/documentation-website/docs/"@nl;
+    cprmv:comment "see: https://normativesystems.gitlab.io/knowledge-modeling/documentation-website/docs/"@en.

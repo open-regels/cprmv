@@ -1,7 +1,7 @@
-@base <https://standaarden.open-regels.nl/standards/cprmv/0.4.3/> .
-@prefix cprmv: <https://standaarden.open-regels.nl/standards/cprmv/0.4.3#> .
-@prefix cprmv-serve: <https://cprmv.open-regels.nl/0.4.3/serve-api/> .
-@prefix cprmvmethods: <https://cprmv.open-regels.nl/0.4.3/methods/> .
+@base <https://standaarden.open-regels.nl/standards/cprmv/0.4.4/> .
+@prefix cprmv: <https://standaarden.open-regels.nl/standards/cprmv/0.4.4#> .
+@prefix cprmv-serve: <https://cprmv.open-regels.nl/0.4.4/serve-api/> .
+@prefix cprmvmethods: <https://cprmv.open-regels.nl/0.4.4/methods/> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix owl: <http://www.w3.org/2002/07/owl#> .
 @prefix vann: <http://purl.org/vocab/vann/> .
@@ -9,13 +9,13 @@
 @prefix xsd: <http://www.w3.org/2001/XMLSchema> .
 @prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 
-<https://standaarden.open-regels.nl/standards/cprmv/0.4.3/methods> a owl:Ontology;
-  vann:preferredNamespaceURI "https://standaarden.open-regels.nl/standards/cprmv/0.4.3/methods";
+<https://standaarden.open-regels.nl/standards/cprmv/0.4.4/methods> a owl:Ontology;
+  vann:preferredNamespaceURI "https://standaarden.open-regels.nl/standards/cprmv/0.4.4/methods";
   vann:preferredNamespacePrefix "cprmvmethods";
   dct:title "CPRMV Methods";
   dct:description "CPRMV Methods vocabulary and value lists for CPRMV. Core Public Rule Management Vocabulary (CPRMV) is a vocabulary for expressing knowledge about agreements published as rules which can both be expressed in natural language like articles in laws as well as more formal business rules for automation of decisions, and also how all these rules relate. This vocabulary defines all kinds of Rule Methods applied on this knowledge. Knowledge about these methods are contained in the CPRMV Methods vocabulary and value lists";
-  owl:versionIRI <https://standaarden.open-regels.nl/standards/cprmv/0.4.3/methods>;
-  owl:versionInfo "0.4.3";
+  owl:versionIRI <https://standaarden.open-regels.nl/standards/cprmv/0.4.4/methods>;
+  owl:versionInfo "0.4.4";
   dct:created "2026-04-20"^^xsd:date;
   dct:creator <https://www.ictu.nl/>;
   dct:license <https://creativecommons.org/licenses/by/4.0/>;
@@ -204,9 +204,9 @@ cprmvmethods:referencemethods a owl:Class;
         cprmvmethods:elinl
     ).
 @base <http://example.com/> .
-@prefix cprmv: <https://standaarden.open-regels.nl/standards/cprmv/0.4.3#> .
-@prefix cprmv-serve: <https://cprmv.open-regels.nl/0.4.3/serve-api/> .
-@prefix cprmvmethods: <https://cprmv.open-regels.nl/0.4.3/methods/> .
+@prefix cprmv: <https://standaarden.open-regels.nl/standards/cprmv/0.4.4#> .
+@prefix cprmv-serve: <https://cprmv.open-regels.nl/0.4.4/serve-api/> .
+@prefix cprmvmethods: <https://cprmv.open-regels.nl/0.4.4/methods/> .
 @prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 
 cprmvmethods:regelspraak a cprmv:FormalisationMethod;
@@ -221,9 +221,9 @@ The alef-regelspraak method is a formalisation method that can be used within th
 It is to some extend analogous to RuleSpeak and defines a controlled Dutch natural language.""";
     cprmv:comment "see https://regelspraak.nl".
 @base <http://example.com/> .
-@prefix cprmv: <https://standaarden.open-regels.nl/standards/cprmv/0.4.3#> .
-@prefix cprmv-serve: <https://cprmv.open-regels.nl/0.4.3/serve-api/> .
-@prefix cprmvmethods: <https://cprmv.open-regels.nl/0.4.3/methods/> .
+@prefix cprmv: <https://standaarden.open-regels.nl/standards/cprmv/0.4.4#> .
+@prefix cprmv-serve: <https://cprmv.open-regels.nl/0.4.4/serve-api/> .
+@prefix cprmvmethods: <https://cprmv.open-regels.nl/0.4.4/methods/> .
 
 cprmvmethods:bwb a cprmvmethods:module;
     a cprmv:AnalysisMethod;
@@ -236,9 +236,9 @@ cprmvmethods:bwb a cprmvmethods:module;
         cprmvmethods:bwb
     ).
 @base <http://example.com/> .
-@prefix cprmv: <https://standaarden.open-regels.nl/standards/cprmv/0.4.3#> .
-@prefix cprmv-serve: <https://cprmv.open-regels.nl/0.4.3/serve-api/> .
-@prefix cprmvmethods: <https://cprmv.open-regels.nl/0.4.3/methods/> .
+@prefix cprmv: <https://standaarden.open-regels.nl/standards/cprmv/0.4.4#> .
+@prefix cprmv-serve: <https://cprmv.open-regels.nl/0.4.4/serve-api/> .
+@prefix cprmvmethods: <https://cprmv.open-regels.nl/0.4.4/methods/> .
 
 cprmvmethods:catala a cprmv:FormalisationMethod;
     cprmv:id "Catala"@en;
@@ -247,10 +247,10 @@ cprmvmethods:catala a cprmv:FormalisationMethod;
     cprmv:label "Catala";
     cprmv:comment "See https://catala-lang.org".
 @base <http://example.com/> .
-@prefix cprmv: <https://standaarden.open-regels.nl/standards/cprmv/0.4.3#> .
-@prefix cprmvmethods: <https://cprmv.open-regels.nl/0.4.3/methods/> .
-@prefix cprmv-serve: <https://cprmv.open-regels.nl/0.4.3/serve-api/> .
-@prefix core-api: <https://cprmv.open-regels.nl/0.4.3/methods/core-api#> .
+@prefix cprmv: <https://standaarden.open-regels.nl/standards/cprmv/0.4.4#> .
+@prefix cprmvmethods: <https://cprmv.open-regels.nl/0.4.4/methods/> .
+@prefix cprmv-serve: <https://cprmv.open-regels.nl/0.4.4/serve-api/> .
+@prefix core-api: <https://cprmv.open-regels.nl/0.4.4/methods/core-api#> .
 @prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix owl: <http://www.w3.org/2002/07/owl#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
@@ -279,9 +279,9 @@ core-api:http-method a owl:ObjectProperty;
     skos:definition "The HTTP method with which to access the API. (default=GET)"@en;
     rdfs:domain cprmv-serve:core-api.
 @base <http://example.com/> .
-@prefix cprmv: <https://standaarden.open-regels.nl/standards/cprmv/0.4.3#> .
-@prefix cprmv-serve: <https://cprmv.open-regels.nl/0.4.3/serve-api/> .
-@prefix cprmvmethods: <https://cprmv.open-regels.nl/0.4.3/methods/> .
+@prefix cprmv: <https://standaarden.open-regels.nl/standards/cprmv/0.4.4#> .
+@prefix cprmv-serve: <https://cprmv.open-regels.nl/0.4.4/serve-api/> .
+@prefix cprmvmethods: <https://cprmv.open-regels.nl/0.4.4/methods/> .
 @prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 
 cprmv-serve:core-json a cprmvmethods:module;
@@ -293,8 +293,8 @@ cprmv-serve:core-json a cprmvmethods:module;
         cprmv-serve:core-json
     ).
 @base <http://example.com/> .
-@prefix cprmv: <https://standaarden.open-regels.nl/standards/cprmv/0.4.3#> .
-@prefix cprmv-serve: <https://cprmv.open-regels.nl/0.4.3/serve-api/> .
+@prefix cprmv: <https://standaarden.open-regels.nl/standards/cprmv/0.4.4#> .
+@prefix cprmv-serve: <https://cprmv.open-regels.nl/0.4.4/serve-api/> .
 @prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix owl: <http://www.w3.org/2002/07/owl#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
@@ -304,8 +304,8 @@ cprmv-serve:core-rdf a cprmv:core-web;
     cprmv:label "CPRMV API - Generic RDF Publication Method";
     cprmv:comment "CPRMV API - Generic RDF Publication Method".
 @base <http://example.com/> .
-@prefix cprmv: <https://standaarden.open-regels.nl/standards/cprmv/0.4.3#> .
-@prefix cprmv-serve: <https://cprmv.open-regels.nl/0.4.3/serve-api/> .
+@prefix cprmv: <https://standaarden.open-regels.nl/standards/cprmv/0.4.4#> .
+@prefix cprmv-serve: <https://cprmv.open-regels.nl/0.4.4/serve-api/> .
 @prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix owl: <http://www.w3.org/2002/07/owl#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
@@ -320,8 +320,8 @@ cprmv-serve:sparql-query a owl:ObjectProperty;
     skos:definition "The SPARQL query used to retrieve rulesets"@en;
     rdfs:domain cprmv-serve:core-sparql.
 @base <http://example.com/> .
-@prefix cprmv: <https://standaarden.open-regels.nl/standards/cprmv/0.4.3#> .
-@prefix cprmv-serve: <https://cprmv.open-regels.nl/0.4.3/serve-api/> .
+@prefix cprmv: <https://standaarden.open-regels.nl/standards/cprmv/0.4.4#> .
+@prefix cprmv-serve: <https://cprmv.open-regels.nl/0.4.4/serve-api/> .
 @prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 
 cprmv-serve:core-turtle a cprmv:SerialisationMethod;
@@ -329,9 +329,9 @@ cprmv-serve:core-turtle a cprmv:SerialisationMethod;
     cprmv:label "CPRMV API - Generic Turtle Serialisation Method";
     cprmv:comment "CPRMV API - Generic Turtle Serialisation  Method".
 @base <http://example.com/> .
-@prefix cprmv: <https://standaarden.open-regels.nl/standards/cprmv/0.4.3#> .
-@prefix cprmvmethods: <https://cprmv.open-regels.nl/0.4.3/methods/> .
-@prefix cprmv-serve: <https://cprmv.open-regels.nl/0.4.3/serve-api/> .
+@prefix cprmv: <https://standaarden.open-regels.nl/standards/cprmv/0.4.4#> .
+@prefix cprmvmethods: <https://cprmv.open-regels.nl/0.4.4/methods/> .
+@prefix cprmv-serve: <https://cprmv.open-regels.nl/0.4.4/serve-api/> .
 @prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix owl: <http://www.w3.org/2002/07/owl#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
@@ -350,9 +350,9 @@ cprmv-serve:repository-publication-location-format a owl:ObjectProperty;
     skos:definition "The format of the URL to retrieve a publication"@en;
     rdfs:domain cprmv-serve:core-web.
 @base <http://example.com/> .
-@prefix cprmv: <https://standaarden.open-regels.nl/standards/cprmv/0.4.3#> .
-@prefix cprmvmethods: <https://cprmv.open-regels.nl/0.4.3/methods/> .
-@prefix cprmv-serve: <https://cprmv.open-regels.nl/0.4.3/serve-api/> .
+@prefix cprmv: <https://standaarden.open-regels.nl/standards/cprmv/0.4.4#> .
+@prefix cprmvmethods: <https://cprmv.open-regels.nl/0.4.4/methods/> .
+@prefix cprmv-serve: <https://cprmv.open-regels.nl/0.4.4/serve-api/> .
 @prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix owl: <http://www.w3.org/2002/07/owl#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
@@ -371,17 +371,17 @@ cprmv-serve:xslt a owl:ObjectProperty;
     skos:definition "The name of the XSLT file to apply to transform the raw XML publication into RDF for use within the CPRMV API"@en;
     rdfs:domain cprmv-serve:core-xml.
 @base <http://example.com/> .
-@prefix cprmv: <https://standaarden.open-regels.nl/standards/cprmv/0.4.3#> .
-@prefix cprmv-serve: <https://cprmv.open-regels.nl/0.4.3/serve-api/> .
+@prefix cprmv: <https://standaarden.open-regels.nl/standards/cprmv/0.4.4#> .
+@prefix cprmv-serve: <https://cprmv.open-regels.nl/0.4.4/serve-api/> .
 
 cprmv-serve:core-yaml a cprmv:SerialisationMethod;
     cprmv:id "core.yaml"@nl;
     cprmv:label "CPRMV API - Generic YAML Serialisation Method";
     cprmv:comment "CPRMV API - Generic YAML Serialisation  Method".
 @base <http://example.com/> .
-@prefix cprmv: <https://standaarden.open-regels.nl/standards/cprmv/0.4.3#> .
-@prefix cprmv-serve: <https://cprmv.open-regels.nl/0.4.3/serve-api/> .
-@prefix cprmvmethods: <https://cprmv.open-regels.nl/0.4.3/methods/> .
+@prefix cprmv: <https://standaarden.open-regels.nl/standards/cprmv/0.4.4#> .
+@prefix cprmv-serve: <https://cprmv.open-regels.nl/0.4.4/serve-api/> .
+@prefix cprmvmethods: <https://cprmv.open-regels.nl/0.4.4/methods/> .
 
 cprmvmethods:cprmvapi a cprmv:ReferenceMethod;
     cprmv:id "cprmvapi"@en;
@@ -389,9 +389,9 @@ cprmvmethods:cprmvapi a cprmv:ReferenceMethod;
     cprmv:comment "CPRMV API functions as a Reference resolver but to enable this harbours it's own way of referencing (rule id path). Also it allows for additional functionality on top of what methods like juriconnect and eli offer";
     cprmv-serve:reference-format "{baseuri}/rules/{path}".
 @base <http://example.com/> .
-@prefix cprmv: <https://standaarden.open-regels.nl/standards/cprmv/0.4.3#> .
-@prefix cprmv-serve: <https://cprmv.open-regels.nl/0.4.3/serve-api/> .
-@prefix cprmvmethods: <https://cprmv.open-regels.nl/0.4.3/methods/> .
+@prefix cprmv: <https://standaarden.open-regels.nl/standards/cprmv/0.4.4#> .
+@prefix cprmv-serve: <https://cprmv.open-regels.nl/0.4.4/serve-api/> .
+@prefix cprmvmethods: <https://cprmv.open-regels.nl/0.4.4/methods/> .
 
 cprmvmethods:cvdr a cprmvmethods:module;
     a cprmv:AnalysisMethod;
@@ -404,9 +404,9 @@ cprmvmethods:cvdr a cprmvmethods:module;
         cprmvmethods:cvdr
     ).
 @base <http://example.com/> .
-@prefix cprmv: <https://standaarden.open-regels.nl/standards/cprmv/0.4.3#> .
-@prefix cprmv-serve: <https://cprmv.open-regels.nl/0.4.3/serve-api/> .
-@prefix cprmvmethods: <https://cprmv.open-regels.nl/0.4.3/methods/> .
+@prefix cprmv: <https://standaarden.open-regels.nl/standards/cprmv/0.4.4#> .
+@prefix cprmv-serve: <https://cprmv.open-regels.nl/0.4.4/serve-api/> .
+@prefix cprmvmethods: <https://cprmv.open-regels.nl/0.4.4/methods/> .
 
 cprmvmethods:dmn13 a cprmvmethods:module;
     a cprmv:FormalisationMethod;
@@ -420,10 +420,10 @@ cprmvmethods:dmn13 a cprmvmethods:module;
         cprmvmethods:dmn13
     ).
 @base <http://example.com/> .
-@prefix cprmv: <https://standaarden.open-regels.nl/standards/cprmv/0.4.3#> .
-@prefix cprmv-serve: <https://cprmv.open-regels.nl/0.4.3/serve-api/> .
-@prefix cprmvmethods: <https://cprmv.open-regels.nl/0.4.3/methods/> .
-@prefix core-api: <https://cprmv.open-regels.nl/0.4.3/methods/core-api#> .
+@prefix cprmv: <https://standaarden.open-regels.nl/standards/cprmv/0.4.4#> .
+@prefix cprmv-serve: <https://cprmv.open-regels.nl/0.4.4/serve-api/> .
+@prefix cprmvmethods: <https://cprmv.open-regels.nl/0.4.4/methods/> .
+@prefix core-api: <https://cprmv.open-regels.nl/0.4.4/methods/core-api#> .
 
 cprmvmethods:digitaal-stelsel-omgevingswet a cprmvmethods:module;
     cprmv:id "digitaal-stelsel-omgevingswet"@nl;
@@ -467,9 +467,9 @@ cprmvmethods:dso-service-register a cprmv:ServiceRegister;
         ("x-api-key" "pass_on_from_request")
     ).
 @base <http://example.com/> .
-@prefix cprmv: <https://standaarden.open-regels.nl/standards/cprmv/0.4.3#> .
-@prefix cprmv-serve: <https://cprmv.open-regels.nl/0.4.3/serve-api/> .
-@prefix cprmvmethods: <https://cprmv.open-regels.nl/0.4.3/methods/> .
+@prefix cprmv: <https://standaarden.open-regels.nl/standards/cprmv/0.4.4#> .
+@prefix cprmv-serve: <https://cprmv.open-regels.nl/0.4.4/serve-api/> .
+@prefix cprmvmethods: <https://cprmv.open-regels.nl/0.4.4/methods/> .
 
 cprmvmethods:eli a cprmvmethods:module;
     cprmv:id "eli"@nl;
@@ -491,9 +491,9 @@ cprmvmethods:elinl a cprmv:ReferenceMethod;
     cprmv:comment "Experimental ELI for BWB and CVDR (Dutch standards)";
     cprmv-serve:reference-format "https://wetten.overheid.nl/{path}".
 @base <http://example.com/> .
-@prefix cprmv: <https://standaarden.open-regels.nl/standards/cprmv/0.4.3#> .
-@prefix cprmv-serve: <https://cprmv.open-regels.nl/0.4.3/serve-api/> .
-@prefix cprmvmethods: <https://cprmv.open-regels.nl/0.4.3/methods/> .
+@prefix cprmv: <https://standaarden.open-regels.nl/standards/cprmv/0.4.4#> .
+@prefix cprmv-serve: <https://cprmv.open-regels.nl/0.4.4/serve-api/> .
+@prefix cprmvmethods: <https://cprmv.open-regels.nl/0.4.4/methods/> .
 
 cprmvmethods:eucellar-fmx4 a cprmvmethods:module;
     a cprmv-serve:core-web;
@@ -509,9 +509,9 @@ cprmvmethods:eucellar-fmx4 a cprmvmethods:module;
         cprmvmethods:eucellar-fmx4
     ).
 @base <http://example.com/> .
-@prefix cprmv: <https://standaarden.open-regels.nl/standards/cprmv/0.4.3#> .
-@prefix cprmv-serve: <https://cprmv.open-regels.nl/0.4.3/serve-api/> .
-@prefix cprmvmethods: <https://cprmv.open-regels.nl/0.4.3/methods/> .
+@prefix cprmv: <https://standaarden.open-regels.nl/standards/cprmv/0.4.4#> .
+@prefix cprmv-serve: <https://cprmv.open-regels.nl/0.4.4/serve-api/> .
+@prefix cprmvmethods: <https://cprmv.open-regels.nl/0.4.4/methods/> .
 
 cprmvmethods:flint a cprmv:AnalysisMethod;
     cprmv:id "Calculemus / FLINT"@en;
@@ -519,9 +519,9 @@ cprmvmethods:flint a cprmv:AnalysisMethod;
     cprmv:comment "zie: https://normativesystems.gitlab.io/knowledge-modeling/documentation-website/docs/"@nl;
     cprmv:comment "see: https://normativesystems.gitlab.io/knowledge-modeling/documentation-website/docs/"@en.
 @base <http://example.com/> .
-@prefix cprmv: <https://standaarden.open-regels.nl/standards/cprmv/0.4.3#> .
-@prefix cprmv-serve: <https://cprmv.open-regels.nl/0.4.3/serve-api/> .
-@prefix cprmvmethods: <https://cprmv.open-regels.nl/0.4.3/methods/> .
+@prefix cprmv: <https://standaarden.open-regels.nl/standards/cprmv/0.4.4#> .
+@prefix cprmv-serve: <https://cprmv.open-regels.nl/0.4.4/serve-api/> .
+@prefix cprmvmethods: <https://cprmv.open-regels.nl/0.4.4/methods/> .
 
 cprmvmethods:fmx4 a cprmvmethods:module;
     a cprmv:AnalysisMethod;
@@ -535,10 +535,10 @@ cprmvmethods:fmx4 a cprmvmethods:module;
         cprmvmethods:fmx4
     ).
 @base <http://example.com/> .
-@prefix cprmv: <https://standaarden.open-regels.nl/standards/cprmv/0.4.3#> .
-@prefix cprmv-serve: <https://cprmv.open-regels.nl/0.4.3/serve-api/> .
-@prefix cprmvmethods: <https://cprmv.open-regels.nl/0.4.3/methods/> .
-@prefix frbr-sru: <https://cprmv.open-regels.nl/0.4.3/methods/frbr-sru/> .
+@prefix cprmv: <https://standaarden.open-regels.nl/standards/cprmv/0.4.4#> .
+@prefix cprmv-serve: <https://cprmv.open-regels.nl/0.4.4/serve-api/> .
+@prefix cprmvmethods: <https://cprmv.open-regels.nl/0.4.4/methods/> .
+@prefix frbr-sru: <https://cprmv.open-regels.nl/0.4.4/methods/frbr-sru/> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix owl: <http://www.w3.org/2002/07/owl#> .
 @prefix skos: <http://www.w3.org/2004/02/skos/core#> .
@@ -573,18 +573,18 @@ frbr-sru:response-from-date-term a owl:ObjectProperty;
     skos:definition "The term name in the SRU response that indicates the date from which the publication to be retrieved is valid."@en;
     rdfs:domain cprmvmethods:frbr-sru.
 @base <http://example.com/> .
-@prefix cprmv: <https://standaarden.open-regels.nl/standards/cprmv/0.4.3#> .
-@prefix cprmv-serve: <https://cprmv.open-regels.nl/0.4.3/serve-api/> .
-@prefix cprmvmethods: <https://cprmv.open-regels.nl/0.4.3/methods/> .
+@prefix cprmv: <https://standaarden.open-regels.nl/standards/cprmv/0.4.4#> .
+@prefix cprmv-serve: <https://cprmv.open-regels.nl/0.4.4/serve-api/> .
+@prefix cprmvmethods: <https://cprmv.open-regels.nl/0.4.4/methods/> .
 
 cprmvmethods:git a cprmv-serve:core-web;
     cprmv:id "Git"@nl;
     cprmv:label "Git";
     cprmv:comment "Public Git repository as ruleset publication repository".
 @base <http://example.com/> .
-@prefix cprmv: <https://standaarden.open-regels.nl/standards/cprmv/0.4.3#> .
-@prefix cprmv-serve: <https://cprmv.open-regels.nl/0.4.3/serve-api/> .
-@prefix cprmvmethods: <https://cprmv.open-regels.nl/0.4.3/methods/> .
+@prefix cprmv: <https://standaarden.open-regels.nl/standards/cprmv/0.4.4#> .
+@prefix cprmv-serve: <https://cprmv.open-regels.nl/0.4.4/serve-api/> .
+@prefix cprmvmethods: <https://cprmv.open-regels.nl/0.4.4/methods/> .
 
 cprmvmethods:iou a cprmvmethods:module;
     cprmv:id "iou"@nl;
@@ -609,18 +609,18 @@ cprmvmethods:iou-operaton a cprmvmethods:operaton;
     cprmv-serve:publication-id-format "DMN1.3_{deploymentid}R{resourceid}_{date}_{index}";
     cprmv-serve:normalized-id-format "DMN1.3_{rulesetid}_{date}_{index}".
 @base <http://example.com/> .
-@prefix cprmv: <https://standaarden.open-regels.nl/standards/cprmv/0.4.3#> .
-@prefix cprmv-serve: <https://cprmv.open-regels.nl/0.4.3/serve-api/> .
-@prefix cprmvmethods: <https://cprmv.open-regels.nl/0.4.3/methods/> .
+@prefix cprmv: <https://standaarden.open-regels.nl/standards/cprmv/0.4.4#> .
+@prefix cprmv-serve: <https://cprmv.open-regels.nl/0.4.4/serve-api/> .
+@prefix cprmvmethods: <https://cprmv.open-regels.nl/0.4.4/methods/> .
 
 cprmvmethods:jas a cprmv:AnalysisMethod;
     cprmv:id "Law Analysis / JAS"@en;
     cprmv:id "Wetsanalyse / JAS"@nl;
     cprmv:comment "zie: https://regels.overheid.nl/standaarden/wetsanalyse"@nl.
 @base <http://example.com/> .
-@prefix cprmv: <https://standaarden.open-regels.nl/standards/cprmv/0.4.3#> .
-@prefix cprmv-serve: <https://cprmv.open-regels.nl/0.4.3/serve-api/> .
-@prefix cprmvmethods: <https://cprmv.open-regels.nl/0.4.3/methods/> .
+@prefix cprmv: <https://standaarden.open-regels.nl/standards/cprmv/0.4.4#> .
+@prefix cprmv-serve: <https://cprmv.open-regels.nl/0.4.4/serve-api/> .
+@prefix cprmvmethods: <https://cprmv.open-regels.nl/0.4.4/methods/> .
 
 cprmvmethods:juriconnect a cprmvmethods:module;
     a cprmv:ReferenceMethod;
@@ -655,9 +655,9 @@ cprmvmethods:juriconnect a cprmvmethods:module;
         cprmvmethods:juriconnect
     ).
 @base <http://example.com/> .
-@prefix cprmv: <https://standaarden.open-regels.nl/standards/cprmv/0.4.3#> .
-@prefix cprmv-serve: <https://cprmv.open-regels.nl/0.4.3/serve-api/> .
-@prefix cprmvmethods: <https://cprmv.open-regels.nl/0.4.3/methods/> .
+@prefix cprmv: <https://standaarden.open-regels.nl/standards/cprmv/0.4.4#> .
+@prefix cprmv-serve: <https://cprmv.open-regels.nl/0.4.4/serve-api/> .
+@prefix cprmvmethods: <https://cprmv.open-regels.nl/0.4.4/methods/> .
 
 cprmvmethods:open-regels.nl a cprmvmethods:module;
     cprmv:id "open-regels.nl"@nl;
@@ -679,9 +679,9 @@ cprmvmethods:norms-backend.linkeddata.open-regels.nl a cprmvmethods:iou-norms;
     cprmv:comment "zie open-regels.nl"@nl;
     cprmv-serve:repository-publication-location-format "https://acc.backend.linkeddata.open-regels.nl/v2/norms/?rulesetid={rulesetid}&valid-on={date}".
 @base <http://example.com/> .
-@prefix cprmv: <https://standaarden.open-regels.nl/standards/cprmv/0.4.3#> .
-@prefix cprmv-serve: <https://cprmv.open-regels.nl/0.4.3/serve-api/> .
-@prefix cprmvmethods: <https://cprmv.open-regels.nl/0.4.3/methods/> .
+@prefix cprmv: <https://standaarden.open-regels.nl/standards/cprmv/0.4.4#> .
+@prefix cprmv-serve: <https://cprmv.open-regels.nl/0.4.4/serve-api/> .
+@prefix cprmvmethods: <https://cprmv.open-regels.nl/0.4.4/methods/> .
 
 cprmvmethods:openfisca a cprmv:FormalisationMethod;
     cprmv:id "OpenFisca"@en;
@@ -690,9 +690,9 @@ cprmvmethods:openfisca a cprmv:FormalisationMethod;
     cprmv:label "OpenFisca";
     cprmv:comment "see https://openfisca.org" .
 @base <http://example.com/> .
-@prefix cprmv: <https://standaarden.open-regels.nl/standards/cprmv/0.4.3#> .
-@prefix cprmv-serve: <https://cprmv.open-regels.nl/0.4.3/serve-api/> .
-@prefix cprmvmethods: <https://cprmv.open-regels.nl/0.4.3/methods/> .
+@prefix cprmv: <https://standaarden.open-regels.nl/standards/cprmv/0.4.4#> .
+@prefix cprmv-serve: <https://cprmv.open-regels.nl/0.4.4/serve-api/> .
+@prefix cprmvmethods: <https://cprmv.open-regels.nl/0.4.4/methods/> .
 
 cprmvmethods:operaton a cprmvmethods:module;
     a cprmv-serve:core.web;
@@ -705,9 +705,9 @@ cprmvmethods:operaton a cprmvmethods:module;
         cprmvmethods:operaton
     ).
 @base <http://example.com/> .
-@prefix cprmv: <https://standaarden.open-regels.nl/standards/cprmv/0.4.3#> .
-@prefix cprmv-serve: <https://cprmv.open-regels.nl/0.4.3/serve-api/> .
-@prefix cprmvmethods: <https://cprmv.open-regels.nl/0.4.3/methods/> .
+@prefix cprmv: <https://standaarden.open-regels.nl/standards/cprmv/0.4.4#> .
+@prefix cprmv-serve: <https://cprmv.open-regels.nl/0.4.4/serve-api/> .
+@prefix cprmvmethods: <https://cprmv.open-regels.nl/0.4.4/methods/> .
 
 cprmvmethods:regelrecht a cprmvmethods:git;
     a cprmv:FormalisationMethod;
@@ -719,10 +719,10 @@ cprmvmethods:regelrecht a cprmvmethods:git;
     cprmv-serve:normalized-id-format "RR_{rulesetid}_{date}_{index}";
     cprmv-serve:repository-publication-location-format "https://github.com/MinBZK/regelrecht/tree/main/corpus".
 @base <http://example.com/> .
-@prefix cprmv: <https://standaarden.open-regels.nl/standards/cprmv/0.4.3#> .
-@prefix cprmv-serve: <https://cprmv.open-regels.nl/0.4.3/serve-api/> .
-@prefix cprmvmethods: <https://cprmv.open-regels.nl/0.4.3/methods/> .
-@prefix frbr-sru: <https://cprmv.open-regels.nl/0.4.3/methods/frbr-sru/> .
+@prefix cprmv: <https://standaarden.open-regels.nl/standards/cprmv/0.4.4#> .
+@prefix cprmv-serve: <https://cprmv.open-regels.nl/0.4.4/serve-api/> .
+@prefix cprmvmethods: <https://cprmv.open-regels.nl/0.4.4/methods/> .
+@prefix frbr-sru: <https://cprmv.open-regels.nl/0.4.4/methods/frbr-sru/> .
 
 cprmvmethods:repository-overheid-nl a cprmvmethods:module;
     cprmv:id "repository.overheid.nl"@nl;
@@ -768,10 +768,10 @@ cprmvmethods:repository-overheid-nl-cvdr a cprmvmethods:frbr-sru;
     frbr-sru:response-from-date-term
         "inwerkingtredingDatum".
 @base <http://example.com/> .
-@prefix cprmv: <https://standaarden.open-regels.nl/standards/cprmv/0.4.3#> .
-@prefix cprmv-serve: <https://cprmv.open-regels.nl/0.4.3/serve-api/> .
-@prefix cprmvmethods: <https://cprmv.open-regels.nl/0.4.3/methods/> .
-@prefix core-api: <https://cprmv.open-regels.nl/0.4.3/methods/core-api#> .
+@prefix cprmv: <https://standaarden.open-regels.nl/standards/cprmv/0.4.4#> .
+@prefix cprmv-serve: <https://cprmv.open-regels.nl/0.4.4/serve-api/> .
+@prefix cprmvmethods: <https://cprmv.open-regels.nl/0.4.4/methods/> .
+@prefix core-api: <https://cprmv.open-regels.nl/0.4.4/methods/core-api#> .
 
 cprmvmethods:register-overheids-organisaties a cprmvmethods:module;
     cprmv:id "register-overheids-organisaties"@nl;
@@ -827,9 +827,9 @@ cprmvmethods:roo-catalogus a cprmv:OrganisationRegister;
         ("Accept" "application/json")
     ).
 @base <http://example.com/> .
-@prefix cprmv: <https://standaarden.open-regels.nl/standards/cprmv/0.4.3#> .
-@prefix cprmv-serve: <https://cprmv.open-regels.nl/0.4.3/serve-api/> .
-@prefix cprmvmethods: <https://cprmv.open-regels.nl/0.4.3/methods/> .
+@prefix cprmv: <https://standaarden.open-regels.nl/standards/cprmv/0.4.4#> .
+@prefix cprmv-serve: <https://cprmv.open-regels.nl/0.4.4/serve-api/> .
+@prefix cprmvmethods: <https://cprmv.open-regels.nl/0.4.4/methods/> .
 
 cprmvmethods:sttr a cprmvmethods:module;
     a cprmv:FormalisationMethod;

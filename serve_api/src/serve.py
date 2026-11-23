@@ -90,7 +90,7 @@ async def lifespan(app: FastAPI):
 app = FastAPI(
     title="CPRMV Rules Serve API",
     description="This API allows fetching CPRMV RuleSets from acknowledged publication methods part of the CPRMV Instruments catalog configured for this CPRMV API instance. See the CPRMV project website for more information (The link below links to the ReSpec documentation for CPRMV)",
-    version="0.4.3",
+    version="0.4.4",
     lifespan=lifespan,
     contact={
         "name": "CPRMV project",
@@ -148,7 +148,7 @@ app.mount("/respec", StaticFiles(directory="respec", html=True, follow_symlink=T
 # which can be combined with information retrieved through the /rules endpoint
 # also, a method name can be given (as defined in wither cprmvmethods or cprmv-serve namespaces) to get only the RDF knowledge for that given method
 @app.get("/methods")
-@app.get("/0.4.3/methods/{method_name}")
+@app.get("/0.4.4/methods/{method_name}")
 def methods(method_name: str | None = None, format: str = "json-ld"):
     if format in ["json-ld", "xml", "turtle", "ttl", "n3", "turtle2"]:
         g = Graph()

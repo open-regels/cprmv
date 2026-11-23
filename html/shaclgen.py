@@ -11,10 +11,10 @@ from rdflib.term import URIRef
 from rdflib.namespace import RDF, RDFS, OWL, SH, XSD, split_uri
 
 SKOS = Namespace('http://www.w3.org/2004/02/skos/core#')
-CPRMV = Namespace('https://standaarden.open-regels.nl/standards/cprmv/0.4.3#')
-CPRMVMETHODS = Namespace('https://cprmv.open-regels.nl/0.4.3/methods/')
-CPRMVBASE = Namespace('https://standaarden.open-regels.nl/standards/cprmv/0.4.3/')
-CPRMVSERVE = Namespace('https://cprmv.open-regels.nl/0.4.3/serve-api/')
+CPRMV = Namespace('https://standaarden.open-regels.nl/standards/cprmv/0.4.4#')
+CPRMVMETHODS = Namespace('https://cprmv.open-regels.nl/0.4.4/methods/')
+CPRMVBASE = Namespace('https://standaarden.open-regels.nl/standards/cprmv/0.4.4/')
+CPRMVSERVE = Namespace('https://cprmv.open-regels.nl/0.4.4/serve-api/')
 
 CPSVAP3_2_0_PUML = """
 
@@ -74,9 +74,9 @@ def asList(kg, obj, prop = None):
 
 def loadmethods():
     vocabkg = Graph()
-    vocabkg.parse('../rdf/0.4.3/cprmv.ttl', format="turtle")
-    vocabkg.parse('../rdf/0.4.3/cprmv.shacl.ttl', format="turtle")
-    vocabkg.parse('../rdf/0.4.3/cprmvmethods.ttl', format="turtle")
+    vocabkg.parse('../rdf/0.4.4/cprmv.ttl', format="turtle")
+    vocabkg.parse('../rdf/0.4.4/cprmv.shacl.ttl', format="turtle")
+    vocabkg.parse('../rdf/0.4.4/cprmvmethods.ttl', format="turtle")
 
     modules = {}
     classes = {}
@@ -101,9 +101,9 @@ def loadmethods():
         spfx, sns, subject_local_name = vocabkg.namespace_manager.compute_qname(subject)
         method_module_foldername = subject_local_name.replace('core-','core.')
         try:
-            vocabkg.parse('../rdf/0.4.3/methods/'+method_module_foldername+'/method.ttl', format="turtle")
+            vocabkg.parse('../rdf/0.4.4/methods/'+method_module_foldername+'/method.ttl', format="turtle")
         except:
-            print("Could not load: ../rdf/0.4.3/methods/"+method_module_foldername+"/method.ttl using RDFlib")
+            print("Could not load: ../rdf/0.4.4/methods/"+method_module_foldername+"/method.ttl using RDFlib")
             continue
     for module in vocabkg.subjects(RDF.type, CPRMVMETHODS.module):
         print(f"Processing CPRMV Method module : {module}")
@@ -133,8 +133,8 @@ def loadmethods():
                     classes[subject][SKOS.prefLabel] = subject_local_name
             defaultvalue = None
             #try:
-            #    print(f"Attempting to use content of ../rdf/0.4.3/methods/{method_module_foldername}/README.md as SKOS.definition...")
-            #    with open('../rdf/0.4.3/methods/'+method_module_foldername+'/README.md', 'r') as readmefile:
+            #    print(f"Attempting to use content of ../rdf/0.4.4/methods/{method_module_foldername}/README.md as SKOS.definition...")
+            #    with open('../rdf/0.4.4/methods/'+method_module_foldername+'/README.md', 'r') as readmefile:
             #        defaultvalue = readmefile.read()
             #        defaultvalue = ''.join(defaultvalue.splitlines(keepends=True)[2:])
             #    print(f"Warning: using as default value for skos:definition : contents of the README.md file for this CPRMV Method")
@@ -205,8 +205,8 @@ def loadmethods():
 
 def load():
     vocabkg = Graph()
-    vocabkg.parse('../rdf/0.4.3/cprmv.ttl', format="turtle")
-    vocabkg.parse('../rdf/0.4.3/cprmv.shacl.ttl', format="turtle")
+    vocabkg.parse('../rdf/0.4.4/cprmv.ttl', format="turtle")
+    vocabkg.parse('../rdf/0.4.4/cprmv.shacl.ttl', format="turtle")
 
     classes = {}
 
@@ -362,7 +362,7 @@ def genmethodsmd(classes, out='ch03.md', title='CPRMV Specification', filter=CPR
                 mns, mname = split_uri(m)
                 defaultvalue = ''
                 try:
-                    with open('../rdf/0.4.3/methods/'+mname.replace('-','.')+'/README.md', 'r') as readmefile:
+                    with open('../rdf/0.4.4/methods/'+mname.replace('-','.')+'/README.md', 'r') as readmefile:
                         defaultvalue = readmefile.read()
                         defaultvalue = ''.join(defaultvalue.splitlines(keepends=True)[2:])
                 except:

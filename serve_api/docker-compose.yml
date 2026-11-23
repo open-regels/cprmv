@@ -4,7 +4,7 @@ services:
   cprmv-api:
     container_name: cprmv-api
     # Use environment variable to easily switch versions
-    # Default to latest, but can be overridden with: 
+    # Default to latest, but can be overridden with:
     # IMAGE_TAG=commit-sha docker-compose up
     image: datafluisteraar/cprmv-api:${IMAGE_TAG:-latest}
     ports:

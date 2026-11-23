@@ -1,0 +1,11 @@
+@base <http://example.com/> .
+@prefix cprmv: <https://standaarden.open-regels.nl/standards/cprmv/0.4.4#> .
+@prefix cprmv-serve: <https://cprmv.open-regels.nl/0.4.4/serve-api/> .
+@prefix cprmvmethods: <https://cprmv.open-regels.nl/0.4.4/methods/> .
+
+cprmvmethods:openfisca a cprmv:FormalisationMethod;
+    cprmv:id "OpenFisca"@en;
+    cprmv:id "OpenFisca"@fr;
+    cprmv:id "OpenFisca"@nl;
+    cprmv:label "OpenFisca";
+    cprmv:comment "see https://openfisca.org" .

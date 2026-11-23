@@ -1,0 +1,16 @@
+@base <http://example.com/> .
+@prefix cprmv: <https://standaarden.open-regels.nl/standards/cprmv/0.4.4#> .
+@prefix cprmv-serve: <https://cprmv.open-regels.nl/0.4.4/serve-api/> .
+@prefix cprmvmethods: <https://cprmv.open-regels.nl/0.4.4/methods/> .
+
+cprmvmethods:sttr a cprmvmethods:module;
+    a cprmv:FormalisationMethod;
+    a cprmv-serve:core-xml;
+    cprmv:id "sttr"@en;
+    cprmv:id "sttr"@nl;
+    cprmv:label "STTR";
+    cprmv:comment "see https://iplo.nl/digitaal-stelsel/aansluiten/standaarden/sttr-imtr/";
+    cprmv-serve:xslt "sttr2cprmv.xsl";
+    cprmvmethods:hasMethods (
+        cprmvmethods:sttr
+    ).

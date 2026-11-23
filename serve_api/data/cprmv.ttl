@@ -1,7 +1,7 @@
 @base <http://example.com/> .
 @prefix schema: <http://schema.org/> .
 @prefix cpsv: <http://purl.org/vocab/cpsv#> .
-@prefix cprmv: <https://standaarden.open-regels.nl/standards/cprmv/0.4.3#> .
+@prefix cprmv: <https://standaarden.open-regels.nl/standards/cprmv/0.4.4#> .
 @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix owl: <http://www.w3.org/2002/07/owl#> .
@@ -14,13 +14,13 @@
 @prefix prov: <http://www.w3.org/ns/prov#> .
 @prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 
-<https://standaarden.open-regels.nl/standards/cprmv/0.4.3#> a owl:Ontology;
-  vann:preferredNamespaceURI "https://standaarden.open-regels.nl/standards/cprmv/0.4.3#";
+<https://standaarden.open-regels.nl/standards/cprmv/0.4.4#> a owl:Ontology;
+  vann:preferredNamespaceURI "https://standaarden.open-regels.nl/standards/cprmv/0.4.4#";
   vann:preferredNamespacePrefix "cprmv";
   dct:title "CPRMV";
   dct:description "Core Public Rule Management Vocabulary is a vocabulary for expressing knowledge about agreements published as rules which can both be expressed in natural language like articles in laws as well as more formal business rules for automation of decisions, and also how all these rules relate to each other as well as to the concepts in the Core Public Service Vocabulary. It is based on the notion that all these rules are also produced as the ouput of a service delivered by Public Organizations. Typically many rules are used in the context of other services, and to some extend this requires organizations to collaborate on them, even during operationalized in services that follow them. CPRMV allows for the possibility to make all this more transparent and structured. It extends the other Core Vocabularies in this regard.";
-  owl:versionIRI <https://standaarden.open-regels.nl/standards/cprmv/0.4.3#>;
-  owl:versionInfo "0.4.3";
+  owl:versionIRI <https://standaarden.open-regels.nl/standards/cprmv/0.4.4#>;
+  owl:versionInfo "0.4.4";
   dct:created "2026-04-20"^^xsd:date;
   dct:creator <https://www.ictu.nl/>;
   dct:license <https://creativecommons.org/licenses/by/4.0/>;

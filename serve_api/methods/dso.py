@@ -77,4 +77,4 @@ class dso_service_register(ServiceRegister, core_api, core_json):
         return []
 
     def determin_method(self, json_data, publication):
-        return URIRef("https://cprmv.open-regels.nl/0.4.3/methods/dso-service-register")
+        return URIRef("https://cprmv.open-regels.nl/0.4.4/methods/dso-service-register")

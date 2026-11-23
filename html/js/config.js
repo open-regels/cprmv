@@ -10,10 +10,10 @@ let respecConfig = {
   // shortName = Repository name
   shortName: "cprmv",
   publishDate: "2026-11-06",
-  publishVersion: "0.4.3",
+  publishVersion: "0.4.4",
 
-  previousPublishVersion: "0.4.2",
-  previousPublishDate: "2026-10-02",
+  previousPublishVersion: "0.4.3",
+  previousPublishDate: "2026-11-23",
   previousMaturity: "fpwd",
   title: "CPRMV",
   subtitle:

@@ -1,0 +1,47 @@
+@base <http://example.com/> .
+@prefix cprmv: <https://standaarden.open-regels.nl/standards/cprmv/0.4.4#> .
+@prefix cprmv-serve: <https://cprmv.open-regels.nl/0.4.4/serve-api/> .
+@prefix cprmvmethods: <https://cprmv.open-regels.nl/0.4.4/methods/> .
+@prefix core-api: <https://cprmv.open-regels.nl/0.4.4/methods/core-api#> .
+
+cprmvmethods:digitaal-stelsel-omgevingswet a cprmvmethods:module;
+    cprmv:id "digitaal-stelsel-omgevingswet"@nl;
+    cprmv:label "Digitaal Stelsel Omgevingswet";
+    cprmvmethods:hasMethods (
+        cprmvmethods:dso
+        cprmvmethods:dso-service-register
+    ).
+
+cprmvmethods:dso a cprmv-serve:core-api;
+    a cprmvmethods:sttr;
+    cprmv:id "dso"@nl;
+    cprmv:id "dso"@en;
+    cprmv:label "DSO";
+    cprmv:comment "see https://iplo.nl/digitaal-stelsel/";
+    cprmv-serve:publication-id-format "DSO_{rulesetid}_{date}_{index}";
+    cprmv-serve:normalized-id-format "DSO_{rulesetid}_{date}_{index}";
+    cprmv-serve:repository-publication-location-format "https://service.omgevingswet.overheid.nl/publiek/toepasbare-regels/api/toepasbareregelsuitvoerengegevens/v1/toepasbareRegels/{rulesetid}/sttrBestand" ;
+    cprmv-serve:utilizes cprmvmethods:dso-service-register;
+    core-api:http-method "GET";
+    core-api:api-headers (
+        ("Accept" "application/xml")
+        ("Content-Type" "application/xml")
+        ("x-api-key" "pass_on_from_request")
+    ).
+
+cprmvmethods:dso-service-register a cprmv:ServiceRegister;
+    a cprmv-serve:core-api;
+    a cprmv-serve:core-json;
+    cprmv:id "dso-service-register"@nl;
+    cprmv:label "DSO as a service register";
+    cprmv:comment "DSO functioneleStructuurRef can be seen as (sub)services. As service register, the rulesetid is tied to one specific functioneleStructuurRef as well as organisation responsible for the rules.";
+    cprmv-serve:publication-id-format "DSOService_{rulesetid}_{date}_{index}";
+    cprmv-serve:normalized-id-format "DSOService_{rulesetid}_{date}_{index}";
+    cprmv-serve:repository-publication-location-format "https://service.omgevingswet.overheid.nl/publiek/toepasbare-regels/api/toepasbareregelsuitvoerengegevens/v1/toepasbareRegels/{rulesetid}";
+    cprmv-serve:utilizes cprmvmethods:roo;
+    core-api:http-method "GET";
+    core-api:api-headers (
+        ("Accept" "application/hal+json")
+        ("Content-Type" "application/json")
+        ("x-api-key" "pass_on_from_request")
+    ).

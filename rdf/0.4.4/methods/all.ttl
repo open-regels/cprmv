@@ -1,0 +1,337 @@
+@base <http://example.com/> .
+@prefix cprmv: <https://standaarden.open-regels.nl/standards/cprmv/0.4.4#> .
+@prefix cprmv-serve: <https://cprmv.open-regels.nl/0.4.4/serve-api/> .
+
+cprmvmethods:regelspraak a cprmv:FormalisationMethod;
+    cprmv:id "RegelSpraak"@en;
+    cprmv:id "RegelSpraak"@fr;
+    cprmv:id "RegelSpraak"@nl;
+    cprmv:label "RegelSpraak";
+    cprmv:comment "see https://regelspraak.nl".
+@base <http://example.com/> .
+@prefix cprmv: <https://standaarden.open-regels.nl/standards/cprmv/0.4.4#> .
+@prefix cprmv-serve: <https://cprmv.open-regels.nl/0.4.4/serve-api/> .
+@prefix cprmvmethods: <https://cprmv.open-regels.nl/0.4.4/methods/> .
+
+cprmvmethods:bwb a cprmv:AnalysisMethod;
+    a cprmv:PublicationMethod;
+    a cprmv-serve:core-xml;
+    cprmv:id "bwb"@nl;
+    cprmv:label "BWB (NL)";
+    cprmv:comment "zie: https://www.overheid.nl/sites/default/files/wetten/Procedurehandboek_BWB_3.7.pdf and https://www.overheid.nl/sites/default/files/pdf/Handleiding%2BSRU%2BBWB.pdf"@nl;
+    cprmv-serve:publication-id-format "BWB{rulesetid}_{date}_{index}";
+    cprmv-serve:normalized-id-format "BWB{rulesetid}_{date}_{index}";
+    cprmv-serve:xslt "bwb2cprmv.xsl".
+@base <http://example.com/> .
+@prefix cprmv: <https://standaarden.open-regels.nl/standards/cprmv/0.4.4#> .
+@prefix cprmv-serve: <https://cprmv.open-regels.nl/0.4.4/serve-api/> .
+
+cprmvmethods:catala a cprmv:FormalisationMethod;
+    cprmv:id "Catala"@en;
+    cprmv:id "Catala"@fr;
+    cprmv:id "Catala"@nl;
+    cprmv:label "Catala";
+    cprmv:comment "See https://catala-lang.org".
+@base <http://example.com/> .
+@prefix cprmv: <https://standaarden.open-regels.nl/standards/cprmv/0.4.4#> .
+@prefix cprmv-serve: <https://cprmv.open-regels.nl/0.4.4/serve-api/> .
+
+cprmv-serve:core-json a cprmv:SerialisationMethod;
+    cprmv:id "core.json"@nl;
+    cprmv:label "CPRMV API - Generic JSON Serialisation Method";
+    cprmv:comment "CPRMV API - Generic JSON Serialisation  Method".
+@base <http://example.com/> .
+@prefix cprmv: <https://standaarden.open-regels.nl/standards/cprmv/0.4.4#> .
+@prefix cprmv-serve: <https://cprmv.open-regels.nl/0.4.4/serve-api/> .
+
+cprmv-serve:core-web a cprmv:PublicationMethod;
+    cprmv:id "core.web"@nl;
+    cprmv:label "CPRMV API - Generic Web Publication Method";
+    cprmv:comment "CPRMV API - Generic Web Publication Method";
+    cprmv-serve:repository-publication-location-format "".
+
+cprmv-serve:repository-publication-location-format a owl:ObjectProperty;
+    skos:prefLabel "repository-publication-location-format"@en;
+    skos:definition "The format of the URL to retrieve a publication"@en;
+    rdfs:domain cprmv-serve:core-web.
+@base <http://example.com/> .
+@prefix cprmv: <https://standaarden.open-regels.nl/standards/cprmv/0.4.4#> .
+@prefix cprmv-serve: <https://cprmv.open-regels.nl/0.4.4/serve-api/> .
+
+cprmv-serve:core-xml a cprmv:SerialisationMethod;
+    cprmv:id "core.xml"@nl;
+    cprmv:label "CPRMV API - Generic XML Serialisation Method";
+    cprmv:comment "CPRMV API - Generic XML Serialisation  Method".
+@base <http://example.com/> .
+@prefix cprmv: <https://standaarden.open-regels.nl/standards/cprmv/0.4.4#> .
+@prefix cprmv-serve: <https://cprmv.open-regels.nl/0.4.4/serve-api/> .
+
+cprmv-serve:core-yaml a cprmv:SerialisationMethod;
+    cprmv:id "core.yaml"@nl;
+    cprmv:label "CPRMV API - Generic XML Serialisation Method";
+    cprmv:comment "CPRMV API - Generic XML Serialisation  Method".
+@base <http://example.com/> .
+@prefix cprmv: <https://standaarden.open-regels.nl/standards/cprmv/0.4.4#> .
+@prefix cprmv-serve: <https://cprmv.open-regels.nl/0.4.4/serve-api/> .
+@prefix cprmvmethods: <https://cprmv.open-regels.nl/0.4.4/methods/> .
+
+cprmvmethods:cprmvidpath a cprmv:ReferenceMethod;
+    cprmv:id "CPRMV API - rule id path"@en;
+    cprmv:id "CPRMV API - rule id path"@nl;
+    cprmv:comment "CPRMV API functions as a Reference resolver but to enable this harbours it's own way of referencing (rule id path). Also it allows for additional functionality on top of what methods like juriconnect and eli offer";
+    cprmv-serve:reference-format "{baseuri}/rules/{path}".
+@base <http://example.com/> .
+@prefix cprmv: <https://standaarden.open-regels.nl/standards/cprmv/0.4.4#> .
+@prefix cprmv-serve: <https://cprmv.open-regels.nl/0.4.4/serve-api/> .
+@prefix cprmvmethods: <https://cprmv.open-regels.nl/0.4.4/methods/> .
+
+cprmvmethods:cvdr a cprmv:AnalysisMethod;
+    a cprmv:PublicationMethod;
+    a cprmv-serve:core-xml;
+    cprmv:id "cvdr"@nl;
+    cprmv:label "CVDR (NL)";
+    cprmv:comment "zie: https://www.overheid.nl/sites/default/files/pdf/Handleiding%2BSRU%2BBWB.pdf"@nl;
+    cprmv-serve:publication-id-format "CVD{rulesetid}_{index}";
+    cprmv-serve:normalized-id-format "CVD{rulesetid}_{date}_{index}";
+    cprmv-serve:xslt "cvdr2cprmv.xsl".
+@base <http://example.com/> .
+@prefix cprmv: <https://standaarden.open-regels.nl/standards/cprmv/0.4.4#> .
+@prefix cprmv-serve: <https://cprmv.open-regels.nl/0.4.4/serve-api/> .
+@prefix cprmvmethods: <https://cprmv.open-regels.nl/0.4.4/methods/> .
+
+cprmvmethods:dmn13 a cprmv:FormalisationMethod;
+    a cprmv:PublicationMethod;
+    a cprmv-serve:core-xml;
+    cprmv:id "DMN 1.3"@en;
+    cprmv:id "DMN 1.3"@nl;
+    cprmv:label "DMN 1.3 on operaton.open-regels.nl (experimental)";
+    cprmv:comment "see https://www.omg.org/spec/DMN/1.3/About-DMN";
+    cprmv-serve:publication-id-format "DMN1.3_{deploymentid}R{resourceid}_{date}_{index}";
+    cprmv-serve:normalized-id-format "DMN1.3_{rulesetid}_{date}_{index}";
+    cprmv-serve:xslt "dmn13operaton2cprmv.xsl".
+@base <http://example.com/> .
+@prefix cprmv: <https://standaarden.open-regels.nl/standards/cprmv/0.4.4#> .
+@prefix cprmv-serve: <https://cprmv.open-regels.nl/0.4.4/serve-api/> .
+@prefix cprmvmethods: <https://cprmv.open-regels.nl/0.4.4/methods/> .
+
+cprmvmethods:elifmx4 a cprmv:ReferenceMethod;
+    cprmv:id "ELIFMX4 on EU CELLAR"@en;
+    cprmv:id "ELIFMX4 on EU CELLAR"@nl;
+    cprmv:comment "ELI references to Formex 4 documents in EU CELLAR";
+    cprmv-serve:reference-format "http://data.europa.eu/eli/{typedoc}/{year}/{naturalnumber}/{start-date}".
+
+cprmvmethods:elinl a cprmv:ReferenceMethod;
+    cprmv:id "ELI for BWB and CVDR"@en;
+    cprmv:id "ELI for BWB and CVDR"@nl;
+    cprmv:comment "Experimental ELI for NL";
+    cprmv-serve:reference-format "https://wetten.overheid.nl/{path}".
+@base <http://example.com/> .
+@prefix cprmv: <https://standaarden.open-regels.nl/standards/cprmv/0.4.4#> .
+@prefix cprmv-serve: <https://cprmv.open-regels.nl/0.4.4/serve-api/> .
+@prefix cprmvmethods: <https://cprmv.open-regels.nl/0.4.4/methods/> .
+
+cprmvmethods:eucellar-fmx4 a cprmv-serve:core-web;
+    a cprmvmethods:fmx4;
+    cprmv:id "eucellarfmx4"@en;
+    cprmv:id "eucellarfmx4"@nl;
+    cprmv:label "Formex v4 from EU CELLAR";
+    cprmv:comment "see: ... "@en;
+    cprmv-serve:repository-publication-location-format "https://publications.europa.eu/resource/cellar/{rulesetid}/{docid}".
+@base <http://example.com/> .
+@prefix cprmv: <https://standaarden.open-regels.nl/standards/cprmv/0.4.4#> .
+@prefix cprmv-serve: <https://cprmv.open-regels.nl/0.4.4/serve-api/> .
+
+cprmvmethods:flint a cprmv:AnalysisMethod;
+    cprmv:id "Calculemus / FLINT"@en;
+    cprmv:id "Calculemus / FLINT"@nl;
+    cprmv:comment "zie: https://normativesystems.gitlab.io/knowledge-modeling/documentation-website/docs/"@nl;
+    cprmv:comment "see: https://normativesystems.gitlab.io/knowledge-modeling/documentation-website/docs/"@en.
+@base <http://example.com/> .
+@prefix cprmv: <https://standaarden.open-regels.nl/standards/cprmv/0.4.4#> .
+@prefix cprmv-serve: <https://cprmv.open-regels.nl/0.4.4/serve-api/> .
+@prefix cprmvmethods: <https://cprmv.open-regels.nl/0.4.4/methods/> .
+
+cprmvmethods:fmx4 a cprmv:AnalysisMethod;
+    a cprmv:PublicationMethod;
+    a cprmv-serve:core-xml;
+    cprmv:id "fmx4"@en;
+    cprmv:id "fmx4"@nl;
+    cprmv:label "Formex v4 (EU)";
+    cprmv:comment "see: ... "@en;
+    cprmv-serve:publication-id-format "FMX4{rulesetid}_{docid}";
+    cprmv-serve:normalized-id-format "FMX4{rulesetid}_{docid}";
+    cprmv-serve:xslt "fmx42cprmv.xsl".
+@base <http://example.com/> .
+@prefix cprmv: <https://standaarden.open-regels.nl/standards/cprmv/0.4.4#> .
+@prefix cprmv-serve: <https://cprmv.open-regels.nl/0.4.4/serve-api/> .
+@prefix cprmvmethods: <https://cprmv.open-regels.nl/0.4.4/methods/> .
+@prefix frbr-sru: <https://cprmv.open-regels.nl/0.4.4/methods/frbr-sru/> .
+
+cprmvmethods:frbr-sru a cprmv-serve:core-web;
+    cprmv:id "FRBR SRU"@nl;
+    cprmv:label "FRBR SRU";
+    cprmv:comment "".
+
+frbr-sru:url a owl:ObjectProperty;
+    skos:prefLabel "url"@en;
+    skos:definition "The URL the SRU REST service can be accessed."@en;
+    rdfs:domain cprmvmethods:frbr-sru.
+
+frbr-sru:response-publication-location-term-namespace a owl:ObjectProperty;
+    skos:prefLabel "response-publication-location-term-namespace"@en;
+    skos:definition "The namespace for the term in the SRU response that indicates the web location the publication can be retrieved from."@en;
+    rdfs:domain cprmvmethods:frbr-sru.
+
+frbr-sru:response-publication-location-term a owl:ObjectProperty;
+    skos:prefLabel "response-publication-location-term"@en;
+    skos:definition "The term name in the SRU response that indicates the web location the publication can be retrieved from."@en;
+    rdfs:domain cprmvmethods:frbr-sru.
+
+frbr-sru:response-from-date-term-namespace a owl:ObjectProperty;
+    skos:prefLabel "response-from-date-term-namespace"@en;
+    skos:definition "The namespace for the term in the SRU response that indicates the date from which the publication to be retrieved is valid."@en;
+    rdfs:domain cprmvmethods:frbr-sru.
+
+frbr-sru:response-from-date-term a owl:ObjectProperty;
+    skos:prefLabel "response-from-date-term"@en;
+    skos:definition "The term name in the SRU response that indicates the date from which the publication to be retrieved is valid."@en;
+    rdfs:domain cprmvmethods:frbr-sru.
+@base <http://example.com/> .
+@prefix cprmv: <https://standaarden.open-regels.nl/standards/cprmv/0.4.4#> .
+@prefix cprmv-serve: <https://cprmv.open-regels.nl/0.4.4/serve-api/> .
+@prefix cprmvmethods: <https://cprmv.open-regels.nl/0.4.4/methods/> .
+
+cprmvmethods:git a cprmv-serve:core-web;
+    cprmv:id "Git"@nl;
+    cprmv:label "Git";
+    cprmv:comment "Public Git repository as ruleset publication repository".
+@base <http://example.com/> .
+@prefix cprmv: <https://standaarden.open-regels.nl/standards/cprmv/0.4.4#> .
+@prefix cprmv-serve: <https://cprmv.open-regels.nl/0.4.4/serve-api/> .
+
+cprmvmethods:jas a cprmv:AnalysisMethod;
+    cprmv:id "Law Analysis / JAS"@en;
+    cprmv:id "Wetsanalyse / JAS"@nl;
+    cprmv:comment "zie: https://regels.overheid.nl/standaarden/wetsanalyse"@nl.
+@base <http://example.com/> .
+@prefix cprmv: <https://standaarden.open-regels.nl/standards/cprmv/0.4.4#> .
+@prefix cprmv-serve: <https://cprmv.open-regels.nl/0.4.4/serve-api/> .
+@prefix cprmvmethods: <https://cprmv.open-regels.nl/0.4.4/methods/> .
+
+cprmvmethods:juriconnect a cprmv:ReferenceMethod;
+    cprmv:id "Juriconnect"@en;
+    cprmv:id "Juriconnect"@nl;
+    cprmv:comment "Juriconnect (not fully supported yet)";
+    cprmv-serve:reference-format 'jci1.{subversion}:c:BWB{bwbid}&{locatie-string}';
+    cprmv-serve:reference-mapping (
+        ( "aanwijzing" "Aanwijzing")
+        ( "afdeling" "Afdeling")
+        ( "artikel" "Artikel")
+        ( "bijlage" "Bijlage")
+        ( "boek" "Boek")
+        ( "deel" "Deel")
+        ( "enig" "enig")
+        ( "hoofdstuk" "Hoofdstuk")
+        ( "inhoudsopgave" "Inhoudsopgave")
+        ( "nummer" "nummer")
+        ( "paragraaf" "Paragraaf")
+        ( "sub-paragraaf" "Paragraaf")
+        ( "titeldeel" "Titeldeel")
+        ( "taal" "taal")
+        ( "verdragsonderdeel" "Verdragsonderdeel")
+        ( "lid" "lid")
+        ( "o" "onderdeel")
+        ( "volzin" "volzin")
+        ( "nummer" "nummer")
+        ( cprmv-serve:reference-mapping-valid-on "g")
+        ( cprmv-serve:reference-mapping-seen-on "z")
+    ).
+@base <http://example.com/> .
+@prefix cprmv: <https://standaarden.open-regels.nl/standards/cprmv/0.4.4#> .
+@prefix cprmv-serve: <https://cprmv.open-regels.nl/0.4.4/serve-api/> .
+
+cprmvmethods:nrml a cprmv:FormalisationMethod;
+    cprmv:id "NRML"@en;
+    cprmv:id "NRML"@fr;
+    cprmv:id "NRML"@nl;
+    cprmv:label "NRML";
+    cprmv:comment "Part of RegelRecht, see https://regelrecht.rijks.app".
+@base <http://example.com/> .
+@prefix cprmv: <https://standaarden.open-regels.nl/standards/cprmv/0.4.4#> .
+@prefix cprmv-serve: <https://cprmv.open-regels.nl/0.4.4/serve-api/> .
+@prefix cprmvmethods: <https://cprmv.open-regels.nl/0.4.4/methods/> .
+
+cprmvmethods:operaton.open-regels.nl a cprmvmethods:operaton;
+    cprmv:id "operaton.open-regels.nl"@nl;
+    cprmv:label "Operaton as repository at open-regels.nl IOU showcase environment";
+    cprmv:comment "zie open-regels.nl"@nl;
+    cprmv-serve:repository-publication-location-format "https://operaton.open-regels.nl/engine-rest/deployment/{deploymentid}/resources/{resourceid}/data".
+@base <http://example.com/> .
+@prefix cprmv: <https://standaarden.open-regels.nl/standards/cprmv/0.4.4#> .
+@prefix cprmv-serve: <https://cprmv.open-regels.nl/0.4.4/serve-api/> .
+
+cprmvmethods:openfisca a cprmv:FormalisationMethod;
+    cprmv:id "OpenFisca"@en;
+    cprmv:id "OpenFisca"@fr;
+    cprmv:id "OpenFisca"@nl;
+    cprmv:label "OpenFisca";
+    cprmv:comment "see https://openfisca.org" .
+@base <http://example.com/> .
+@prefix cprmv: <https://standaarden.open-regels.nl/standards/cprmv/0.4.4#> .
+@prefix cprmv-serve: <https://cprmv.open-regels.nl/0.4.4/serve-api/> .
+@prefix cprmvmethods: <https://cprmv.open-regels.nl/0.4.4/methods/> .
+
+cprmvmethods:operaton a cprmv-serve:core-web;
+    a cprmvmethods:dmn13;
+    a cprmv:ExecutionMethod;
+    cprmv:id "Operaton"@nl;
+    cprmv:label "Operaton";
+    cprmv:comment "".
+@base <http://example.com/> .
+@prefix cprmv: <https://standaarden.open-regels.nl/standards/cprmv/0.4.4#> .
+@prefix cprmv-serve: <https://cprmv.open-regels.nl/0.4.4/serve-api/> .
+@prefix cprmvmethods: <https://cprmv.open-regels.nl/0.4.4/methods/> .
+
+cprmvmethods:regelrecht a cprmvmethods:git;
+    a cprmvmethods:nrml;
+    cprmv:id "RegelRecht git repository"@nl;
+    cprmv:label "NRML files on RegelRecht Git Repository";
+    cprmv:comment "zie https://regelrecht.rijks.app"@nl;
+    cprmv-serve:repository-publication-location-format "https://github/regelrecht...".
+@base <http://example.com/> .
+@prefix cprmv: <https://standaarden.open-regels.nl/standards/cprmv/0.4.4#> .
+@prefix cprmv-serve: <https://cprmv.open-regels.nl/0.4.4/serve-api/> .
+@prefix cprmvmethods: <https://cprmv.open-regels.nl/0.4.4/methods/> .
+@prefix frbr-sru: <https://cprmv.open-regels.nl/0.4.4/methods/frbr-sru/> .
+
+cprmvmethods:repository-overheid-nl-bwb a cprmvmethods:frbr-sru;
+    a cprmvmethods:bwb;
+    cprmv:id "repository.overheid.nl-bwb"@nl;
+    cprmv:label "BWB publicaties op repository.overheid.nl (NL)";
+    cprmv:comment "zie repository.overheid.nl"@nl;
+    cprmv-serve:repository-publication-location-format "https://repository.officiele-overheidspublicaties.nl/bwb/BWB{rulesetid}/{date}_{index}/xml/BWB{rulesetid}_{date}_{index}.xml";
+    frbr-sru:url "https://zoekservice.overheid.nl/sru/Search?x-connection=BWB&operation=searchRetrieve&version=2.0&maximumRecords=1&query=dcterms.identifier=BWB{rulesetid}%20and%20overheidbwb.geldigheidsdatum={valid-on}".
+    frbr-sru:response-publication-location-term-namespace
+        "http://standaarden.overheid.nl/bwb/terms/";
+    frbr-sru:response-publication-location-term
+        "locatie_toestand";
+    frbr-sru:response-from-date-term-namespace
+        "http://standaarden.overheid.nl/bwb/terms/";
+    frbr-sru:response-from-date-term
+        "geldigheidsperiode_startdatum".
+
+cprmvmethods:repository-overheid-nl-cvdr a cprmvmethods:frbr-sru;
+    a cprmvmethods:cvdr;
+    cprmv:id "repository.overheid.nl-cvdr"@nl;
+    cprmv:label "CVDR publicaties op repository.overheid.nl (NL)";
+    cprmv:comment "zie repository.overheid.nl"@nl;
+    cprmv-serve:repository-publication-location-format "https://repository.officiele-overheidspublicaties.nl/cvdr/CVD{rulesetid}/{index}/xml/CVD{rulesetid}_{index}.xml";
+    frbr-sru:url "https://zoekservice.overheid.nl/sru/Search?x-connection=cvdr&operation=searchRetrieve&version=2.0&maximumRecords=1&query=dcterms.identifier=CVD{rulesetid}_*%20and%20overheidrg.inwerkingtredingDatum%3C={valid-on}%20sortby%20overheidrg.inwerkingtredingDatum/descending".
+    frbr-sru:response-publication-location-term-namespace
+        "http://standaarden.overheid.nl/sru";
+    frbr-sru:response-publication-location-term
+        "publicatieurl_xml";
+    frbr-sru:response-from-date-term-namespace
+        "http://standaarden.overheid.nl/cvdr/terms/";
+    frbr-sru:response-from-date-term
+        "inwerkingtredingDatum".

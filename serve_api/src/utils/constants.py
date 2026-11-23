@@ -30,11 +30,11 @@ The Rule ID Path consisting of the Rule Set ID followed by a comma-separated pat
  **URL Encoding Note:** Remember to URL-encode special characters in the path when making requests.
  """
 
-CPRMV = Namespace("https://standaarden.open-regels.nl/standards/cprmv/0.4.3#")
+CPRMV = Namespace("https://standaarden.open-regels.nl/standards/cprmv/0.4.4#")
 CPSV = Namespace("http://purl.org/vocab/cpsv#")
-CPRMVSERVE = Namespace("https://cprmv.open-regels.nl/0.4.3/serve-api/")
-CPRMVMETHODS = Namespace("https://cprmv.open-regels.nl/0.4.3/methods/")
-COREAPI = Namespace("https://cprmv.open-regels.nl/0.4.3/methods/core-api#")
+CPRMVSERVE = Namespace("https://cprmv.open-regels.nl/0.4.4/serve-api/")
+CPRMVMETHODS = Namespace("https://cprmv.open-regels.nl/0.4.4/methods/")
+COREAPI = Namespace("https://cprmv.open-regels.nl/0.4.4/methods/core-api#")
 
 RULE_ID_PATH: str = Path(
     min_length=10,

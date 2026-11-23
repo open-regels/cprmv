@@ -1,0 +1,59 @@
+@base <http://example.com/> .
+@prefix cprmv: <https://standaarden.open-regels.nl/standards/cprmv/0.4.4#> .
+@prefix cprmv-serve: <https://cprmv.open-regels.nl/0.4.4/serve-api/> .
+@prefix cprmvmethods: <https://cprmv.open-regels.nl/0.4.4/methods/> .
+@prefix core-api: <https://cprmv.open-regels.nl/0.4.4/methods/core-api#> .
+
+cprmvmethods:register-overheids-organisaties a cprmvmethods:module;
+    cprmv:id "register-overheids-organisaties"@nl;
+    cprmv:label "Register Overheids Organisaties";
+    cprmvmethods:hasMethods (
+        cprmvmethods:roo
+        cprmvmethods:roo-uri
+        cprmvmethods:roo-catalogus
+    ).
+
+cprmvmethods:roo a cprmv:OrganisationRegister;
+    a cprmv-serve:core-api;
+    a cprmv-serve:core-json;
+    cprmv:id "roo"@en;
+    cprmv:id "roo"@nl;
+    cprmv:label "Register van OverheidsOrganisaties - Dutch register for public organisations";
+    cprmv:comment "see https://organisaties.overheid.nl"@en;
+    cprmv-serve:publication-id-format "ROO.{key}={rulesetid}_{date}_{index}";
+    cprmv-serve:normalized-id-format "ROO.{key}={rulesetid}_{date}_{index}";
+    cprmv-serve:repository-publication-location-format "https://api-organisaties.overheid.nl/v1/overheidsorganisaties/identificatie-uitgebreid?{key}={rulesetid}";
+    core-api:api-base-url <https://api-organisaties.overheid.nl/v1/>;
+    core-api:api-headers (
+        ("Accept" "application/json")
+    ).
+
+cprmvmethods:roo-uri a cprmv:OrganisationRegister;
+    a cprmv-serve:core-api;
+    a cprmv-serve:core-json;
+    cprmv:id "roo-uri"@en;
+    cprmv:id "roo-uri"@nl;
+    cprmv:label "Register van OverheidsOrganisaties - Dutch register for public organisations - By URI";
+    cprmv:comment "see https://organisaties.overheid.nl"@en;
+    cprmv-serve:publication-id-format "ROOURI{uri}_{date}_{index}";
+    cprmv-serve:normalized-id-format "ROOURI{uri}_{date}_{index}";
+    cprmv-serve:repository-publication-location-format "https://api-organisaties.overheid.nl/v1/overheidsorganisaties/{uri}";
+    core-api:api-base-url <https://api-organisaties.overheid.nl/v1/>;
+    core-api:api-headers (
+        ("Accept" "application/json")
+    ).
+
+cprmvmethods:roo-catalogus a cprmv:OrganisationRegister;
+    a cprmv-serve:core-api;
+    a cprmv-serve:core-json;
+    cprmv:id "roo-catalogus"@en;
+    cprmv:id "roo-catalogus"@nl;
+    cprmv:label "Register van OverheidsOrganisaties - Dutch register for public organisations - Whole catalogus";
+    cprmv:comment "see https://organisaties.overheid.nl"@en;
+    cprmv-serve:publication-id-format "ROO_{date}_{index}";
+    cprmv-serve:normalized-id-format "ROO_{date}_{index}";
+    cprmv-serve:repository-publication-location-format "https://api-organisaties.overheid.nl/v1/overheidsorganisaties";
+    core-api:api-base-url <https://api-organisaties.overheid.nl/v1/>;
+    core-api:api-headers (
+        ("Accept" "application/json")
+    ).

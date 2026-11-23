@@ -1,0 +1,15 @@
+@base <http://example.com/> .
+@prefix cprmv: <https://standaarden.open-regels.nl/standards/cprmv/0.4.4#> .
+@prefix cprmv-serve: <https://cprmv.open-regels.nl/0.4.4/serve-api/> .
+@prefix cprmvmethods: <https://cprmv.open-regels.nl/0.4.4/methods/> .
+
+cprmvmethods:operaton a cprmvmethods:module;
+    a cprmv-serve:core.web;
+    a cprmvmethods:dmn13;
+    a cprmv:ExecutionMethod;
+    cprmv:id "Operaton"@nl;
+    cprmv:label "Operaton";
+    cprmv:comment "";
+    cprmvmethods:hasMethods (
+        cprmvmethods:operaton
+    ).

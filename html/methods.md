@@ -12,43 +12,43 @@ properties:
 | Property | Type/Range | Cardinality | Definition |
 | --- | --- | --- | --- |
 | acknowledged |   | 0..1 | a list with RuleMethod's that are acknowledged as part of the rule methods value list. |
-| | | | <a>https://cprmv.open-regels.nl/0.4.3/serve-api/core-yaml</a> |
-| | | | <a>https://cprmv.open-regels.nl/0.4.3/serve-api/core-xml</a> |
-| | | | <a>https://cprmv.open-regels.nl/0.4.3/serve-api/core-api</a> |
-| | | | <a>https://cprmv.open-regels.nl/0.4.3/serve-api/core-web</a> |
-| | | | <a>https://cprmv.open-regels.nl/0.4.3/serve-api/core-python</a> |
-| | | | <a>https://cprmv.open-regels.nl/0.4.3/serve-api/core-markdown</a> |
-| | | | <a>https://cprmv.open-regels.nl/0.4.3/serve-api/core-json</a> |
-| | | | <a>https://cprmv.open-regels.nl/0.4.3/methods/regalgo</a> |
-| | | | <a>https://cprmv.open-regels.nl/0.4.3/methods/openfisca</a> |
-| | | | <a>https://cprmv.open-regels.nl/0.4.3/methods/catala</a> |
-| | | | <a>https://cprmv.open-regels.nl/0.4.3/methods/elinl</a> |
-| | | | <a>https://cprmv.open-regels.nl/0.4.3/methods/elifmx4</a> |
-| | | | <a>https://cprmv.open-regels.nl/0.4.3/methods/juriconnect</a> |
-| | | | <a>https://cprmv.open-regels.nl/0.4.3/methods/cprmvapi</a> |
-| | | | <a>https://cprmv.open-regels.nl/0.4.3/methods/regelrecht</a> |
-| | | | <a>https://cprmv.open-regels.nl/0.4.3/methods/iou-operaton</a> |
-| | | | <a>https://cprmv.open-regels.nl/0.4.3/methods/iou-norms</a> |
-| | | | <a>https://cprmv.open-regels.nl/0.4.3/methods/roo-catalogus</a> |
-| | | | <a>https://cprmv.open-regels.nl/0.4.3/methods/roo-uri</a> |
-| | | | <a>https://cprmv.open-regels.nl/0.4.3/methods/roo</a> |
-| | | | <a>https://cprmv.open-regels.nl/0.4.3/methods/dso-service-register</a> |
-| | | | <a>https://cprmv.open-regels.nl/0.4.3/methods/dso</a> |
-| | | | <a>https://cprmv.open-regels.nl/0.4.3/methods/norms-backend.linkeddata.open-regels.nl</a> |
-| | | | <a>https://cprmv.open-regels.nl/0.4.3/methods/operaton.open-regels.nl</a> |
-| | | | <a>https://cprmv.open-regels.nl/0.4.3/methods/eucellar-fmx4</a> |
-| | | | <a>https://cprmv.open-regels.nl/0.4.3/methods/repository-overheid-nl-cvdr</a> |
-| | | | <a>https://cprmv.open-regels.nl/0.4.3/methods/repository-overheid-nl-bwb</a> |
-| | | | <a>https://cprmv.open-regels.nl/0.4.3/methods/repository-overheid-nl</a> |
-| | | | <a>https://cprmv.open-regels.nl/0.4.3/methods/operaton</a> |
-| | | | <a>https://cprmv.open-regels.nl/0.4.3/methods/sttr</a> |
-| | | | <a>https://cprmv.open-regels.nl/0.4.3/methods/dmn13</a> |
-| | | | <a>https://cprmv.open-regels.nl/0.4.3/methods/fmx4</a> |
-| | | | <a>https://cprmv.open-regels.nl/0.4.3/methods/cvdr</a> |
-| | | | <a>https://cprmv.open-regels.nl/0.4.3/methods/bwb</a> |
-| | | | <a>https://cprmv.open-regels.nl/0.4.3/methods/flint</a> |
-| | | | <a>https://cprmv.open-regels.nl/0.4.3/methods/jas</a> |
-| | | | <a>https://cprmv.open-regels.nl/0.4.3/methods/alef-regelspraak</a> |
+| | | | <a>https://cprmv.open-regels.nl/0.4.4/serve-api/core-yaml</a> |
+| | | | <a>https://cprmv.open-regels.nl/0.4.4/serve-api/core-xml</a> |
+| | | | <a>https://cprmv.open-regels.nl/0.4.4/serve-api/core-api</a> |
+| | | | <a>https://cprmv.open-regels.nl/0.4.4/serve-api/core-web</a> |
+| | | | <a>https://cprmv.open-regels.nl/0.4.4/serve-api/core-python</a> |
+| | | | <a>https://cprmv.open-regels.nl/0.4.4/serve-api/core-markdown</a> |
+| | | | <a>https://cprmv.open-regels.nl/0.4.4/serve-api/core-json</a> |
+| | | | <a>https://cprmv.open-regels.nl/0.4.4/methods/regalgo</a> |
+| | | | <a>https://cprmv.open-regels.nl/0.4.4/methods/openfisca</a> |
+| | | | <a>https://cprmv.open-regels.nl/0.4.4/methods/catala</a> |
+| | | | <a>https://cprmv.open-regels.nl/0.4.4/methods/elinl</a> |
+| | | | <a>https://cprmv.open-regels.nl/0.4.4/methods/elifmx4</a> |
+| | | | <a>https://cprmv.open-regels.nl/0.4.4/methods/juriconnect</a> |
+| | | | <a>https://cprmv.open-regels.nl/0.4.4/methods/cprmvapi</a> |
+| | | | <a>https://cprmv.open-regels.nl/0.4.4/methods/regelrecht</a> |
+| | | | <a>https://cprmv.open-regels.nl/0.4.4/methods/iou-operaton</a> |
+| | | | <a>https://cprmv.open-regels.nl/0.4.4/methods/iou-norms</a> |
+| | | | <a>https://cprmv.open-regels.nl/0.4.4/methods/roo-catalogus</a> |
+| | | | <a>https://cprmv.open-regels.nl/0.4.4/methods/roo-uri</a> |
+| | | | <a>https://cprmv.open-regels.nl/0.4.4/methods/roo</a> |
+| | | | <a>https://cprmv.open-regels.nl/0.4.4/methods/dso-service-register</a> |
+| | | | <a>https://cprmv.open-regels.nl/0.4.4/methods/dso</a> |
+| | | | <a>https://cprmv.open-regels.nl/0.4.4/methods/norms-backend.linkeddata.open-regels.nl</a> |
+| | | | <a>https://cprmv.open-regels.nl/0.4.4/methods/operaton.open-regels.nl</a> |
+| | | | <a>https://cprmv.open-regels.nl/0.4.4/methods/eucellar-fmx4</a> |
+| | | | <a>https://cprmv.open-regels.nl/0.4.4/methods/repository-overheid-nl-cvdr</a> |
+| | | | <a>https://cprmv.open-regels.nl/0.4.4/methods/repository-overheid-nl-bwb</a> |
+| | | | <a>https://cprmv.open-regels.nl/0.4.4/methods/repository-overheid-nl</a> |
+| | | | <a>https://cprmv.open-regels.nl/0.4.4/methods/operaton</a> |
+| | | | <a>https://cprmv.open-regels.nl/0.4.4/methods/sttr</a> |
+| | | | <a>https://cprmv.open-regels.nl/0.4.4/methods/dmn13</a> |
+| | | | <a>https://cprmv.open-regels.nl/0.4.4/methods/fmx4</a> |
+| | | | <a>https://cprmv.open-regels.nl/0.4.4/methods/cvdr</a> |
+| | | | <a>https://cprmv.open-regels.nl/0.4.4/methods/bwb</a> |
+| | | | <a>https://cprmv.open-regels.nl/0.4.4/methods/flint</a> |
+| | | | <a>https://cprmv.open-regels.nl/0.4.4/methods/jas</a> |
+| | | | <a>https://cprmv.open-regels.nl/0.4.4/methods/alef-regelspraak</a> |
 
 
 
@@ -63,12 +63,12 @@ properties:
 | Property | Type/Range | Cardinality | Definition |
 | --- | --- | --- | --- |
 | acknowledged |   | 0..1 | a list with RuleMethod's that are acknowledged as part of the rule methods value list. |
-| | | | <a>https://cprmv.open-regels.nl/0.4.3/methods/iou-norms</a> |
-| | | | <a>https://cprmv.open-regels.nl/0.4.3/methods/fmx4</a> |
-| | | | <a>https://cprmv.open-regels.nl/0.4.3/methods/cvdr</a> |
-| | | | <a>https://cprmv.open-regels.nl/0.4.3/methods/bwb</a> |
-| | | | <a>https://cprmv.open-regels.nl/0.4.3/methods/flint</a> |
-| | | | <a>https://cprmv.open-regels.nl/0.4.3/methods/jas</a> |
+| | | | <a>https://cprmv.open-regels.nl/0.4.4/methods/iou-norms</a> |
+| | | | <a>https://cprmv.open-regels.nl/0.4.4/methods/fmx4</a> |
+| | | | <a>https://cprmv.open-regels.nl/0.4.4/methods/cvdr</a> |
+| | | | <a>https://cprmv.open-regels.nl/0.4.4/methods/bwb</a> |
+| | | | <a>https://cprmv.open-regels.nl/0.4.4/methods/flint</a> |
+| | | | <a>https://cprmv.open-regels.nl/0.4.4/methods/jas</a> |
 
 
 
@@ -83,14 +83,14 @@ properties:
 | Property | Type/Range | Cardinality | Definition |
 | --- | --- | --- | --- |
 | acknowledged |   | 0..1 | a list with RuleMethod's that are acknowledged as part of the rule methods value list. |
-| | | | <a>https://cprmv.open-regels.nl/0.4.3/methods/regalgo</a> |
-| | | | <a>https://cprmv.open-regels.nl/0.4.3/methods/openfisca</a> |
-| | | | <a>https://cprmv.open-regels.nl/0.4.3/methods/catala</a> |
-| | | | <a>https://cprmv.open-regels.nl/0.4.3/methods/alef-regelspraak</a> |
-| | | | <a>https://cprmv.open-regels.nl/0.4.3/methods/regelrecht</a> |
-| | | | <a>https://cprmv.open-regels.nl/0.4.3/methods/iou-norms</a> |
-| | | | <a>https://cprmv.open-regels.nl/0.4.3/methods/sttr</a> |
-| | | | <a>https://cprmv.open-regels.nl/0.4.3/methods/dmn13</a> |
+| | | | <a>https://cprmv.open-regels.nl/0.4.4/methods/regalgo</a> |
+| | | | <a>https://cprmv.open-regels.nl/0.4.4/methods/openfisca</a> |
+| | | | <a>https://cprmv.open-regels.nl/0.4.4/methods/catala</a> |
+| | | | <a>https://cprmv.open-regels.nl/0.4.4/methods/alef-regelspraak</a> |
+| | | | <a>https://cprmv.open-regels.nl/0.4.4/methods/regelrecht</a> |
+| | | | <a>https://cprmv.open-regels.nl/0.4.4/methods/iou-norms</a> |
+| | | | <a>https://cprmv.open-regels.nl/0.4.4/methods/sttr</a> |
+| | | | <a>https://cprmv.open-regels.nl/0.4.4/methods/dmn13</a> |
 
 
 
@@ -105,13 +105,13 @@ properties:
 | Property | Type/Range | Cardinality | Definition |
 | --- | --- | --- | --- |
 | acknowledged |   | 0..1 | a list with RuleMethod's that are acknowledged as part of the rule methods value list. |
-| | | | <a>https://cprmv.open-regels.nl/0.4.3/methods/regelrecht</a> |
-| | | | <a>https://cprmv.open-regels.nl/0.4.3/methods/iou-norms</a> |
-| | | | <a>https://cprmv.open-regels.nl/0.4.3/methods/sttr</a> |
-| | | | <a>https://cprmv.open-regels.nl/0.4.3/methods/dmn13</a> |
-| | | | <a>https://cprmv.open-regels.nl/0.4.3/methods/fmx4</a> |
-| | | | <a>https://cprmv.open-regels.nl/0.4.3/methods/cvdr</a> |
-| | | | <a>https://cprmv.open-regels.nl/0.4.3/methods/bwb</a> |
+| | | | <a>https://cprmv.open-regels.nl/0.4.4/methods/regelrecht</a> |
+| | | | <a>https://cprmv.open-regels.nl/0.4.4/methods/iou-norms</a> |
+| | | | <a>https://cprmv.open-regels.nl/0.4.4/methods/sttr</a> |
+| | | | <a>https://cprmv.open-regels.nl/0.4.4/methods/dmn13</a> |
+| | | | <a>https://cprmv.open-regels.nl/0.4.4/methods/fmx4</a> |
+| | | | <a>https://cprmv.open-regels.nl/0.4.4/methods/cvdr</a> |
+| | | | <a>https://cprmv.open-regels.nl/0.4.4/methods/bwb</a> |
 
 
 
@@ -154,8 +154,8 @@ properties:
 | Property | Type/Range | Cardinality | Definition |
 | --- | --- | --- | --- |
 | acknowledged |   | 0..1 | a list with RuleMethod's that are acknowledged as part of the rule methods value list. |
-| | | | <a>https://cprmv.open-regels.nl/0.4.3/methods/regelrecht</a> |
-| | | | <a>https://cprmv.open-regels.nl/0.4.3/methods/operaton</a> |
+| | | | <a>https://cprmv.open-regels.nl/0.4.4/methods/regelrecht</a> |
+| | | | <a>https://cprmv.open-regels.nl/0.4.4/methods/operaton</a> |
 
 
 
@@ -170,17 +170,17 @@ properties:
 | Property | Type/Range | Cardinality | Definition |
 | --- | --- | --- | --- |
 | acknowledged |   | 0..1 | a list with RuleMethod's that are acknowledged as part of the rule methods value list. |
-| | | | <a>https://cprmv.open-regels.nl/0.4.3/methods/regelrecht</a> |
-| | | | <a>https://cprmv.open-regels.nl/0.4.3/methods/roo-catalogus</a> |
-| | | | <a>https://cprmv.open-regels.nl/0.4.3/methods/roo-uri</a> |
-| | | | <a>https://cprmv.open-regels.nl/0.4.3/methods/roo</a> |
-| | | | <a>https://cprmv.open-regels.nl/0.4.3/methods/dso-service-register</a> |
-| | | | <a>https://cprmv.open-regels.nl/0.4.3/methods/dso</a> |
-| | | | <a>https://cprmv.open-regels.nl/0.4.3/methods/norms-backend.linkeddata.open-regels.nl</a> |
-| | | | <a>https://cprmv.open-regels.nl/0.4.3/methods/operaton.open-regels.nl</a> |
-| | | | <a>https://cprmv.open-regels.nl/0.4.3/methods/eucellar-fmx4</a> |
-| | | | <a>https://cprmv.open-regels.nl/0.4.3/methods/repository-overheid-nl-cvdr</a> |
-| | | | <a>https://cprmv.open-regels.nl/0.4.3/methods/repository-overheid-nl-bwb</a> |
+| | | | <a>https://cprmv.open-regels.nl/0.4.4/methods/regelrecht</a> |
+| | | | <a>https://cprmv.open-regels.nl/0.4.4/methods/roo-catalogus</a> |
+| | | | <a>https://cprmv.open-regels.nl/0.4.4/methods/roo-uri</a> |
+| | | | <a>https://cprmv.open-regels.nl/0.4.4/methods/roo</a> |
+| | | | <a>https://cprmv.open-regels.nl/0.4.4/methods/dso-service-register</a> |
+| | | | <a>https://cprmv.open-regels.nl/0.4.4/methods/dso</a> |
+| | | | <a>https://cprmv.open-regels.nl/0.4.4/methods/norms-backend.linkeddata.open-regels.nl</a> |
+| | | | <a>https://cprmv.open-regels.nl/0.4.4/methods/operaton.open-regels.nl</a> |
+| | | | <a>https://cprmv.open-regels.nl/0.4.4/methods/eucellar-fmx4</a> |
+| | | | <a>https://cprmv.open-regels.nl/0.4.4/methods/repository-overheid-nl-cvdr</a> |
+| | | | <a>https://cprmv.open-regels.nl/0.4.4/methods/repository-overheid-nl-bwb</a> |
 
 
 
@@ -195,10 +195,10 @@ properties:
 | Property | Type/Range | Cardinality | Definition |
 | --- | --- | --- | --- |
 | acknowledged |   | 0..1 | a list with RuleMethod's that are acknowledged as part of the rule methods value list. |
-| | | | <a>https://cprmv.open-regels.nl/0.4.3/methods/elinl</a> |
-| | | | <a>https://cprmv.open-regels.nl/0.4.3/methods/elifmx4</a> |
-| | | | <a>https://cprmv.open-regels.nl/0.4.3/methods/juriconnect</a> |
-| | | | <a>https://cprmv.open-regels.nl/0.4.3/methods/cprmvapi</a> |
+| | | | <a>https://cprmv.open-regels.nl/0.4.4/methods/elinl</a> |
+| | | | <a>https://cprmv.open-regels.nl/0.4.4/methods/elifmx4</a> |
+| | | | <a>https://cprmv.open-regels.nl/0.4.4/methods/juriconnect</a> |
+| | | | <a>https://cprmv.open-regels.nl/0.4.4/methods/cprmvapi</a> |
 
 
 

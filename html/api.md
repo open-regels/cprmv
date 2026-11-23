@@ -15,7 +15,7 @@ This serialisation method is defined for support within API's that serve CPRMV m
  CPRMV API - Generic JSON Serialisation  Method
 
 
-subclass of: [https://cprmv.open-regels.nl/0.4.3/methods/module](https://cprmv.open-regels.nl/0.4.3/methods/module)
+subclass of: [https://cprmv.open-regels.nl/0.4.4/methods/module](https://cprmv.open-regels.nl/0.4.4/methods/module)
 
 
 subclass of: <a>SerialisationMethod</a>
@@ -44,7 +44,7 @@ This serialisation method is defined for support within API's that serve CPRMV m
  CPRMV API - Generic Web Publication Method
 
 
-subclass of: [https://cprmv.open-regels.nl/0.4.3/methods/module](https://cprmv.open-regels.nl/0.4.3/methods/module)
+subclass of: [https://cprmv.open-regels.nl/0.4.4/methods/module](https://cprmv.open-regels.nl/0.4.4/methods/module)
 
 
 subclass of: <a>PublicationMethod</a>
@@ -75,7 +75,7 @@ This publication method is defined for support within API's that serve CPRMV met
  CPRMV API - Generic API Publication Method
 
 
-subclass of: [https://cprmv.open-regels.nl/0.4.3/methods/module](https://cprmv.open-regels.nl/0.4.3/methods/module)
+subclass of: [https://cprmv.open-regels.nl/0.4.4/methods/module](https://cprmv.open-regels.nl/0.4.4/methods/module)
 
 
 subclass of: <a>core-web</a>
@@ -107,7 +107,7 @@ This serialisation method is defined for support within API's that serve CPRMV m
  CPRMV API - Generic XML Serialisation  Method
 
 
-subclass of: [https://cprmv.open-regels.nl/0.4.3/methods/module](https://cprmv.open-regels.nl/0.4.3/methods/module)
+subclass of: [https://cprmv.open-regels.nl/0.4.4/methods/module](https://cprmv.open-regels.nl/0.4.4/methods/module)
 
 
 subclass of: <a>SerialisationMethod</a>
