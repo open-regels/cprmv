@@ -1,0 +1,14 @@
+```puml
+@startuml
+!pragma layout elk
+left to right direction
+
+    object "dmn13" as dmn13 {
+    }
+    object "FormalisationMethod" as FormalisationMethod
+    object "core-xml" as core_xml
+    dmn13 --|> FormalisationMethod
+    dmn13 --|> core_xml
+
+@enduml
+```

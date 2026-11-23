@@ -1,0 +1,37 @@
+@base <http://example.com/> .
+@prefix cprmv: <https://standaarden.open-regels.nl/standards/cprmv/0.4.3#> .
+@prefix cprmv-serve: <https://cprmv.open-regels.nl/0.4.3/serve-api/> .
+@prefix cprmvmethods: <https://cprmv.open-regels.nl/0.4.3/methods/> .
+
+cprmvmethods:juriconnect a cprmvmethods:module;
+    a cprmv:ReferenceMethod;
+    cprmv:id "juriconnect"@en;
+    cprmv:id "juriconnect"@nl;
+    cprmv:comment "Juriconnect (not fully supported yet)";
+    cprmv-serve:reference-format 'jci1.{subversion}:c:BWB{bwbid}&{locatie-string}';
+    cprmv-serve:reference-mapping (
+        ( "aanwijzing" "Aanwijzing")
+        ( "afdeling" "Afdeling")
+        ( "artikel" "Artikel")
+        ( "bijlage" "Bijlage")
+        ( "boek" "Boek")
+        ( "deel" "Deel")
+        ( "enig" "enig")
+        ( "hoofdstuk" "Hoofdstuk")
+        ( "inhoudsopgave" "Inhoudsopgave")
+        ( "nummer" "nummer")
+        ( "paragraaf" "Paragraaf")
+        ( "sub-paragraaf" "Paragraaf")
+        ( "titeldeel" "Titeldeel")
+        ( "taal" "taal")
+        ( "verdragsonderdeel" "Verdragsonderdeel")
+        ( "lid" "lid")
+        ( "o" "onderdeel")
+        ( "volzin" "volzin")
+        ( "nummer" "nummer")
+        ( cprmv-serve:reference-mapping-valid-on "g")
+        ( cprmv-serve:reference-mapping-seen-on "z")
+    );
+    cprmvmethods:hasMethods (
+        cprmvmethods:juriconnect
+    ).

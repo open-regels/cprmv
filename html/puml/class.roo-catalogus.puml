@@ -1,0 +1,16 @@
+```puml
+@startuml
+!pragma layout elk
+left to right direction
+
+    object "roo-catalogus" as roo_catalogus {
+    }
+    object "OrganisationRegister" as OrganisationRegister
+    object "core-api" as core_api
+    object "core-json" as core_json
+    roo_catalogus --|> OrganisationRegister
+    roo_catalogus --|> core_api
+    roo_catalogus --|> core_json
+
+@enduml
+```

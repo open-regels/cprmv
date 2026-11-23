@@ -1,0 +1,14 @@
+```puml
+@startuml
+!pragma layout elk
+left to right direction
+
+    object "operaton" as operaton {
+    }
+    object "dmn13" as dmn13
+    object "ExecutionMethod" as ExecutionMethod
+    operaton --|> dmn13
+    operaton --|> ExecutionMethod
+
+@enduml
+```

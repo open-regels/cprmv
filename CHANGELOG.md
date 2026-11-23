@@ -4,6 +4,23 @@ This changelog is going to be maintained starting from CPRMV / CPRMV API v0.4.0.
 Usage of earlier versions is deprecated and at own risk.   
 Note that CPRMV / CPRMV API still is highly subjected to change.   
 
+**v0.4.3**
+- **A RuleSet is now a frbr:Endeavor as it can be a Work, Expression, Manifestation or an Item. This makes the CPRMV applicable to any of these. Note that RuleMethods may be focused on only certain types of Endeavors**
+- **Adds support for the concept of method modules (that can bundle multiple methods) and documents all method modules, including the core methods, as part of the ReSpec documentation. There, links to working examples are provided.** 
+- **Entirely new first two introductory chapters of the ReSpec documentation**
+- **The ReSpec documentation includes generated class diagrams for each owl class**
+- **Examples and link to RDF definitions in the ReSpec documentation**  
+- **fixes the broken PDF variant generation of the ReSpec documentation**
+
+**v0.4.3 CPRMV API**
+- **Supports the changes in the CPRMV vocabulary version 0.4.3**
+- **Adds initial and basic support for Service Register and OrganisationRegister methods**
+- **Adds support for method modules: core_api, roo (an OrganisationRegister method), sttr, dso (including an implied ServiceRegister) and iou (the Norms API)**
+- **Deprecated helper endpoints relating to EU Cellar are removed**
+- **Description for the/rules endpoint has been shortened. It still provides a short list of examples that should work, but the more extensive documentation of how methods can be used is now contained in the ReSpec documentation**
+- **Adds /raw endpoint with which the referenced unprocessed raw publication file can be retrieved as a download. The prov:wasDerivedFrom is dropped because you can now use this endpoint to access the content it was derived from. The original location this content is fetched from can be found from the method configuration. This will support using the CPRMV API as a gateway lateron**
+- **Adds method_name argument to /methods endpoint with which only a single method can be selected such that only the knowledge of that method is returned**
+- **Adds /0.4.3/methods variant endpoint of /methods that resolves to a single method. A method module defines methods that when listed in value lists in the ReSpec documentation will make them resolve to this for now.**
 
 **v0.4.2 CPRMV**  
 - **Adds concepts about Echelons to which RuleMethod's can be related and categorised linked to Service Management and Design Science Research**

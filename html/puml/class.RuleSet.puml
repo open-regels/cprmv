@@ -1,0 +1,20 @@
+```puml
+@startuml
+!pragma layout elk
+left to right direction
+
+    object "RuleSet" as RuleSet {
+        id
+        validFrom : xsd:date
+        validUntil : xsd:date
+        publishedOn : xsd:date
+    }
+    object "RuleMethod" as RuleMethod
+    object "Resource" as Resource
+    RuleSet --> "0..*" Rule : hasPart
+    RuleSet --> "0..*" RuleSet : isBasedOn
+    RuleSet --> "1..*" RuleMethod : hasMethod
+    RuleSet --> "0..*" Resource : comment
+
+@enduml
+```

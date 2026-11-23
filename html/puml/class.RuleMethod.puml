@@ -1,0 +1,18 @@
+```puml
+@startuml
+!pragma layout elk
+left to right direction
+
+    object "RuleMethod" as RuleMethod {
+        id
+    }
+    object "Method" as Method
+    object "Resource" as Resource
+    object "Echelon" as Echelon
+    RuleMethod --|> Method
+    RuleMethod --> "0..*" Resource : comment
+    RuleMethod --> "0..*" Echelon : refinesTowards
+    RuleMethod --> "0..*" Echelon : refinesFrom
+
+@enduml
+```

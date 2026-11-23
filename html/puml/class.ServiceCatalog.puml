@@ -1,0 +1,14 @@
+```puml
+@startuml
+!pragma layout elk
+left to right direction
+
+    object "ServiceCatalog" as ServiceCatalog {
+    }
+    object "RuleSet" as RuleSet
+    object "ServiceRegister" as ServiceRegister
+    ServiceCatalog --|> RuleSet
+    ServiceCatalog --> "1..*" ServiceRegister : hasMethod
+
+@enduml
+```

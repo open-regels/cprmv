@@ -1,0 +1,12 @@
+```puml
+@startuml
+!pragma layout elk
+left to right direction
+
+    object "Analysis" as Analysis {
+    }
+    object "RuleSet" as RuleSet
+    Analysis --|> RuleSet
+
+@enduml
+```

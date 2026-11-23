@@ -1,0 +1,16 @@
+```puml
+@startuml
+!pragma layout elk
+left to right direction
+
+    object "dso-service-register" as dso_service_register {
+    }
+    object "ServiceRegister" as ServiceRegister
+    object "core-api" as core_api
+    object "core-json" as core_json
+    dso_service_register --|> ServiceRegister
+    dso_service_register --|> core_api
+    dso_service_register --|> core_json
+
+@enduml
+```

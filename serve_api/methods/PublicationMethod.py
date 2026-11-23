@@ -1,11 +1,25 @@
 from datetime import datetime
 from parse import parse
 from RuleMethod import RuleMethod
-from utils.constants import CPRMVSERVE
+from utils.constants import CPRMV, CPRMVSERVE
+from rdflib.namespace import RDF
 import os
 
 # publication method implementations must override / define the (abstract) methods in this class
 class PublicationMethod(RuleMethod):
+
+    def __init__(self, app, method_config):
+        super().__init__(app, method_config)
+        self.service_register = None
+        self.organisation_register = None
+        cprmvMethods = self.app.cprmvsettings["CPRMVMETHODS_KG"]
+        reg = cprmvMethods.value(self.config, CPRMVSERVE["utilizes"])
+        if (reg, RDF.type, CPRMV.ServiceRegister) in cprmvMethods:
+            print(f"{self.config} utilizes service register method: {reg}")
+            self.service_register = reg
+        elif (reg, RDF.type, CPRMV.OrganisationRegister) in cprmvMethods:
+            print(f"{self.config} utilizes organisation register method: {reg}")
+            self.organisation_register = reg
 
     def valid_date(self, datestr):
         try:

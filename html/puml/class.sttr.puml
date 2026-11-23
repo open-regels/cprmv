@@ -1,0 +1,14 @@
+```puml
+@startuml
+!pragma layout elk
+left to right direction
+
+    object "sttr" as sttr {
+    }
+    object "FormalisationMethod" as FormalisationMethod
+    object "core-xml" as core_xml
+    sttr --|> FormalisationMethod
+    sttr --|> core_xml
+
+@enduml
+```

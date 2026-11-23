@@ -1,0 +1,9 @@
+@base <http://example.com/> .
+@prefix cprmv: <https://standaarden.open-regels.nl/standards/cprmv/0.4.3#> .
+@prefix cprmv-serve: <https://cprmv.open-regels.nl/0.4.3/serve-api/> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+
+cprmv-serve:core-turtle a cprmv:SerialisationMethod;
+    cprmv:id "core.turtle"@nl;
+    cprmv:label "CPRMV API - Generic Turtle Serialisation Method";
+    cprmv:comment "CPRMV API - Generic Turtle Serialisation  Method".

@@ -1,0 +1,24 @@
+@base <http://example.com/> .
+@prefix cprmv: <https://standaarden.open-regels.nl/standards/cprmv/0.4.3#> .
+@prefix cprmv-serve: <https://cprmv.open-regels.nl/0.4.3/serve-api/> .
+@prefix cprmvmethods: <https://cprmv.open-regels.nl/0.4.3/methods/> .
+
+cprmvmethods:open-regels.nl a cprmvmethods:module;
+    cprmv:id "open-regels.nl"@nl;
+    cprmv:label "open-regels.nl IOU showcase environment";
+    cprmvmethods:hasMethods (
+        cprmvmethods:operaton.open-regels.nl
+        cprmvmethods:norms-backend.linkeddata.open-regels.nl
+    ).
+
+cprmvmethods:operaton.open-regels.nl a cprmvmethods:iou-operaton;
+    cprmv:id "operaton.open-regels.nl"@nl;
+    cprmv:label "Operaton as repository at open-regels.nl IOU showcase environment";
+    cprmv:comment "zie open-regels.nl"@nl;
+    cprmv-serve:repository-publication-location-format "https://operaton.open-regels.nl/engine-rest/deployment/{deploymentid}/resources/{resourceid}/data".
+
+cprmvmethods:norms-backend.linkeddata.open-regels.nl a cprmvmethods:iou-norms;
+    cprmv:id "norms-backend.linkeddata.open-regels.nl"@nl;
+    cprmv:label "Norms management at open-regels.nl IOU showcase environment";
+    cprmv:comment "zie open-regels.nl"@nl;
+    cprmv-serve:repository-publication-location-format "https://acc.backend.linkeddata.open-regels.nl/v2/norms/?rulesetid={rulesetid}&valid-on={date}".

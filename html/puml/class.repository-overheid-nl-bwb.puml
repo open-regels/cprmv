@@ -1,0 +1,12 @@
+```puml
+@startuml
+!pragma layout elk
+left to right direction
+
+    object "repository-overheid-nl-bwb" as repository_overheid_nl_bwb {
+    }
+    object "bwb" as bwb
+    repository_overheid_nl_bwb --|> bwb
+
+@enduml
+```

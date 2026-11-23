@@ -31,14 +31,14 @@ var organisationConfig = {
                 url: "https://www.logius.nl/standaarden",
             },
             ],
-    
+
     postProcess: [window.respecMermaid.createFigures, fixGitLabLinks],
-    
+
     // Original config
     //    latestVersion: ["nl_organisationPublishURL", "pubDomain", "/", "shortName"],
     //    thisVersion: ["nl_organisationPublishURL", "pubDomain", "/", "specStatus", "-", "specType", "-", "shortName", "-", "publishDate"],
     //    prevVersion: ["nl_organisationPublishURL", "pubDomain", "/", "previousMaturity", "-", "specType", "-", "shortName", "-", "previousPublishDate"],
-    
+
     latestVersion: ["nl_organisationPublishURL", "shortName"],
     thisVersion: [
         "nl_organisationPublishURL",
@@ -54,10 +54,10 @@ var organisationConfig = {
     ],
     useLogo: true,
     useLabel: true,
-    
+
     license: "CC0",
     addSectionLinks: true,
-    
+
     localizationStrings: {
         en: {
             wv: "Draft",
@@ -98,7 +98,7 @@ var organisationConfig = {
             fpwd: "Eerste publieke werkversie",
         },
     },
-    
+
     sotdText: {
         nl: {
             sotd: "Status van dit document",
@@ -119,13 +119,13 @@ var organisationConfig = {
             fpwd: `This is a draft that could be altered, removed or replaced by other documents. It is not a recommendation approved by TO.`,
         },
     },
-    
+
     labelColor: {
         def: "#154273",
         wv: "#39870c",
         fpwd: "#39870c"
     },
-    
+
     licenses: {
         "cc0": {
             name: "Creative Commons 0 Public Domain Dedication",
@@ -149,7 +149,7 @@ var organisationConfig = {
             "./media/logos/cc-by-nd.svg",
         },
     },
-    
+
     localBiblio: {
         "SemVer": {
             href: "https://semver.org",
@@ -198,10 +198,16 @@ var organisationConfig = {
             date: "",
         },
         "CPRMV": {
-            href: "https://standaarden.open-regels.nl/standards/cprmv/0.4.2/",
+            href: "https://standaarden.open-regels.nl/standards/cprmv/0.4.3/",
             title: "Core Public Rule Management Vocabulary (CPRMV)",
             authors: ["ministerie van Binnenlandse Zaken en Koninkrijksrelaties."],
             date: "",
+        },
+        "GT4ASGA2PILOT8": {
+          href: "https://digicampus.gitlab.io/gt4a/sga2-wp8/",
+          title: "GovTech4All SGA2 WP2 Pilot 8",
+          authors: ["GRNET, ICTU, DINUM, LANTIK"],
+          date: "",
         },
         "LM": {
             href: "https://regels.overheid.nl/publicaties/legitimaat",

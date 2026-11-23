@@ -1,0 +1,14 @@
+```puml
+@startuml
+!pragma layout elk
+left to right direction
+
+    object "fmx4" as fmx4 {
+    }
+    object "AnalysisMethod" as AnalysisMethod
+    object "core-xml" as core_xml
+    fmx4 --|> AnalysisMethod
+    fmx4 --|> core_xml
+
+@enduml
+```

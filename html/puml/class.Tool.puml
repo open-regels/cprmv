@@ -1,0 +1,12 @@
+```puml
+@startuml
+!pragma layout elk
+left to right direction
+
+    object "Tool" as Tool {
+    }
+    object "Instrument" as Instrument
+    Tool --|> Instrument
+
+@enduml
+```
