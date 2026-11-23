@@ -11,7 +11,7 @@ from utils.constants import CPRMV, CPRMVSERVE
 from rdflib import Namespace
 import os
 
-FRBR_SRU = Namespace("https://cprmv.open-regels.nl/0.4.2/methods/frbr-sru/")
+FRBR_SRU = Namespace("https://cprmv.open-regels.nl/0.4.3/methods/frbr-sru/")
 
 class frbr_sru(core_web):
 
@@ -35,19 +35,19 @@ class frbr_sru(core_web):
         frbr_valid_from_term_ns = str(cprmvMethods.value(self.config, FRBR_SRU["response-from-date-term-namespace"]))
         frbr_valid_from_term = str(cprmvMethods.value(self.config, FRBR_SRU["response-from-date-term"]))
         fvft_prefix = 'fvft'
-        print("OK")
+        #print("OK")
         frbr_valid_from_xpath = '//'+fvft_prefix+':'+frbr_valid_from_term
         frbr_sru_response_publoc_term_ns = str(cprmvMethods.value(self.config, FRBR_SRU["response-publication-location-term-namespace"]))
         frbr_sru_response_publoc_term = str(cprmvMethods.value(self.config, FRBR_SRU["response-publication-location-term"]))
         fsrpt_prefix = 'fsrpt'
-        print("OKOK")
+        #print("OKOK")
         frbr_publoc_format = str(cprmvMethods.value(self.config, CPRMVSERVE["repository-publication-location-format"]))
-        print(f"test: {frbr_sru_response_publoc_term}")
+        #print(f"test: {frbr_sru_response_publoc_term}")
         frbr_publoc_xpath = '//'+fsrpt_prefix+':'+frbr_sru_response_publoc_term
         sru_url = frbr_sru_url_format.format_map(publication[CPRMVSERVE['id_parts']])
-        print("OKOK3")
+        #print("OKOK3")
         methodLabel = cprmvMethods.value(self.config, CPRMV.label)
-        print("OKOKOK")
+        #print("OKOKOK")
         try:
             print(f"retrieving versioning information through SRU service: {sru_url}")
             req = Request(sru_url)

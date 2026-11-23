@@ -1,0 +1,14 @@
+```puml
+@startuml
+!pragma layout elk
+left to right direction
+
+    object "DecisionModel" as DecisionModel {
+    }
+    object "RuleSet" as RuleSet
+    object "Analysis" as Analysis
+    DecisionModel --|> RuleSet
+    DecisionModel --> "0..*" Analysis : hasAnalysis
+
+@enduml
+```

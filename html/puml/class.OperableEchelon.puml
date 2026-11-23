@@ -1,0 +1,12 @@
+```puml
+@startuml
+!pragma layout elk
+left to right direction
+
+    object "OperableEchelon" as OperableEchelon {
+    }
+    object "Echelon" as Echelon
+    OperableEchelon --|> Echelon
+
+@enduml
+```

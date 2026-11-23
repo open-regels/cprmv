@@ -1,0 +1,13 @@
+```puml
+@startuml
+!pragma layout elk
+left to right direction
+
+    object "core-web" as core_web {
+        
+    }
+    object "PublicationMethod" as PublicationMethod
+    core_web --|> PublicationMethod
+
+@enduml
+```

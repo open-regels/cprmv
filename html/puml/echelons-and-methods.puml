@@ -1,0 +1,69 @@
+```puml
+@startuml
+!pragma layout elk
+left to right direction
+
+package cprmv {
+    object "Method" as Method {
+    }
+    object "RuleMethod" as RuleMethod {
+        id
+    }
+    object "AnalysisMethod" as AnalysisMethod {
+    }
+    object "FormalisationMethod" as FormalisationMethod {
+    }
+    object "SerialisationMethod" as SerialisationMethod {
+    }
+    object "CodificationMethod" as CodificationMethod {
+    }
+    object "ExecutionMethod" as ExecutionMethod {
+    }
+    object "ExplanationMethod" as ExplanationMethod {
+    }
+    object "TestMethod" as TestMethod {
+    }
+    object "PublicationMethod" as PublicationMethod {
+    }
+    object "ReferenceMethod" as ReferenceMethod {
+    }
+    object "Echelon" as Echelon {
+    }
+    object "NaturalEchelon" as NaturalEchelon {
+    }
+    object "SemanticEchelon" as SemanticEchelon {
+    }
+    object "OntologicEchelon" as OntologicEchelon {
+    }
+    object "LogicEchelon" as LogicEchelon {
+    }
+    object "OperableEchelon" as OperableEchelon {
+    }
+    object "SupportEchelon" as SupportEchelon {
+    }
+    object "Instrument" as Instrument
+    object "Resource" as Resource
+    Method --|> Instrument
+    RuleMethod --|> Method
+    RuleMethod --> "0..*" Resource : comment
+    RuleMethod --> "0..*" Echelon : refinesTowards
+    RuleMethod --> "0..*" Echelon : refinesFrom
+    AnalysisMethod --|> RuleMethod
+    FormalisationMethod --|> RuleMethod
+    SerialisationMethod --|> RuleMethod
+    CodificationMethod --|> RuleMethod
+    ExecutionMethod --|> RuleMethod
+    ExplanationMethod --|> RuleMethod
+    TestMethod --|> RuleMethod
+    PublicationMethod --|> RuleMethod
+    ReferenceMethod --|> PublicationMethod
+    NaturalEchelon --|> Echelon
+    SemanticEchelon --|> Echelon
+    OntologicEchelon --|> Echelon
+    LogicEchelon --|> Echelon
+    OperableEchelon --|> Echelon
+    SupportEchelon --|> Echelon
+
+}
+@enduml
+```

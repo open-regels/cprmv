@@ -1,0 +1,14 @@
+```puml
+@startuml
+!pragma layout elk
+left to right direction
+
+    object "cvdr" as cvdr {
+    }
+    object "AnalysisMethod" as AnalysisMethod
+    object "core-xml" as core_xml
+    cvdr --|> AnalysisMethod
+    cvdr --|> core_xml
+
+@enduml
+```

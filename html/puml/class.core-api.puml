@@ -1,0 +1,13 @@
+```puml
+@startuml
+!pragma layout elk
+left to right direction
+
+    object "core-api" as core_api {
+        api-base-url
+        api-headers
+        http-method
+    }
+
+@enduml
+```

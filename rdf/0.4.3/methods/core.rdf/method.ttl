@@ -1,0 +1,11 @@
+@base <http://example.com/> .
+@prefix cprmv: <https://standaarden.open-regels.nl/standards/cprmv/0.4.3#> .
+@prefix cprmv-serve: <https://cprmv.open-regels.nl/0.4.3/serve-api/> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+
+cprmv-serve:core-rdf a cprmv:core-web;
+    cprmv:id "core.rdf"@nl;
+    cprmv:label "CPRMV API - Generic RDF Publication Method";
+    cprmv:comment "CPRMV API - Generic RDF Publication Method".

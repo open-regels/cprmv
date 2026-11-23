@@ -1,0 +1,32 @@
+@base <http://example.com/> .
+@prefix cprmv: <https://standaarden.open-regels.nl/standards/cprmv/0.4.3#> .
+@prefix cprmvmethods: <https://cprmv.open-regels.nl/0.4.3/methods/> .
+@prefix cprmv-serve: <https://cprmv.open-regels.nl/0.4.3/serve-api/> .
+@prefix core-api: <https://cprmv.open-regels.nl/0.4.3/methods/core-api#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+
+cprmv-serve:core-api a cprmvmethods:module;
+    a cprmv:core-web;
+    cprmv:id "core.api"@nl;
+    cprmv:label "CPRMV API - Generic API Publication Method";
+    cprmv:comment "CPRMV API - Generic API Publication Method";
+    cprmvmethods:hasMethods (
+        cprmv-serve:core-api
+    ).
+
+core-api:api-base-url a owl:ObjectProperty;
+    skos:prefLabel "api-base-url"@en;
+    skos:definition "The base URL of the API"@en;
+    rdfs:domain cprmv-serve:core-api.
+
+core-api:api-headers a owl:ObjectProperty;
+    skos:prefLabel "api-headers"@en;
+    skos:definition "The headers to use in requests to the API"@en;
+    rdfs:domain cprmv-serve:core-api.
+
+core-api:http-method a owl:ObjectProperty;
+    skos:prefLabel "HTTP method"@en;
+    skos:definition "The HTTP method with which to access the API. (default=GET)"@en;
+    rdfs:domain cprmv-serve:core-api.

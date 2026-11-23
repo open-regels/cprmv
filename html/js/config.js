@@ -9,18 +9,18 @@ let respecConfig = {
 
   // shortName = Repository name
   shortName: "cprmv",
-  publishDate: "2026-10-02",
-  publishVersion: "0.4.2",
+  publishDate: "2026-11-06",
+  publishVersion: "0.4.3",
 
-  previousPublishVersion: "0.4.1",
-  previousPublishDate: "2026-04-20",
+  previousPublishVersion: "0.4.2",
+  previousPublishDate: "2026-10-02",
   previousMaturity: "fpwd",
   title: "CPRMV",
   subtitle:
     "Core Public Rule Management Vocabulary (CPRMV), extending the Interoperable Europe standards towards a standard for Public Rule Management",
 
   // Content
-  content: { ch01: "informative", ch02: "informative", ch03: "conformance", methods: "conformance", api: "conformance"},
+  content: { ch01: "informative", ch02: "informative", ch03: "conformance", methods: "conformance", modules: "conformance", api: "conformance"},
   editors: [
     {
       name: "Steven Gort",
@@ -37,11 +37,15 @@ let respecConfig = {
   ],
   authors: [
     {
-      name: "Steven Gort",
+      name: "Bas Kaptijn",
       url: "https://www.ictu.nl",
     },
     {
-      name: "Bas Kaptijn",
+      name: "Marco Brattinga",
+      url: "https://www.soprasteria.com",
+    },
+    {
+      name: "Steven Gort",
       url: "https://www.ictu.nl",
     },
     {

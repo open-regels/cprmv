@@ -1,0 +1,18 @@
+```puml
+@startuml
+!pragma layout elk
+left to right direction
+
+    object "Rule" as Rule {
+        id
+    }
+    object "Resource" as Resource
+    Rule --> "0..*" Rule : isBasedOn
+    Rule --> "0..*" Rule : hasPart
+    Rule --> "0..1" Resource : definition
+    Rule --> "0..1" Resource : postDefinition
+    Rule --> "0..*" Resource : comment
+    Rule --> "0..*" Resource : sourcequote
+
+@enduml
+```

@@ -1,0 +1,27 @@
+@base <http://example.com/> .
+@prefix cprmv: <https://standaarden.open-regels.nl/standards/cprmv/0.4.3#> .
+@prefix cprmv-serve: <https://cprmv.open-regels.nl/0.4.3/serve-api/> .
+@prefix cprmvmethods: <https://cprmv.open-regels.nl/0.4.3/methods/> .
+
+cprmvmethods:iou a cprmvmethods:module;
+    cprmv:id "iou"@nl;
+    cprmv:label "IOU";
+    cprmvmethods:hasMethods (
+        cprmvmethods:iou-norms
+        cprmvmethods:iou-operaton
+    ).
+
+cprmvmethods:iou-norms a cprmv-serve:core-api;
+    a cprmv-serve:core-json;
+    cprmv:id "iou-norms"@nl;
+    cprmv:label "IOU Norms Management";
+    cprmv:comment "Sets of Norms from IOU Norms API V2 based on legal rules or Norm change announcement publications ahead of changes in legal rules";
+    cprmv-serve:publication-id-format "IOU-NORMS_{rulesetid}_{date}";
+    cprmv-serve:normalized-id-format "IOU-NORMS_{rulesetid}_{date}_{index}".
+
+cprmvmethods:iou-operaton a cprmvmethods:operaton;
+    cprmv:id "iou-operaton"@nl;
+    cprmv:label "Operaton as repository in an IOU environment";
+    cprmv:comment "zie open-regels.nl"@nl;
+    cprmv-serve:publication-id-format "DMN1.3_{deploymentid}R{resourceid}_{date}_{index}";
+    cprmv-serve:normalized-id-format "DMN1.3_{rulesetid}_{date}_{index}".

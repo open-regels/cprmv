@@ -1,0 +1,12 @@
+```puml
+@startuml
+!pragma layout elk
+left to right direction
+
+    object "repository-overheid-nl-cvdr" as repository_overheid_nl_cvdr {
+    }
+    object "cvdr" as cvdr
+    repository_overheid_nl_cvdr --|> cvdr
+
+@enduml
+```

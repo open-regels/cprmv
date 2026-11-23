@@ -4,128 +4,39 @@
 left to right direction
 
 package cprmv {
+    object "Instrument" as Instrument {
+    }
+    object "Method" as Method {
+    }
     object "RuleSet" as RuleSet {
         id
         validFrom : xsd:date
         validUntil : xsd:date
         publishedOn : xsd:date
-        hasPart
-    }
-    object "Analysis" as Analysis {
-    }
-    object "DecisionModel" as DecisionModel {
     }
     object "Rule" as Rule {
         id
-        hasPart
-    }
-    object "Parameter" as Parameter {
     }
     object "RuleMethod" as RuleMethod {
         id
     }
-    object "AnalysisMethod" as AnalysisMethod {
-    }
-    object "FormalisationMethod" as FormalisationMethod {
-    }
-    object "SerialisationMethod" as SerialisationMethod {
-    }
-    object "CodificationMethod" as CodificationMethod {
-    }
-    object "ExecutionMethod" as ExecutionMethod {
-    }
-    object "ExplanationMethod" as ExplanationMethod {
-    }
-    object "TestMethod" as TestMethod {
-    }
-    object "PublicationMethod" as PublicationMethod {
-    }
-    object "OrganisationRegister" as OrganisationRegister {
-    }
-    object "AcknowledgedOrganisation" as AcknowledgedOrganisation {
-        acknowledges
-    }
-    object "OrganisationCatalog" as OrganisationCatalog {
-    }
-    object "ServiceRegister" as ServiceRegister {
-    }
-    object "AcknowledgedService" as AcknowledgedService {
-        acknowledges
-    }
-    object "ServiceCatalog" as ServiceCatalog {
-    }
-    object "ReferenceMethod" as ReferenceMethod {
-    }
-    object "Explanation" as Explanation {
-    }
-    object "TestCase" as TestCase {
-    }
-    object "TestSet" as TestSet {
-    }
-    object "Decision" as Decision {
-    }
-    object "Case" as Case {
-    }
-    object "Echelon" as Echelon {
-    }
-    object "AgreementEchelon" as AgreementEchelon {
-    }
-    object "SemanticEchelon" as SemanticEchelon {
-    }
-    object "OntologicEchelon" as OntologicEchelon {
-    }
-    object "LogicEchelon" as LogicEchelon {
-    }
-    object "OperableEchelon" as OperableEchelon {
-    }
-    object "SupportEchelon" as SupportEchelon {
-    }
+    object "Resource" as Resource
+    object "Echelon" as Echelon
+    Method --|> Instrument
     RuleSet --> "0..*" RuleSet : isBasedOn
-    RuleSet --> "1..*" PublicService : isOutputOf
     RuleSet --> "1..*" RuleMethod : hasMethod
     RuleSet --> "0..*" Resource : comment
-    Analysis --|> RuleSet
-    DecisionModel --> "0..*" Analysis : hasAnalysis
-    DecisionModel --|> RuleSet
+    RuleSet --> "0..*" Rule : hasPart
     Rule --> "0..*" Rule : isBasedOn
+    Rule --> "0..*" Rule : hasPart
     Rule --> "0..1" Resource : definition
     Rule --> "0..1" Resource : postDefinition
     Rule --> "0..*" Resource : comment
     Rule --> "0..*" Resource : sourcequote
-    Parameter --|> Rule
+    RuleMethod --|> Method
     RuleMethod --> "0..*" Resource : comment
     RuleMethod --> "0..*" Echelon : refinesTowards
     RuleMethod --> "0..*" Echelon : refinesFrom
-    AnalysisMethod --|> RuleMethod
-    FormalisationMethod --|> RuleMethod
-    SerialisationMethod --|> RuleMethod
-    CodificationMethod --|> RuleMethod
-    ExecutionMethod --|> RuleMethod
-    ExplanationMethod --|> RuleMethod
-    TestMethod --|> RuleMethod
-    PublicationMethod --|> RuleMethod
-    OrganisationRegister --|> PublicationMethod
-    AcknowledgedOrganisation --|> Rule
-    OrganisationCatalog --> "1..*" OrganisationRegister : hasMethod
-    OrganisationCatalog --|> RuleSet
-    ServiceRegister --|> PublicationMethod
-    AcknowledgedService --|> Rule
-    ServiceCatalog --> "1..*" ServiceRegister : hasMethod
-    ServiceCatalog --|> RuleSet
-    ReferenceMethod --|> PublicationMethod
-    Explanation --> "1..1" RuleSet : explains
-    Explanation --> "1..1" Rule : explains
-    Explanation --|> Rule
-    TestCase --|> Case
-    TestSet --|> RuleSet
-    Decision --|> Rule
-    Case --|> Rule
-    AgreementEchelon --|> Echelon
-    SemanticEchelon --|> Echelon
-    OntologicEchelon --|> Echelon
-    LogicEchelon --|> Echelon
-    OperableEchelon --|> Echelon
-    SupportEchelon --|> Echelon
 
 }
 
@@ -160,7 +71,7 @@ package "cpsv-ap v3.2.0 (relevant part)" as cpsv-ap {
 
 
 RuleSet --> "1..1" frbrooWork : isBasedOn
-RuleSet  -[dotted]-> service : "output-of"
+RuleSet  -[dotted]-> service : "isOutputOf"
 output <|--  RuleSet
 frbrooWork <|--  RuleSet
 

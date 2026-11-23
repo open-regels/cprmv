@@ -1,0 +1,11 @@
+```puml
+@startuml
+!pragma layout elk
+left to right direction
+
+    object "codificationmethods" as codificationmethods {
+        
+    }
+
+@enduml
+```

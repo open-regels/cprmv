@@ -1,0 +1,12 @@
+```puml
+@startuml
+!pragma layout elk
+left to right direction
+
+    object "ExplanationMethod" as ExplanationMethod {
+    }
+    object "RuleMethod" as RuleMethod
+    ExplanationMethod --|> RuleMethod
+
+@enduml
+```

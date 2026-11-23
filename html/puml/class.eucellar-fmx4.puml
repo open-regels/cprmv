@@ -1,0 +1,14 @@
+```puml
+@startuml
+!pragma layout elk
+left to right direction
+
+    object "eucellar-fmx4" as eucellar_fmx4 {
+    }
+    object "core-web" as core_web
+    object "fmx4" as fmx4
+    eucellar_fmx4 --|> core_web
+    eucellar_fmx4 --|> fmx4
+
+@enduml
+```

@@ -1,0 +1,10 @@
+```puml
+@startuml
+!pragma layout elk
+left to right direction
+
+    object "core-markdown" as core_markdown {
+    }
+
+@enduml
+```

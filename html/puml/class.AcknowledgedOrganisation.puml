@@ -1,0 +1,13 @@
+```puml
+@startuml
+!pragma layout elk
+left to right direction
+
+    object "AcknowledgedOrganisation" as AcknowledgedOrganisation {
+        acknowledges
+    }
+    object "Rule" as Rule
+    AcknowledgedOrganisation --|> Rule
+
+@enduml
+```

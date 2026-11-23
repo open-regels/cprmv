@@ -3,20 +3,19 @@
   <xsl:output method="text" encoding="UTF-8" indent="yes"/>
   <xsl:param name="cprmvid" select="''"/>
   <xsl:param name="puburl" select="''"/>
-  
+
   <xsl:template match="text()"/>
-  
+
   <xsl:template match="/toestand">
     <xsl:text xml:space="preserve">@base &lt;http://example.com/&gt; .
 @prefix cpsv: &lt;http://purl.org/vocab/cpsv#&gt; .
-@prefix cprmv: &lt;https://standaarden.open-regels.nl/standards/cprmv/0.4.2#&gt; .
-@prefix cprmvmethods: &lt;https://cprmv.open-regels.nl/0.4.2/methods/&gt; .
+@prefix cprmv: &lt;https://standaarden.open-regels.nl/standards/cprmv/0.4.3#&gt; .
+@prefix cprmvmethods: &lt;https://cprmv.open-regels.nl/0.4.3/methods/&gt; .
 @prefix prov: &lt;http://www.w3.org/ns/prov#&gt; .
 @prefix xsd: &lt;http://www.w3.org/2001/XMLSchema#&gt; .
 @prefix overheid: &lt;http://standaarden.overheid.nl/owms/terms/&gt; .
 @prefix tooibwb: &lt;https://identifier.overheid.nl/tooi/thes/bwb&gt; .
 &lt;http://cprmv.open-regels.nl/</xsl:text><xsl:value-of select="concat(./@bwb-id,'-',./@inwerkingtreding)"/><xsl:text xml:space="preserve">&gt; a cprmv:RuleSet;
-    prov:wasDerivedFrom &lt;</xsl:text><xsl:value-of select="$puburl"/><xsl:text xml:space="preserve">&gt;;
     cprmv:id "</xsl:text><xsl:value-of select="$cprmvid"/><xsl:text xml:space="preserve">"@nl;
     cprmv:validFrom "</xsl:text><xsl:value-of select="./@inwerkingtreding"/><xsl:text xml:space="preserve">"^^xsd:date;
     cprmv:hasMethod cprmvmethods:bwb;
@@ -39,7 +38,7 @@
         cprmv:hasPart (</xsl:text><xsl:apply-templates select="afdeling|paragraaf|artikel"/><xsl:text xml:space="preserve">)</xsl:text></xsl:if><xsl:text xml:space="preserve">
     ]</xsl:text>
   </xsl:template>
-  
+
   <xsl:template match="afdeling"><xsl:text xml:space="preserve">[
             a cprmv:Rule;
             cprmv:id "</xsl:text><xsl:value-of select="@label"/><xsl:text xml:space="preserve">"@nl</xsl:text><xsl:if test="./kop/titel"><xsl:text xml:space="preserve">;
@@ -47,7 +46,7 @@
             cprmv:hasPart (</xsl:text><xsl:apply-templates select="artikel"><xsl:with-param name="indent" select="true()"/></xsl:apply-templates><xsl:text xml:space="preserve">)</xsl:text></xsl:if><xsl:text xml:space="preserve">
         ]</xsl:text>
   </xsl:template>
-      
+
   <xsl:template match="circulaire.divisie"><xsl:text xml:space="preserve">[
             a cprmv:Rule;
             cprmv:id "</xsl:text><xsl:value-of select="@label"/><xsl:text xml:space="preserve">"@nl</xsl:text><xsl:if test="./kop/titel"><xsl:text xml:space="preserve">;
@@ -55,7 +54,7 @@
             cprmv:hasPart (</xsl:text><xsl:apply-templates select="tekst|circulaire.divisie"><xsl:with-param name="indent" select="true()"/></xsl:apply-templates><xsl:text xml:space="preserve">)</xsl:text></xsl:if><xsl:text xml:space="preserve">
         ]</xsl:text>
   </xsl:template>
-      
+
   <xsl:template match="paragraaf"><xsl:text xml:space="preserve">[
             a cprmv:Rule;
             cprmv:id "</xsl:text><xsl:value-of select="@label"/><xsl:text xml:space="preserve">"@nl</xsl:text><xsl:if test="./al"><xsl:text xml:space="preserve">;
@@ -63,7 +62,7 @@
             cprmv:hasPart (</xsl:text><xsl:apply-templates select="artikel"><xsl:with-param name="indent" select="true()"/></xsl:apply-templates><xsl:text xml:space="preserve">)</xsl:text></xsl:if><xsl:text xml:space="preserve">
         ]</xsl:text>
   </xsl:template>
-  
+
 <xsl:template match="artikel|tekst">
     <xsl:param name="indent" select="false"/>
     <xsl:text xml:space="preserve">[
@@ -85,7 +84,7 @@
                 </xsl:apply-templates><xsl:text xml:space="preserve">)</xsl:text></xsl:if><xsl:text xml:space="preserve">
             </xsl:text><xsl:if test="$indent=true()"><xsl:text xml:space="preserve">    </xsl:text></xsl:if><xsl:text xml:space="preserve">]</xsl:text>
   </xsl:template>
-  
+
   <xsl:template match="lijst/li"><xsl:param name="indent"/><xsl:text xml:space="preserve">[
                     </xsl:text><xsl:if test="$indent=true()"><xsl:text xml:space="preserve">    </xsl:text></xsl:if><xsl:text xml:space="preserve">a cprmv:Rule;
                     </xsl:text><xsl:if test="$indent=true()"><xsl:text xml:space="preserve">    </xsl:text></xsl:if><xsl:text xml:space="preserve">cprmv:id "onderdeel </xsl:text><xsl:value-of select="./li.nr"/><xsl:text xml:space="preserve">"@nl</xsl:text><xsl:if test="./al"><xsl:text xml:space="preserve">;
@@ -95,7 +94,7 @@
                     </xsl:apply-templates><xsl:text xml:space="preserve">)</xsl:text></xsl:if><xsl:text xml:space="preserve">
                 </xsl:text><xsl:if test="$indent=true()"><xsl:text xml:space="preserve">    </xsl:text></xsl:if><xsl:text xml:space="preserve">]</xsl:text>
   </xsl:template>
-  
+
   <xsl:template match="table"><xsl:param name="indent"/><xsl:text xml:space="preserve">[
                 </xsl:text><xsl:if test="$indent=true()"><xsl:text xml:space="preserve">    </xsl:text></xsl:if><xsl:text xml:space="preserve">a cprmv:Rule;
                 </xsl:text><xsl:if test="$indent=true()"><xsl:text xml:space="preserve">    </xsl:text></xsl:if><xsl:text xml:space="preserve">cprmv:id "table </xsl:text><xsl:value-of select="position()"/><xsl:text xml:space="preserve">"@nl</xsl:text><xsl:if test="./al"><xsl:text xml:space="preserve">;
@@ -105,7 +104,7 @@
                 </xsl:apply-templates><xsl:text xml:space="preserve">)</xsl:text></xsl:if><xsl:text xml:space="preserve">
             </xsl:text><xsl:if test="$indent=true()"><xsl:text xml:space="preserve">    </xsl:text></xsl:if><xsl:text xml:space="preserve">]</xsl:text>
   </xsl:template>
-  
+
   <xsl:template match="row"><xsl:param name="indent"/><xsl:text xml:space="preserve">[
                 </xsl:text><xsl:if test="$indent=true()"><xsl:text xml:space="preserve">    </xsl:text></xsl:if><xsl:text xml:space="preserve">a cprmv:Rule;
                 </xsl:text><xsl:if test="$indent=true()"><xsl:text xml:space="preserve">    </xsl:text></xsl:if><xsl:text xml:space="preserve">cprmv:id "row </xsl:text><xsl:value-of select="position()"/><xsl:text xml:space="preserve">"@nl</xsl:text><xsl:if test="entry"><xsl:text xml:space="preserve">;
@@ -114,14 +113,14 @@
                 </xsl:apply-templates><xsl:text xml:space="preserve">)</xsl:text></xsl:if><xsl:text xml:space="preserve">
             </xsl:text><xsl:if test="$indent=true()"><xsl:text xml:space="preserve">    </xsl:text></xsl:if><xsl:text xml:space="preserve">]</xsl:text>
   </xsl:template>
-  
+
   <xsl:template match="entry"><xsl:param name="indent"/><xsl:text xml:space="preserve">[
                     </xsl:text><xsl:if test="$indent=true()"><xsl:text xml:space="preserve">    </xsl:text></xsl:if><xsl:text xml:space="preserve">a cprmv:Rule;
                     </xsl:text><xsl:if test="$indent=true()"><xsl:text xml:space="preserve">    </xsl:text></xsl:if><xsl:text xml:space="preserve">cprmv:id "column </xsl:text><xsl:value-of select="position()"/><xsl:text xml:space="preserve">"@nl</xsl:text><xsl:if test="./al"><xsl:text xml:space="preserve">;
                     </xsl:text><xsl:if test="$indent=true()"><xsl:text xml:space="preserve">    </xsl:text></xsl:if><xsl:text xml:space="preserve">cprmv:definition "</xsl:text><xsl:apply-templates select="al"></xsl:apply-templates><xsl:text xml:space="preserve">"@nl</xsl:text></xsl:if><xsl:text xml:space="preserve">
                 </xsl:text><xsl:if test="$indent=true()"><xsl:text xml:space="preserve">    </xsl:text></xsl:if><xsl:text xml:space="preserve">]</xsl:text>
   </xsl:template>
-  
+
   <xsl:template match="al"><xsl:value-of select="translate(., '&quot;&#xA;', '')"/></xsl:template>
-  
+
 </xsl:stylesheet>

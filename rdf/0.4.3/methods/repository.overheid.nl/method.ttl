@@ -1,0 +1,49 @@
+@base <http://example.com/> .
+@prefix cprmv: <https://standaarden.open-regels.nl/standards/cprmv/0.4.3#> .
+@prefix cprmv-serve: <https://cprmv.open-regels.nl/0.4.3/serve-api/> .
+@prefix cprmvmethods: <https://cprmv.open-regels.nl/0.4.3/methods/> .
+@prefix frbr-sru: <https://cprmv.open-regels.nl/0.4.3/methods/frbr-sru/> .
+
+cprmvmethods:repository-overheid-nl a cprmvmethods:module;
+    cprmv:id "repository.overheid.nl"@nl;
+    cprmv:label "repository.overheid.nl";
+    cprmvmethods:hasMethods (
+        cprmvmethods:repository-overheid-nl-bwb
+        cprmvmethods:repository-overheid-nl-cvdr
+    ).
+
+cprmvmethods:repository-overheid-nl-bwb a cprmvmethods:frbr-sru;
+    a cprmvmethods:bwb;
+    cprmv:id "repository.overheid.nl-bwb"@nl;
+    cprmv:label "BWB publicaties op repository.overheid.nl (NL)";
+    cprmv:comment "zie repository.overheid.nl"@nl;
+    cprmv-serve:repository-publication-location-format "https://repository.officiele-overheidspublicaties.nl/bwb/BWB{rulesetid}/{date}_{index}/xml/BWB{rulesetid}_{date}_{index}.xml";
+    cprmv-serve:publication-id-format "BWB{rulesetid}_{date}_{index}";
+    cprmv-serve:normalized-id-format "BWB{rulesetid}_{date}_{index}";
+    frbr-sru:url "https://zoekservice.overheid.nl/sru/Search?x-connection=BWB&operation=searchRetrieve&version=2.0&maximumRecords=1&query=dcterms.identifier=BWB{rulesetid}%20and%20overheidbwb.geldigheidsdatum={valid-on}";
+    frbr-sru:response-publication-location-term-namespace
+        "http://standaarden.overheid.nl/bwb/terms/";
+    frbr-sru:response-publication-location-term
+        "locatie_toestand";
+    frbr-sru:response-from-date-term-namespace
+        "http://standaarden.overheid.nl/bwb/terms/";
+    frbr-sru:response-from-date-term
+        "geldigheidsperiode_startdatum".
+
+cprmvmethods:repository-overheid-nl-cvdr a cprmvmethods:frbr-sru;
+    a cprmvmethods:cvdr;
+    cprmv:id "repository.overheid.nl-cvdr"@nl;
+    cprmv:label "CVDR publicaties op repository.overheid.nl (NL)";
+    cprmv:comment "zie repository.overheid.nl"@nl;
+    cprmv-serve:repository-publication-location-format "https://repository.officiele-overheidspublicaties.nl/cvdr/CVD{rulesetid}/{index}/xml/CVD{rulesetid}_{index}.xml";
+    cprmv-serve:publication-id-format "CVD{rulesetid}_{index}";
+    cprmv-serve:normalized-id-format "CVD{rulesetid}_{date}_{index}";
+    frbr-sru:url "https://zoekservice.overheid.nl/sru/Search?x-connection=cvdr&operation=searchRetrieve&version=2.0&maximumRecords=1&query=dcterms.identifier=CVD{rulesetid}_*%20and%20overheidrg.inwerkingtredingDatum%3C={valid-on}%20sortby%20overheidrg.inwerkingtredingDatum/descending";
+    frbr-sru:response-publication-location-term-namespace
+        "http://standaarden.overheid.nl/sru";
+    frbr-sru:response-publication-location-term
+        "publicatieurl_xml";
+    frbr-sru:response-from-date-term-namespace
+        "http://standaarden.overheid.nl/cvdr/terms/";
+    frbr-sru:response-from-date-term
+        "inwerkingtredingDatum".

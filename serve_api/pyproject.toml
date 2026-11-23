@@ -1,6 +1,6 @@
 [project]
 name = "cprmv"
-version = "0.4.2"
+version = "0.4.3"
 description = "CPRMV - <short description>"
 authors = [
   "Bas Kaptijn <bas.kaptijn@ictu.nl>",

@@ -1,0 +1,12 @@
+```puml
+@startuml
+!pragma layout elk
+left to right direction
+
+    object "operaton.open-regels.nl" as operaton_open_regels_nl {
+    }
+    object "iou-operaton" as iou_operaton
+    operaton_open_regels_nl --|> iou_operaton
+
+@enduml
+```

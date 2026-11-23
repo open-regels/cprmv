@@ -1,0 +1,24 @@
+@base <http://example.com/> .
+@prefix cprmv: <https://standaarden.open-regels.nl/standards/cprmv/0.4.3#> .
+@prefix cprmv-serve: <https://cprmv.open-regels.nl/0.4.3/serve-api/> .
+@prefix cprmvmethods: <https://cprmv.open-regels.nl/0.4.3/methods/> .
+
+cprmvmethods:eli a cprmvmethods:module;
+    cprmv:id "eli"@nl;
+    cprmv:label "eli";
+    cprmvmethods:hasMethods (
+        cprmvmethods:elifmx4
+        cprmvmethods:elinl
+    ).
+
+cprmvmethods:elifmx4 a cprmv:ReferenceMethod;
+    cprmv:id "elifmx4"@en;
+    cprmv:id "elifmx4 on EU CELLAR"@nl;
+    cprmv:comment "ELI references to Formex 4 documents in EU CELLAR";
+    cprmv-serve:reference-format "http://data.europa.eu/eli/{typedoc}/{year}/{naturalnumber}/{start-date}".
+
+cprmvmethods:elinl a cprmv:ReferenceMethod;
+    cprmv:id "elinl"@en;
+    cprmv:id "elinl"@nl;
+    cprmv:comment "Experimental ELI for BWB and CVDR (Dutch standards)";
+    cprmv-serve:reference-format "https://wetten.overheid.nl/{path}".

@@ -9,16 +9,18 @@ class core_xml(SerialisationMethod):
     def get_cprmv_rule_set_from_raw_publication(self, g, raw, publication):
         cprmvMethods = self.app.cprmvsettings["CPRMVMETHODS_KG"]
         cprmvid = publication[CPRMVSERVE["id_parts"]]['cprmvid']
-        puburl = publication['puburl']
         methodLabel = cprmvMethods.value(self.config, CPRMV.label)
         print(f"opening raw publication from temp file {raw}")
         xml = etree.parse(open(raw))
         print(f"transforming {methodLabel} resource into CPRMV RuleSet ...")
+        print("preparing XSLT")
         ac = etree.XSLTAccessControl(read_network=False, read_file=False)
         xsl = cprmvMethods.value(self.config, CPRMVSERVE["xslt"])
         transform = etree.XSLT(
             etree.parse("./data/"+xsl), access_control=ac
         )
-        result = str(transform(xml, cprmvid=etree.XSLT.strparam(cprmvid), puburl=etree.XSLT.strparam(puburl)))
+        print("transforming...")
+        result = str(transform(xml, cprmvid=etree.XSLT.strparam(cprmvid)))
+        print("Loading transformed publication into KG ...: "+result)
         g.parse(data=result, format="turtle")
         return

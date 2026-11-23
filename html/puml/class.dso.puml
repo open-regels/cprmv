@@ -1,0 +1,14 @@
+```puml
+@startuml
+!pragma layout elk
+left to right direction
+
+    object "dso" as dso {
+    }
+    object "core-api" as core_api
+    object "sttr" as sttr
+    dso --|> core_api
+    dso --|> sttr
+
+@enduml
+```

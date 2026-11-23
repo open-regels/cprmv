@@ -1,0 +1,12 @@
+```puml
+@startuml
+!pragma layout elk
+left to right direction
+
+    object "OntologicEchelon" as OntologicEchelon {
+    }
+    object "Echelon" as Echelon
+    OntologicEchelon --|> Echelon
+
+@enduml
+```

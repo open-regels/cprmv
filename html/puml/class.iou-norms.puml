@@ -1,0 +1,14 @@
+```puml
+@startuml
+!pragma layout elk
+left to right direction
+
+    object "iou-norms" as iou_norms {
+    }
+    object "core-api" as core_api
+    object "core-json" as core_json
+    iou_norms --|> core_api
+    iou_norms --|> core_json
+
+@enduml
+```

@@ -1,0 +1,12 @@
+```puml
+@startuml
+!pragma layout elk
+left to right direction
+
+    object "norms-backend.linkeddata.open-regels.nl" as norms_backend_linkeddata_open_regels_nl {
+    }
+    object "iou-norms" as iou_norms
+    norms_backend_linkeddata_open_regels_nl --|> iou_norms
+
+@enduml
+```

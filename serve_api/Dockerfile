@@ -25,6 +25,7 @@ RUN python -m pip install --no-cache-dir --upgrade pip setuptools wheel && \
 COPY src/ ./src/
 COPY data/ ./data/
 COPY respec/ ./respec/
+COPY methods/ ./methods/
 # Bundled certSIGN Web CA intermediate, loaded by src/serve.py into its SSL context.
 # repository.officiele-overheidspublicaties.nl omits this intermediate from its TLS
 # handshake, so without it OpenSSL/Python cannot verify the chain. See certs/README
@@ -34,7 +35,7 @@ COPY certs/ ./certs/
 # Add labels for better Docker Hub integration
 LABEL maintainer="Bas.Kaptijn@ictu.nl"
 LABEL description="CPRMV Rules Serve API - Experimental API for fetching CPRMV Rules from RuleSets"
-LABEL version="0.4.2"
+LABEL version="0.4.3"
 LABEL org.opencontainers.image.source="https://git.open-regels.nl/standards/cprmv"
 
 # Create non-root user for security
@@ -50,4 +51,4 @@ HEALTHCHECK --interval=30s --timeout=30s --start-period=5s --retries=3 \
 
 # --app combined_app: without it fastapi-cli serves the object named `app`, which
 # has the REST API but not /mcp (fastapi_cli/discover.py prefers "app", then "api").
-CMD ["fastapi", "run", "src/serve.py", "--app", "combined_app", "--port", "8000", "--host", "0.0.0.0"]
+CMD ["fastapi", "run", "src/serve.py", "--port", "8000", "--host", "0.0.0.0"]

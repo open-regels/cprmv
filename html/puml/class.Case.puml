@@ -1,0 +1,12 @@
+```puml
+@startuml
+!pragma layout elk
+left to right direction
+
+    object "Case" as Case {
+    }
+    object "Rule" as Rule
+    Case --|> Rule
+
+@enduml
+```

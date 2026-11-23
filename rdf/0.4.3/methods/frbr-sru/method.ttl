@@ -1,0 +1,38 @@
+@base <http://example.com/> .
+@prefix cprmv: <https://standaarden.open-regels.nl/standards/cprmv/0.4.3#> .
+@prefix cprmv-serve: <https://cprmv.open-regels.nl/0.4.3/serve-api/> .
+@prefix cprmvmethods: <https://cprmv.open-regels.nl/0.4.3/methods/> .
+@prefix frbr-sru: <https://cprmv.open-regels.nl/0.4.3/methods/frbr-sru/> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+
+cprmvmethods:frbr-sru a cprmv-serve:core-web;
+    cprmv:id "FRBR SRU"@nl;
+    cprmv:label "FRBR SRU";
+    cprmv:comment "".
+
+frbr-sru:url a owl:ObjectProperty;
+    skos:prefLabel "url"@en;
+    skos:definition "The URL the SRU REST service can be accessed."@en;
+    rdfs:domain cprmvmethods:frbr-sru.
+
+frbr-sru:response-publication-location-term-namespace a owl:ObjectProperty;
+    skos:prefLabel "response-publication-location-term-namespace"@en;
+    skos:definition "The namespace for the term in the SRU response that indicates the web location the publication can be retrieved from."@en;
+    rdfs:domain cprmvmethods:frbr-sru.
+
+frbr-sru:response-publication-location-term a owl:ObjectProperty;
+    skos:prefLabel "response-publication-location-term"@en;
+    skos:definition "The term name in the SRU response that indicates the web location the publication can be retrieved from."@en;
+    rdfs:domain cprmvmethods:frbr-sru.
+
+frbr-sru:response-from-date-term-namespace a owl:ObjectProperty;
+    skos:prefLabel "response-from-date-term-namespace"@en;
+    skos:definition "The namespace for the term in the SRU response that indicates the date from which the publication to be retrieved is valid."@en;
+    rdfs:domain cprmvmethods:frbr-sru.
+
+frbr-sru:response-from-date-term a owl:ObjectProperty;
+    skos:prefLabel "response-from-date-term"@en;
+    skos:definition "The term name in the SRU response that indicates the date from which the publication to be retrieved is valid."@en;
+    rdfs:domain cprmvmethods:frbr-sru.
