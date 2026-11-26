@@ -562,9 +562,9 @@ fastmcp==4.0.10 \
     --hash=sha256:1f8462e3d97394a637e1b0f1eaea0002da661c8d98000ad43f0aa3fa1ff523e8 \
     --hash=sha256:64539631a7dc5873a1c7a44089b2f7b3395dea3ca857e9f81bfe9665a59038d5
     # via cprmv (pyproject.toml)
-fastmcp-slim==4.0.10 \
-    --hash=sha256:c2abd40302b8f06b0291413cf537d57bc0f171b5fd98af5cfef3b2b6b506122f \
-    --hash=sha256:d22b423f93ad945bf65d446a1689ff84be7b91dfd9b6f23c5013f4b2fe9776a7
+fastmcp-slim==4.1.2 \
+    --hash=sha256:4b703ddbd35165ebf03b2cc560688f458f3fe4db11e635074fcc303496734154 \
+    --hash=sha256:58a4e547a0f85cfee2d2219677ed31c0f1c4911741a5c91a1ee5fbf69dde35fa
     # via fastmcp
 googleapis-common-protos==1.75.5 \
     --hash=sha256:c7a866fc34ed29a3b10af627a4b9b1dc2433313ca6e959f0ae4feb132047ed72 \
