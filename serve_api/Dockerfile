@@ -1,4 +1,4 @@
-FROM python:3.14-bookworm
+FROM python:3.14-bookworm@sha256:fbaf91204f2758a70a7f7d6cf3c2871851227152a54e6a7b5b59941c4566b6b5
 
 WORKDIR /app
 
@@ -18,8 +18,7 @@ ENV LC_ALL=nl_NL.UTF-8
 COPY requirements.txt .
 
 # Install dependencies with more specific pip options
-RUN python -m pip install --no-cache-dir --upgrade pip setuptools wheel && \
-    pip install --no-cache-dir --timeout=300 --retries=3 -r requirements.txt
+RUN pip install --no-cache-dir --timeout=300 --retries=3 --require-hashes --no-deps -r requirements.txt
 
 # Copy the entire src directory including any subdirectories like utils
 COPY src/ ./src/
