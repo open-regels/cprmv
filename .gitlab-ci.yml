@@ -1,29 +1,7 @@
-# Combined GitLab CI/CD Pipeline for Respec Publication + CPRMV API
-variables:
-  # Docker image settings for CPRMV API
-  DOCKER_IMAGE_NAME: "datafluisteraar/cprmv-api"
-  DOCKER_DRIVER: overlay2
-  DOCKER_TLS_CERTDIR: "/certs"
-  PUPPETEER_SKIP_CHROMIUM_DOWNLOAD: "true"
-  PUPPETEER_EXECUTABLE_PATH: "/usr/bin/chromium-browser"
-
-# Define pipeline stages
-stages:
-  - test
-  - build
-  - deploy
-
-# Services needed for Docker-in-Docker (only for Docker jobs)
-.docker_services: &docker_services
-  services:
-    - docker:24.0.5-dind
-
-# ============================================================================
-# RESPEC PUBLICATION JOB
-# ============================================================================
-
-# The Docker image that will be used to build your app
-image: node:lts-alpine
+# Development and CI live on GitHub (open-regels/cprmv). This file only publishes
+# the ReSpec to https://standaarden.open-regels.nl/standards/cprmv/ when `main` is
+# pushed to GitLab at a release. Nothing else runs here.
+image: node:26-alpine@sha256:6bd9ab43c0ec0190ca7b2d193906cb8b7edf6e7f4afa43ddeccd6452710bffb5
 create-pages:
   pages:
     # The folder that contains the files to be exposed at the Page URL
@@ -43,80 +21,3 @@ create-pages:
     #script:
     #  - npm run build
     #  - cd ..
-
-# ============================================================================
-# CPRMV API DOCKER JOBS
-# ============================================================================
-
-# Test the CPRMV API code
-test-cprmv-api:
-  stage: test
-  image: python:3.14-bookworm
-  before_script:
-    - cd serve_api
-    - apt-get update && apt-get install -y libxml2-dev libxslt-dev
-  script:
-    - echo "Installing API dependencies..."
-    - pip install --no-cache-dir -r requirements-dev.txt
-    - echo "Running API tests..."
-    - python -m py_compile src/serve.py
-    - python -c "from src.serve import app; print('FastAPI app imported successfully')"
-    - test -f ./data/cprmvmethods.ttl || echo "Warning cprmvmethods.ttl not found"
-    - test -f ./data/cprmv.ttl || echo "Warning cprmv.ttl not found"
-    - pytest
-    - echo "API tests completed successfully."
-  rules:
-    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
-      changes:
-        - "serve_api/**/*"
-    - if: $CI_COMMIT_BRANCH == "main"
-      changes:
-        - "serve_api/**/*"
-
-# Build and push CPRMV API Docker image (production)
-build-cprmv-api:
-  stage: build
-  image: docker:24.0.5
-  <<: *docker_services
-  before_script:
-    - cd serve_api
-    - docker info
-  script:
-    - echo "Logging into Docker Hub ..."
-    - echo $DOCKER_HUB_TOKEN | docker login -u $DOCKER_HUB_USERNAME --password-stdin
-    - echo "Building Docker image..."
-    - >
-      if [ "$CI_COMMIT_REF_NAME" = "main" ]; then
-        docker build -t $DOCKER_IMAGE_NAME:latest .;
-        docker build -t $DOCKER_IMAGE_NAME:$CI_COMMIT_SHORT_SHA .;
-        echo "Pushing images to Docker Hub...";
-        docker push $DOCKER_IMAGE_NAME:latest;
-        docker push $DOCKER_IMAGE_NAME:$CI_COMMIT_SHORT_SHA;
-        echo "Successfully pushed $DOCKER_IMAGE_NAME:latest";
-        echo "Successfully pushed $DOCKER_IMAGE_NAME:$CI_COMMIT_SHORT_SHA";
-      else
-        docker build -t $DOCKER_IMAGE_NAME:$CI_COMMIT_REF_SLUG .;
-        docker push $DOCKER_IMAGE_NAME:$CI_COMMIT_REF_SLUG;
-        echo "Successfully pushed $DOCKER_IMAGE_NAME:$CI_COMMIT_REF_SLUG";
-      fi
-  rules:
-    - if: $CI_COMMIT_BRANCH == "main"
-      changes:
-        - "serve_api/**/*"
-    - if: $CI_COMMIT_BRANCH == "develop"
-      changes:
-        - "serve_api/**/*"
-
-# Deploy notification for CPRMV API
-deploy-cprmv-api:
-  stage: deploy
-  image: alpine:latest
-  script:
-    - echo "New CPRMV API image available at Docker Hub."
-    - echo "docker pull $DOCKER_IMAGE_NAME:latest"
-    - echo "docker pull $DOCKER_IMAGE_NAME:$CI_COMMIT_SHORT_SHA"
-    - echo "Update your docker-compose.yml to use the new image"
-  rules:
-    - if: $CI_COMMIT_BRANCH == "main"
-      changes:
-        - "serve_api/**/*"

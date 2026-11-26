@@ -1,4 +1,4 @@
-FROM python:3.14-bookworm
+FROM python:3.14-bookworm@sha256:fbaf91204f2758a70a7f7d6cf3c2871851227152a54e6a7b5b59941c4566b6b5
 
 WORKDIR /app
 
@@ -18,8 +18,7 @@ ENV LC_ALL=nl_NL.UTF-8
 COPY requirements.txt .
 
 # Install dependencies with more specific pip options
-RUN python -m pip install --no-cache-dir --upgrade pip setuptools wheel && \
-    pip install --no-cache-dir --timeout=300 --retries=3 -r requirements.txt
+RUN pip install --no-cache-dir --timeout=300 --retries=3 --require-hashes --no-deps -r requirements.txt
 
 # Copy the entire src directory including any subdirectories like utils
 COPY src/ ./src/
@@ -32,11 +31,17 @@ COPY methods/ ./methods/
 # and SSL_FIX.md for provenance and details.
 COPY certs/ ./certs/
 
+# Build metadata, reported by GET /health
+ARG BUILD_SHA
+ARG BUILD_RUN
+ENV BUILD_SHA=$BUILD_SHA BUILD_RUN=$BUILD_RUN
+
 # Add labels for better Docker Hub integration
 LABEL maintainer="Bas.Kaptijn@ictu.nl"
 LABEL description="CPRMV Rules Serve API - Experimental API for fetching CPRMV Rules from RuleSets"
-LABEL version="0.4.3"
-LABEL org.opencontainers.image.source="https://git.open-regels.nl/standards/cprmv"
+LABEL org.opencontainers.image.version="0.4.3"
+LABEL org.opencontainers.image.source="https://github.com/open-regels/cprmv"
+LABEL org.opencontainers.image.revision=$BUILD_SHA
 
 # Create non-root user for security
 RUN groupadd -r appuser && useradd -r -g appuser appuser
@@ -47,8 +52,6 @@ EXPOSE 8000
 
 # Health check using built-in urllib (no external dependencies)
 HEALTHCHECK --interval=30s --timeout=30s --start-period=5s --retries=3 \
-  CMD python -c "from urllib.request import urlopen; urlopen('http://localhost:8000/', timeout=5)" || exit 1
+  CMD python -c "from urllib.request import urlopen; urlopen('http://localhost:8000/health', timeout=5)" || exit 1
 
-# --app combined_app: without it fastapi-cli serves the object named `app`, which
-# has the REST API but not /mcp (fastapi_cli/discover.py prefers "app", then "api").
 CMD ["fastapi", "run", "src/serve.py", "--port", "8000", "--host", "0.0.0.0"]

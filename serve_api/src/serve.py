@@ -141,6 +141,22 @@ def cprmv_info():
     """
     return {app.title: app.version}
 
+@app.get("/health")
+def health() -> dict:
+    """
+    liveness and build metadata: version, the git SHA and CI run the image was
+    built from, and the image digest; each is null when not set
+    """
+    return {
+        "status": "ok",
+        "version": app.version,
+        "build": {
+            "sha": os.environ.get("BUILD_SHA") or None,
+            "run": os.environ.get("BUILD_RUN") or None,
+        },
+        "image": {"digest": os.environ.get("CPRMV_IMAGE_DIGEST") or None},
+    }
+
 # respec documentation on CPRMV and CPRMV Methods endpoint
 app.mount("/respec", StaticFiles(directory="respec", html=True, follow_symlink=True), name="respec")
 

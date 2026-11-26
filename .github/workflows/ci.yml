@@ -1,0 +1,242 @@
+name: CI
+
+# Tests, builds and publishes the API image, then waits for the VM of the tier to
+# run it. One workflow serves two tiers, chosen by the branch (scripts/ci-tier.sh):
+# acc is the acceptance tier, main is the stable tier. The check names `test` and
+# `build` are referenced by the rulesets. Renaming a job means updating them.
+#
+# Deliberately no paths filter on push: the reconciler on a VM maps every commit
+# of its branch to one image, and a commit without an image would stall it. The
+# GitHub Actions layer cache keeps a docs-only rebuild cheap.
+on:
+  pull_request:
+    branches:
+      - acc
+      - main
+  push:
+    branches:
+      - acc
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+# One group per ref. Pull requests cancel the superseded run; pushes queue, so a
+# commit that is being published is never cancelled half way.
+concurrency:
+  group: ci-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+env:
+  IMAGE: ghcr.io/open-regels/cprmv-api
+
+jobs:
+  test:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Set up Python
+        uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7.1.0
+        with:
+          python-version: '3.14'
+      - name: Install dependencies
+        run: pip install --require-hashes -r serve_api/requirements-dev.txt
+      - name: Compile and import the API
+        working-directory: serve_api
+        run: |
+          python -m py_compile src/serve.py
+          python -c "from src.serve import app"
+      - name: API tests
+        # From serve_api/, as GitLab ran them: the tests import ..src.serve.
+        working-directory: serve_api
+        run: pytest
+      - name: Shellcheck
+        # The version is whatever the ubuntu-24.04 image ships; it is not pinned.
+        # git ls-files covers scripts added later without editing this workflow.
+        # The stubs have no extension, so they are listed explicitly. rdf/<version>/
+        # holds published, versioned artifacts that are not edited, so it is excluded.
+        run: |
+          git ls-files -z -- '*.sh' ':!:rdf/' | xargs -0 shellcheck
+          shellcheck deployment/vm/reconciler/test/stubs/*
+      - name: Check out bats-core
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          repository: bats-core/bats-core
+          ref: eb7f42f8d608ac693d7a4b67474f6714ea68cfc5 # v1.14.0
+          # The action only accepts a path inside the workspace.
+          path: bats-core
+          persist-credentials: false
+      - name: Install pip-audit
+        # Not a project dependency: scripts/test/audit-requirements.bats runs the
+        # real tool (it needs the network, which the runner has). Pinned by hand,
+        # because Renovate does not manage an inline pip argument.
+        run: pip install pip-audit==2.10.1
+      - name: Shell tests
+        # jq, git, curl and flock (util-linux) are on the runner image. The
+        # reconciler tests commit in temporary repositories, so git needs an
+        # identity.
+        run: |
+          git config --global user.email ci@example.invalid
+          git config --global user.name ci
+          ./bats-core/install.sh "$RUNNER_TEMP/bats"
+          "$RUNNER_TEMP/bats/bin/bats" scripts/test deployment/vm/reconciler/test
+
+  build:
+    needs: test
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Set up Buildx
+        uses: docker/setup-buildx-action@f87e5991a6d7451dcb8d9637bfbc97413f497069 # v4.4.1
+      - name: Build, loaded locally for the smoke test
+        uses: docker/build-push-action@c3c9e263c25d99ce0380d002d59b67737d91b0dc # v7.4.0
+        with:
+          context: serve_api
+          load: true
+          tags: cprmv-api:ci
+          build-args: |
+            BUILD_SHA=${{ github.sha }}
+            BUILD_RUN=${{ github.run_number }}
+          cache-from: type=gha
+          # Only pushes write the cache, so a pull request cannot poison it.
+          cache-to: ${{ github.event_name == 'push' && 'type=gha,mode=max' || '' }}
+      - name: Smoke test
+        env:
+          IMAGE_REF: cprmv-api:ci
+          EXPECTED_SHA: ${{ github.sha }}
+        run: sh scripts/smoke-health.sh "$IMAGE_REF" "$EXPECTED_SHA"
+
+  publish:
+    # Push to acc or main only: nothing is published from a pull request, and the
+    # write permissions exist only here.
+    if: >-
+      github.event_name == 'push' &&
+      (github.ref == 'refs/heads/acc' || github.ref == 'refs/heads/main')
+    needs: build
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    permissions:
+      contents: read
+      packages: write # push the image to GHCR
+      id-token: write # sign the provenance attestation
+      attestations: write # store the attestation
+    outputs:
+      host: ${{ steps.tier.outputs.host }}
+      environment: ${{ steps.tier.outputs.environment }}
+      branch: ${{ steps.tier.outputs.branch }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Resolve the tier
+        id: tier
+        env:
+          REF: ${{ github.ref }}
+        run: sh scripts/ci-tier.sh "$REF" >> "$GITHUB_OUTPUT"
+      - name: Resolve the image tags
+        id: tags
+        env:
+          SHA: ${{ github.sha }}
+          TIER: ${{ steps.tier.outputs.tier }}
+        run: |
+          tags="$IMAGE:sha-$SHA
+          $IMAGE:$TIER"
+          if [ "$TIER" = stable ]; then
+            # The release version, from [project] in pyproject.toml.
+            version=$(python3 -c "import tomllib; print(tomllib.load(open('serve_api/pyproject.toml', 'rb'))['project']['version'])")
+            # Whole-string match: a line-by-line grep would let a value with
+            # embedded newlines inject lines into $GITHUB_OUTPUT. Validated
+            # before anything is written to it.
+            if ! [[ "$version" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+              echo "::error::serve_api/pyproject.toml version is not MAJOR.MINOR.PATCH" >&2
+              exit 1
+            fi
+            tags="$tags
+          $IMAGE:$version"
+          fi
+          {
+            echo 'list<<TAGS_END'
+            echo "$tags"
+            echo 'TAGS_END'
+          } >> "$GITHUB_OUTPUT"
+      - name: Set up Buildx
+        uses: docker/setup-buildx-action@f87e5991a6d7451dcb8d9637bfbc97413f497069 # v4.4.1
+      - name: Log in to GHCR
+        uses: docker/login-action@8aa5831fb8d48d8f76594c7ddde61ae58019f550 # v4.8.0
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Push
+        id: push
+        # The same build as in `build` (same build-args): the layer cache makes it
+        # a re-tag and a push. Writes the cache for later runs.
+        uses: docker/build-push-action@c3c9e263c25d99ce0380d002d59b67737d91b0dc # v7.4.0
+        with:
+          context: serve_api
+          push: true
+          tags: ${{ steps.tags.outputs.list }}
+          build-args: |
+            BUILD_SHA=${{ github.sha }}
+            BUILD_RUN=${{ github.run_number }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+      - name: Verify the pushed image
+        # Pulls what the registry now holds, by digest, and runs the same check.
+        env:
+          IMAGE_REF: ${{ env.IMAGE }}@${{ steps.push.outputs.digest }}
+          EXPECTED_SHA: ${{ github.sha }}
+        run: sh scripts/smoke-health.sh "$IMAGE_REF" "$EXPECTED_SHA"
+      - name: Attest build provenance
+        uses: actions/attest-build-provenance@4d101475d8b20a2381f78447822ac1eab6504dd8 # v4.2.2
+        with:
+          subject-name: ghcr.io/open-regels/cprmv-api
+          subject-digest: ${{ steps.push.outputs.digest }}
+          push-to-registry: true
+          create-storage-record: false
+
+  deploy:
+    # Push to acc or main only, like publish, which it needs. It times out after
+    # 15 minutes while the VM of the tier does not exist or does not run the
+    # reconciler; it passes once the VM deploys the pushed commit.
+    if: >-
+      github.event_name == 'push' &&
+      (github.ref == 'refs/heads/acc' || github.ref == 'refs/heads/main')
+    needs: publish
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    permissions:
+      contents: read
+    # `acceptance` or `stable`, from the branch. GitHub creates an environment
+    # that does not exist yet on first use (`stable` has not been used so far).
+    environment:
+      name: ${{ needs.publish.outputs.environment }}
+      url: https://${{ needs.publish.outputs.host }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Wait for the VM to run this commit
+        env:
+          # The pushed commit.
+          SHA: ${{ github.sha }}
+          HOST: ${{ needs.publish.outputs.host }}
+          BRANCH: ${{ needs.publish.outputs.branch }}
+        run: |
+          scripts/wait-for-deploy.sh \
+            "https://$HOST/deploy-status.json" \
+            "$SHA" \
+            https://github.com/open-regels/cprmv.git \
+            "$BRANCH" \
+            "https://$HOST/health"

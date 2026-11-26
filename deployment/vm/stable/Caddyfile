@@ -1,0 +1,35 @@
+# Stable: the API behind Caddy. Mirrors ../acc/Caddyfile; only this comment, the
+# status path (/opt/cprmv/stable/www) and the host name differ. Keep the two in
+# step. The status file is written by the reconciler into /opt/cprmv/stable/www,
+# mounted read-only at /srv/status.
+
+(app) {
+	header {
+		Strict-Transport-Security "max-age=31536000; includeSubDomains; preload"
+		X-Content-Type-Options "nosniff"
+		X-Frame-Options "DENY"
+		X-XSS-Protection "1; mode=block"
+		Permissions-Policy "geolocation=(), microphone=(), camera=(), payment=(), usb=(), magnetometer=(), gyroscope=(), accelerometer=()"
+	}
+
+	handle /deploy-status.json {
+		root * /srv/status
+		header Cache-Control "no-store"
+		file_server
+	}
+
+	handle {
+		reverse_proxy cprmv-api:8000
+	}
+}
+
+# Automatic HTTPS once DNS points here.
+cprmv.open-regels.nl {
+	import app
+}
+
+# Plain HTTP on the VM's IP, for checking the deployment before DNS moves.
+# Requests for any other host name are served too; no redirect to HTTPS.
+:80 {
+	import app
+}

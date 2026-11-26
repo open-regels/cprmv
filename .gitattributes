@@ -1,0 +1,13 @@
+# The hash-locked requirements and the shell scripts are used on Linux (CI, the
+# build container). Git for Windows with autocrlf would otherwise check them out
+# with CRLF, which breaks the scripts and makes the compile drift check noisy.
+*.sh text eol=lf
+*.bats text eol=lf
+deployment/vm/reconciler/test/stubs/* text eol=lf
+serve_api/requirements*.txt text eol=lf
+deployment/vm/cloud-init.yaml text eol=lf
+deployment/vm/reconciler/*.service text eol=lf
+deployment/vm/reconciler/*.timer text eol=lf
+.github/rulesets/*.json text eol=lf
+deployment/vm/stable/Caddyfile text eol=lf
+deployment/vm/stable/compose.yml text eol=lf

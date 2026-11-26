@@ -1,0 +1,15 @@
+#!/bin/sh
+# Test stub for `curl`, used by reconcile.bats: answers any URL as the API's
+# /health would. Serves build.sha from $STUB_DIR/health_sha if present, else the
+# sha the docker stub last brought up; with neither, the connection is refused.
+printf 'curl %s\n' "$*" >>"$STUB_DIR/calls.log"
+
+if [ -f "$STUB_DIR/health_sha" ]; then
+  sha=$(cat "$STUB_DIR/health_sha")
+elif [ -f "$STUB_DIR/last_up" ]; then
+  sha=$(cat "$STUB_DIR/last_up")
+else
+  echo "curl: (7) Failed to connect to 127.0.0.1 port 8000" >&2
+  exit 7
+fi
+printf '{"status":"ok","version":"0.0.0","build":{"sha":"%s","run":"1"},"image":{"digest":null}}\n' "$sha"

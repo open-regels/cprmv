@@ -1,0 +1,86 @@
+#cloud-config
+# First-boot bootstrap of the CPRMV @@TIER_TITLE@@ VM.
+#
+# This file is a TEMPLATE. provision.sh fills in the tier, its branch and its
+# name in prose, and puts in the base64 of the reconciler and its two systemd
+# units, taken from the local checkout, so the VM gets exactly the files that
+# were reviewed and fetches no code from the network at boot. A block marked as
+# conditional is kept only when the tier's branch differs from its name
+# (stable -> main). Render it without Azure with:
+#   bash provision.sh --render rendered.yaml
+## Template notes (lines that start with "## " are dropped from the render):
+## @@TIER@@, @@BRANCH@@ and @@TIER_TITLE@@ are the tier (acc or stable), its
+## branch, and its name in prose. The lines between @@IF_BRANCH_DIFFERS@@ and
+## @@END_IF@@ are kept only when the branch differs from the tier (stable ->
+## main); otherwise they are dropped with the markers, so the rendered acc
+## cloud-init has no environment file and stays as it was.
+#
+# Nothing is cloned. The reconciler creates its own bare repository in
+# /opt/cprmv/@@TIER@@/repo on its first run and deploys the head of `@@BRANCH@@`.
+
+write_files:
+  - path: /usr/local/lib/cprmv/reconcile.sh
+    owner: root:root
+    permissions: "0755"
+    encoding: b64
+    content: "@@RECONCILE_SH_B64@@"
+  - path: /etc/systemd/system/cprmv-reconcile@.service
+    owner: root:root
+    permissions: "0644"
+    encoding: b64
+    content: "@@RECONCILE_SERVICE_B64@@"
+  - path: /etc/systemd/system/cprmv-reconcile@.timer
+    owner: root:root
+    permissions: "0644"
+    encoding: b64
+    content: "@@RECONCILE_TIMER_B64@@"
+@@IF_BRANCH_DIFFERS@@
+  # Read by cprmv-reconcile@@@TIER@@.service (EnvironmentFile=-/etc/cprmv/%i.env).
+  - path: /etc/cprmv/@@TIER@@.env
+    owner: root:root
+    permissions: "0644"
+    content: |
+      CPRMV_BRANCH=@@BRANCH@@
+@@END_IF@@
+
+runcmd:
+  - |
+    set -eu
+    export DEBIAN_FRONTEND=noninteractive
+
+    # Docker's signing key, checked against the fingerprint Docker publishes.
+    apt_get() { apt-get -o DPkg::Lock::Timeout=600 -q "$@"; } # first boot may hold the lock (unattended-upgrades)
+    apt_get update
+    apt_get install -y ca-certificates curl gnupg
+    install -m 0755 -d /etc/apt/keyrings
+    curl -fsSL https://download.docker.com/linux/ubuntu/gpg -o /etc/apt/keyrings/docker.asc
+    chmod a+r /etc/apt/keyrings/docker.asc
+    gpg --show-keys --with-colons /etc/apt/keyrings/docker.asc |
+      grep -q '^fpr:::::::::9DC858229FC7DD38854AE2D88D81803C0EBFCD88:'
+
+    # The source is written only now: Signed-By names a key that must exist
+    # before the first `apt-get update` that reads it.
+    cat >/etc/apt/sources.list.d/docker.sources <<'SOURCES'
+    Types: deb
+    URIs: https://download.docker.com/linux/ubuntu
+    Suites: noble
+    Components: stable
+    Architectures: amd64
+    Signed-By: /etc/apt/keyrings/docker.asc
+    SOURCES
+    apt_get update
+    apt_get install -y docker-ce docker-ce-cli containerd.io docker-compose-plugin \
+      git jq util-linux curl
+    systemctl enable --now docker
+
+    # The reconciler's user: a system account that cannot log in, in the
+    # docker group (root-equivalent; see the design's risks). It has a home
+    # because git and the docker CLI read their configuration from it.
+    if ! id cprmv >/dev/null 2>&1; then
+      useradd --system --create-home --home-dir /var/lib/cprmv \
+        --shell /usr/sbin/nologin --groups docker cprmv
+    fi
+    install -d -o cprmv -g cprmv -m 0755 /opt/cprmv /opt/cprmv/@@TIER@@ /opt/cprmv/@@TIER@@/www
+
+    systemctl daemon-reload
+    systemctl enable --now cprmv-reconcile@@@TIER@@.timer
