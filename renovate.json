@@ -6,6 +6,7 @@
     "docker:pinDigests"
   ],
   "minimumReleaseAge": "14 days",
+  "constraints": { "pipTools": "==7.6.2" },
   "prConcurrentLimit": 2,
   "internalChecksFilter": "strict",
   "pip-compile": {
@@ -13,7 +14,7 @@
   },
   "customManagers": [
     {
-      "description": "The Python base image is written twice: in serve_api/Dockerfile and in the deps-linux target of serve_api/Makefile, which compiles the hashed requirements on the same image. The Dockerfile is found by the docker manager; this entry finds the Makefile copy under the same depName and datasource, so both move in one pull request and the lock files are never compiled on a different image than the one that runs them.",
+      "description": "The Python base image is written twice: in serve_api/Dockerfile and in the deps-linux target of serve_api/Makefile, which compiles the hashed requirements on the same image. The Dockerfile is found by the docker manager; this entry finds the Makefile copy under the same depName and datasource, so both move in one pull request. The requirements are not recompiled by this change: a Python minor bump needs them recompiled on the new image (make deps-linux ARGS=--upgrade) and pushed onto the pull request.",
       "customType": "regex",
       "managerFilePatterns": ["/(^|/)serve_api/Makefile$/"],
       "matchStrings": [
@@ -65,6 +66,13 @@
       "matchDatasources": ["pypi"],
       "allowedVersions": "!/^\\d+\\.0\\.0$/",
       "minimumReleaseAge": "14 days"
+    },
+    {
+      "description": "Python minor and major moves are one pull request (Dockerfile, Makefile image and the workflows' python-version) and only on approval, so the image and the CI Python stay together.",
+      "matchDepNames": ["python"],
+      "matchUpdateTypes": ["major", "minor"],
+      "groupName": "Python minor",
+      "dependencyDashboardApproval": true
     },
     {
       "description": "Lock-file maintenance moves the transitive tree, so it is prioritised within the normal pull request limit.",

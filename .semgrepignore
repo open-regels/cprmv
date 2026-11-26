@@ -7,3 +7,6 @@ html/public/
 
 # ReSpec build output served by the API, committed as built. Same reason as above.
 serve_api/respec/
+
+# Intentionally vulnerable pins for the audit-script tests.
+scripts/test/fixtures/

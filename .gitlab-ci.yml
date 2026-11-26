@@ -1,7 +1,7 @@
 # Development and CI live on GitHub (open-regels/cprmv). This file only publishes
 # the ReSpec to https://standaarden.open-regels.nl/standards/cprmv/ when `main` is
 # pushed to GitLab at a release. Nothing else runs here.
-image: node:lts-alpine
+image: node:26-alpine@sha256:6bd9ab43c0ec0190ca7b2d193906cb8b7edf6e7f4afa43ddeccd6452710bffb5
 create-pages:
   pages:
     # The folder that contains the files to be exposed at the Page URL

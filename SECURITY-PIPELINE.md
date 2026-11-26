@@ -34,15 +34,16 @@ All done on 24 November 2026 by the `open-regels` organisation admin.
 | `actions/attest-build-provenance` | `4d101475d8b20a2381f78447822ac1eab6504dd8`                                                 | v4.2.2  | Renovate; Part B                                 |
 | `bats-core/bats-core`            | `eb7f42f8d608ac693d7a4b67474f6714ea68cfc5`, checked out with `actions/checkout`            | v1.14.0 | Renovate; Part B                                 |
 | Node.js                          | `node-version: '24.22.2'` in `zizmor.yml`                                                   | 24.22.2 | Renovate (setup-node input); runs the Renovate validator only |
-| Python (CI)                      | `python-version: '3.14'` in `zizmor.yml` and `dependency-audit.yml`                         | 3.14    | manual; matches the image                        |
+| Python (CI)                      | `python-version: '3.14'` in `zizmor.yml` and `dependency-audit.yml`                         | 3.14    | Renovate, grouped with the image, behind Dashboard approval |
 | zizmor (the audit tool)          | `version: '1.29.0'` in `zizmor.yml`                                                         | 1.29.0  | Renovate; merge the action update first          |
 | semgrep                          | `semgrep==1.176.1` in `semgrep.yml`                                                         | 1.176.1 | manual                                           |
 | renovate config validator        | `renovate@44.50.3` in `zizmor.yml`                                                          | 44.50.3 | manual                                           |
-| pip-tools                        | `pip-tools==7.6.2` in `zizmor.yml` and `serve_api/Makefile`                                 | 7.6.2   | manual; 7.7.0 is younger than the 14-day cooldown |
+| pip-tools                        | `pip-tools==7.6.2` in `zizmor.yml`, `serve_api/Makefile` and `renovate.json` (`constraints`) | 7.6.2   | manual; 7.7.0 is younger than the 14-day cooldown |
 | pip-audit                        | `pip-audit==2.10.1` in `dependency-audit.yml`                                               | 2.10.1  | manual                                           |
 | Python base image                | `python:3.14-bookworm@sha256:fbaf91204f2758a70a7f7d6cf3c2871851227152a54e6a7b5b59941c4566b6b5` in `serve_api/Dockerfile` line 1 and `PY_IMAGE` in `serve_api/Makefile` | 3.14-bookworm | Renovate, both files in one pull request (see below) |
+| GitLab Pages image               | `node:26-alpine@sha256:6bd9ab43c0ec0190ca7b2d193906cb8b7edf6e7f4afa43ddeccd6452710bffb5` in `.gitlab-ci.yml` | 26 (LTS) | Renovate (`gitlabci` manager, `docker:pinDigests`) |
 | Caddy image                      | added by Part B                                                                             | -       | Part B                                           |
-| Python dependencies              | `serve_api/requirements.txt` and `requirements-dev.txt`, `--generate-hashes`                | -       | Renovate (`pip-compile` manager)                 |
+| Python dependencies              | `serve_api/requirements.txt` and `requirements-dev.txt`, `--generate-hashes`                | -       | Renovate (`pip_requirements` per package, `pip-compile` weekly lock-file maintenance); the `audit` drift check rejects an inconsistent bump |
 
 There is no script that compares this table with the workflows. When Renovate
 updates an action, update its row on the same branch before merging.
@@ -62,6 +63,22 @@ platform markers, and the hashed Linux files will not `pip install` on Windows:
 platform-only dependencies such as `colorama` and `pywin32-ctypes` are absent from
 them. The `audit` job recompiles and fails on any drift, so a Windows-compiled file
 is rejected.
+
+On Windows there is no `make`; from the repository root in Git Bash run:
+
+```
+MSYS_NO_PATHCONV=1 docker run --rm -v "$PWD/serve_api:/s" -w /s python:3.14-bookworm@sha256:fbaf91204f2758a70a7f7d6cf3c2871851227152a54e6a7b5b59941c4566b6b5 sh -c "pip install -q pip-tools==7.6.2 && sed 's/\r$//' pip-compile.sh > /tmp/pc.sh && sh /tmp/pc.sh"
+```
+
+Add `--upgrade` after `/tmp/pc.sh` to upgrade. On Linux or WSL with native Docker the
+output files are owned by root; `chown` them back before committing.
+
+If `audit` fails on drift of added `--hash` lines only (a new wheel uploaded for an
+existing release), run the Linux compile and commit the result.
+
+A Renovate pull request that moves the Python minor (grouped with the image, behind
+Dashboard approval) needs the requirements recompiled on the new Python
+(`make deps-linux ARGS=--upgrade` or the docker command above) and pushed onto it.
 
 ## Checks
 
@@ -147,4 +164,7 @@ None today.
 - **Husky pre-push hooks.** Node tooling. A `pre-commit` pre-push stage (already a
   dev dependency) is possible, but changes the maintainer's local workflow:
   follow-up.
+- **Transitive tool dependencies.** The CI tools (semgrep, pip-audit, pip-tools, the
+  Renovate validator) are pinned by version, but their own transitive dependencies
+  are not, as in lvg.
 - **Playwright, bundle checks, preview cleanup.** Nothing here they would check.
