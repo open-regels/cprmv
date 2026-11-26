@@ -24,18 +24,23 @@ def test_get_root():
     assert response.status_code == 200
     assert response.json() == {"CPRMV Rules Serve API": "0.4.3"}
 
-HEALTH_ENV = ("BUILD_SHA", "BUILD_RUN", "CPRMV_IMAGE_DIGEST")
+HEALTH_ENV = ("BUILD_SHA", "BUILD_RUN", "CPRMV_IMAGE_DIGEST", "CPRMV_ENVIRONMENT")
 
 
 def test_health_reports_build_and_digest(monkeypatch):
     monkeypatch.setenv("BUILD_SHA", "abc123")
     monkeypatch.setenv("BUILD_RUN", "42")
     monkeypatch.setenv("CPRMV_IMAGE_DIGEST", "sha256:feed")
+    monkeypatch.setenv("CPRMV_ENVIRONMENT", "acceptance")
     response = client.get("/health")
     assert response.status_code == 200
+    assert list(response.json().keys()) == [
+        "status", "version", "environment", "build", "image",
+    ]
     assert response.json() == {
         "status": "ok",
         "version": "0.4.3",
+        "environment": "acceptance",
         "build": {"sha": "abc123", "run": "42"},
         "image": {"digest": "sha256:feed"},
     }
@@ -45,6 +50,7 @@ def test_health_reports_null_when_unset(monkeypatch):
     for name in HEALTH_ENV:
         monkeypatch.delenv(name, raising=False)
     body = client.get("/health").json()
+    assert body["environment"] is None
     assert body["build"] == {"sha": None, "run": None}
     assert body["image"] == {"digest": None}
 
@@ -53,6 +59,7 @@ def test_health_treats_empty_as_null(monkeypatch):
     for name in HEALTH_ENV:
         monkeypatch.setenv(name, "")
     body = client.get("/health").json()
+    assert body["environment"] is None
     assert body["build"] == {"sha": None, "run": None}
     assert body["image"] == {"digest": None}
 

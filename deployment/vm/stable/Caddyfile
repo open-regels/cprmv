@@ -1,5 +1,5 @@
 # Stable: the API behind Caddy. Mirrors ../acc/Caddyfile; only this comment, the
-# status path (/opt/cprmv/stable/www) and the host name differ. Keep the two in
+# status path (/opt/cprmv/stable/www) and the site address (host names) differ. Keep the two in
 # step. The status file is written by the reconciler into /opt/cprmv/stable/www,
 # mounted read-only at /srv/status.
 
@@ -23,8 +23,9 @@
 	}
 }
 
-# Automatic HTTPS once DNS points here.
-cprmv.open-regels.nl {
+# Automatic HTTPS once DNS points here. cprmv.open-rules.eu is an alias: the same
+# API, with its own certificate.
+cprmv.open-regels.nl, cprmv.open-rules.eu {
 	import app
 }
 

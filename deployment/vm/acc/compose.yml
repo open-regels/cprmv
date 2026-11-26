@@ -3,6 +3,7 @@ services:
     image: ${CPRMV_IMAGE}
     environment:
       CPRMV_IMAGE_DIGEST: ${CPRMV_IMAGE_DIGEST}
+      CPRMV_ENVIRONMENT: acceptance
     healthcheck:
       test:
         - CMD
