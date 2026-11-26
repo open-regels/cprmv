@@ -1,0 +1,70 @@
+#!/bin/sh
+# Test stub for `docker`, used by reconcile.bats. Logs every call to
+# $STUB_DIR/calls.log and behaves as the files in $STUB_DIR say (see the
+# comment at the top of reconcile.bats).
+printf 'docker %s\n' "$*" >>"$STUB_DIR/calls.log"
+
+last=""
+for a in "$@"; do last=$a; done
+
+case $1 in
+info)
+  if [ -e "$STUB_DIR/daemon_down" ]; then
+    echo "Cannot connect to the Docker daemon" >&2
+    exit 1
+  fi
+  ;;
+manifest)
+  sha=${last##*:sha-}
+  if [ -e "$STUB_DIR/image_missing_$sha" ]; then
+    echo "manifest unknown" >&2
+    exit 1
+  fi
+  ;;
+pull)
+  if [ -e "$STUB_DIR/pull_fails_${last##*:sha-}" ]; then
+    echo "pull failed: unexpected EOF" >&2
+    exit 1
+  fi
+  echo "pulled $last"
+  ;;
+image)
+  if [ "$2" = inspect ]; then
+    sha=${last##*:sha-}
+    repo=${last%:sha-*}
+    if [ -f "$STUB_DIR/digest_$sha" ]; then
+      digest=$(cat "$STUB_DIR/digest_$sha")
+    else
+      digest=$(printf '%s%s' "$sha" "$sha" | cut -c1-64)
+    fi
+    printf 'other.example/cprmv@sha256:%064d\n' 0
+    printf '%s@sha256:%s\n' "$repo" "$digest"
+  fi
+  ;;
+compose)
+  file=""
+  prev=""
+  for a in "$@"; do
+    [ "$prev" = -f ] && file=$a
+    prev=$a
+  done
+  sha=$(basename "$(dirname "$file")")
+  case " $* " in
+  *" up "*)
+    if [ -e "$STUB_DIR/up_fails_$sha" ]; then
+      i=1
+      while [ "$i" -le 25 ]; do
+        echo "compose error line $i for $sha"
+        i=$((i + 1))
+      done
+      exit 1
+    fi
+    printf '%s\n' "$sha" >"$STUB_DIR/last_up"
+    ;;
+  *" ps "*)
+    cat "$STUB_DIR/ps_health" 2>/dev/null || echo healthy
+    ;;
+  esac
+  ;;
+esac
+exit 0

@@ -24,6 +24,38 @@ def test_get_root():
     assert response.status_code == 200
     assert response.json() == {"CPRMV Rules Serve API": "0.4.3"}
 
+HEALTH_ENV = ("BUILD_SHA", "BUILD_RUN", "CPRMV_IMAGE_DIGEST")
+
+
+def test_health_reports_build_and_digest(monkeypatch):
+    monkeypatch.setenv("BUILD_SHA", "abc123")
+    monkeypatch.setenv("BUILD_RUN", "42")
+    monkeypatch.setenv("CPRMV_IMAGE_DIGEST", "sha256:feed")
+    response = client.get("/health")
+    assert response.status_code == 200
+    assert response.json() == {
+        "status": "ok",
+        "version": "0.4.3",
+        "build": {"sha": "abc123", "run": "42"},
+        "image": {"digest": "sha256:feed"},
+    }
+
+
+def test_health_reports_null_when_unset(monkeypatch):
+    for name in HEALTH_ENV:
+        monkeypatch.delenv(name, raising=False)
+    body = client.get("/health").json()
+    assert body["build"] == {"sha": None, "run": None}
+    assert body["image"] == {"digest": None}
+
+
+def test_health_treats_empty_as_null(monkeypatch):
+    for name in HEALTH_ENV:
+        monkeypatch.setenv(name, "")
+    body = client.get("/health").json()
+    assert body["build"] == {"sha": None, "run": None}
+    assert body["image"] == {"digest": None}
+
 #def test_get_mapping():
 #    result = get_mapping(CPRMVMETHODS.juriconnect)
 #    expected = {'aanwijzing': 'Aanwijzing', 'afdeling': 'Afdeling', 'artikel': 'Artikel', 'bijlage': 'Bijlage', 'boek': 'Boek', 'deel': 'Deel', 'enig': 'enig', 'hoofdstuk': 'Hoofdstuk', 'inhoudsopgave': 'Inhoudsopgave', 'nummer': 'nummer', 'paragraaf': 'Paragraaf', 'sub-paragraaf': 'Paragraaf', 'titeldeel': 'Titeldeel', 'taal': 'taal', 'verdragsonderdeel': 'Verdragsonderdeel', 'lid': 'lid', 'o': 'onderdeel', 'volzin': 'volzin', 'https://cprmv.open-regels.nl/0.4.3/serve-api/reference-mapping-valid-on': #'g', 'https://cprmv.open-regels.nl/0.4.3/serve-api/reference-mapping-seen-on': 'z'}
