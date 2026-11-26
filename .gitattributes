@@ -5,7 +5,7 @@
 *.bats text eol=lf
 deployment/vm/reconciler/test/stubs/* text eol=lf
 serve_api/requirements*.txt text eol=lf
-deployment/vm/acc/cloud-init.yaml text eol=lf
+deployment/vm/cloud-init.yaml text eol=lf
 deployment/vm/reconciler/*.service text eol=lf
 deployment/vm/reconciler/*.timer text eol=lf
 .github/rulesets/*.json text eol=lf

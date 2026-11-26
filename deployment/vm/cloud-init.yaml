@@ -1,14 +1,20 @@
 #cloud-config
-# First-boot bootstrap of the CPRMV acceptance VM.
+# First-boot bootstrap of the CPRMV @@TIER_TITLE@@ VM.
 #
 # This file is a TEMPLATE. provision.sh replaces the three @@...@@ placeholders
 # below with the base64 of the reconciler and its two systemd units, taken from
 # the local checkout, so the VM gets exactly the files that were reviewed and
 # fetches no code from the network at boot. Render it without Azure with:
 #   bash provision.sh --render rendered.yaml
+## Template notes (lines that start with "## " are dropped from the render):
+## @@TIER@@, @@BRANCH@@ and @@TIER_TITLE@@ are the tier (acc or stable), its
+## branch, and its name in prose. The lines between @@IF_BRANCH_DIFFERS@@ and
+## @@END_IF@@ are kept only when the branch differs from the tier (stable ->
+## main); otherwise they are dropped with the markers, so the rendered acc
+## cloud-init has no environment file and stays as it was.
 #
 # Nothing is cloned. The reconciler creates its own bare repository in
-# /opt/cprmv/acc/repo on its first run and deploys the head of `acc`.
+# /opt/cprmv/@@TIER@@/repo on its first run and deploys the head of `@@BRANCH@@`.
 
 write_files:
   - path: /usr/local/lib/cprmv/reconcile.sh
@@ -26,6 +32,14 @@ write_files:
     permissions: "0644"
     encoding: b64
     content: "@@RECONCILE_TIMER_B64@@"
+@@IF_BRANCH_DIFFERS@@
+  # Read by cprmv-reconcile@@@TIER@@.service (EnvironmentFile=-/etc/cprmv/%i.env).
+  - path: /etc/cprmv/@@TIER@@.env
+    owner: root:root
+    permissions: "0644"
+    content: |
+      CPRMV_BRANCH=@@BRANCH@@
+@@END_IF@@
 
 runcmd:
   - |
@@ -64,7 +78,7 @@ runcmd:
       useradd --system --create-home --home-dir /var/lib/cprmv \
         --shell /usr/sbin/nologin --groups docker cprmv
     fi
-    install -d -o cprmv -g cprmv -m 0755 /opt/cprmv /opt/cprmv/acc /opt/cprmv/acc/www
+    install -d -o cprmv -g cprmv -m 0755 /opt/cprmv /opt/cprmv/@@TIER@@ /opt/cprmv/@@TIER@@/www
 
     systemctl daemon-reload
-    systemctl enable --now cprmv-reconcile@acc.timer
+    systemctl enable --now cprmv-reconcile@@@TIER@@.timer

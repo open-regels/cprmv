@@ -161,9 +161,9 @@ already drifted.
 .github/workflows/dependency-audit.yml  security: daily pip-audit of acc and main
 renovate.json, .semgrepignore, SECURITY-PIPELINE.md
 deployment/vm/README.md                 what the VM needs, provisioning, operations
-deployment/vm/acc/provision.sh          az: NSG, network, static IP, VM
-deployment/vm/acc/cloud-init.yaml       first-boot bootstrap
-deployment/vm/acc/cutover-dns.sh        az: acc.cprmv A record → new VM
+deployment/vm/provision.sh              az: NSG, network, static IP, VM (TIER=acc|stable)
+deployment/vm/cloud-init.yaml           first-boot bootstrap (template, per tier)
+deployment/vm/cutover-dns.sh            az: acc.cprmv or cprmv A record → new VM
 deployment/vm/acc/compose.yml           cprmv-api + caddy for acceptance
 deployment/vm/acc/Caddyfile             acc.cprmv.open-regels.nl → cprmv-api:8000
 deployment/vm/reconciler/reconcile.sh   the reconciler (tier-agnostic)

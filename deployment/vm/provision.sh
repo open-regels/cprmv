@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
-# Provisions the CPRMV acceptance VM with the az CLI. Run by the user:
-#   SUBSCRIPTION=<subscription id> ADMIN_SSH_SOURCE=<address> bash provision.sh
+# Provisions a CPRMV VM (tier acc or stable) with the az CLI. Run by the user:
+#   TIER=<acc|stable> SUBSCRIPTION=<subscription id> ADMIN_SSH_SOURCE=<address> bash provision.sh
 # Idempotent: each resource is created only if it is missing.
 #
 # Required environment:
@@ -8,65 +8,103 @@
 #                      written to a file; the repository is public.
 #   SUBSCRIPTION       the Azure subscription id. Not written to a file either.
 # Optional environment (defaults below):
+#   TIER               acc (the default) or stable. It names the resources
+#                      (rg-cprmv-<tier>, vm-cprmv-<tier>, ...), the reconciler
+#                      instance (cprmv-reconcile@<tier>) and /opt/cprmv/<tier>.
+#   BRANCH             the branch the tier follows: acc for acc, main for stable.
+#                      When it differs from the tier, cloud-init writes
+#                      CPRMV_BRANCH=<branch> to /etc/cprmv/<tier>.env.
 #   LOCATION, RESOURCE_GROUP, VM_NAME, VM_SIZE, VM_IMAGE,
 #   ADMIN_USER, ADMIN_SSH_PUBLIC_KEY (path), VNET_NAME, SUBNET_NAME, NSG_NAME,
 #   PUBLIC_IP_NAME, REPO_ROOT (the checkout; default: this script's repository,
 #   so a copy of the script elsewhere needs REPO_ROOT set).
 # Other use:
-#   bash provision.sh --render <file>   write the rendered cloud-init and stop;
-#                                       needs neither Azure nor the variables above.
+#   TIER=<tier> bash provision.sh --render <file>
+#                      write the rendered cloud-init and stop; needs neither
+#                      Azure nor the required variables above.
 set -euo pipefail
 export MSYS_NO_PATHCONV=1 # Git Bash must not rewrite arguments that look like paths
-
-SUBSCRIPTION=${SUBSCRIPTION:-}
-LOCATION=${LOCATION:-westeurope}
-RESOURCE_GROUP=${RESOURCE_GROUP:-rg-cprmv-acc}
-VM_NAME=${VM_NAME:-vm-cprmv-acc}
-VM_SIZE=${VM_SIZE:-Standard_B2ms}
-VM_IMAGE=${VM_IMAGE:-Canonical:ubuntu-24_04-lts:server:latest} # Ubuntu 24.04 LTS, x86-64
-ADMIN_USER=${ADMIN_USER:-cprmvadmin}
-ADMIN_SSH_PUBLIC_KEY=${ADMIN_SSH_PUBLIC_KEY:-$HOME/.ssh/id_ed25519.pub}
-VNET_NAME=${VNET_NAME:-vnet-cprmv-acc}
-SUBNET_NAME=${SUBNET_NAME:-snet-cprmv-acc}
-NSG_NAME=${NSG_NAME:-nsg-cprmv-acc}
-PUBLIC_IP_NAME=${PUBLIC_IP_NAME:-pip-cprmv-acc}
-
-here=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
-REPO_ROOT=${REPO_ROOT:-$(cd "$here/../../.." && pwd)}
-template=$REPO_ROOT/deployment/vm/acc/cloud-init.yaml
-reconciler_dir=$REPO_ROOT/deployment/vm/reconciler
 
 die() {
   echo "provision.sh: $*" >&2
   exit 1
 }
 
+TIER=${TIER:-acc}
+case $TIER in
+  acc) default_branch=acc tier_title=acceptance ;;
+  stable) default_branch=main tier_title=stable ;;
+  *) die "TIER must be acc or stable, not '$TIER'" ;;
+esac
+BRANCH=${BRANCH:-$default_branch}
+case $BRANCH in '' | *[!A-Za-z0-9._/-]*) die "BRANCH '$BRANCH' is not a plain branch name" ;; esac
+
+SUBSCRIPTION=${SUBSCRIPTION:-}
+LOCATION=${LOCATION:-westeurope}
+RESOURCE_GROUP=${RESOURCE_GROUP:-rg-cprmv-$TIER}
+VM_NAME=${VM_NAME:-vm-cprmv-$TIER}
+VM_SIZE=${VM_SIZE:-Standard_B2ms}
+VM_IMAGE=${VM_IMAGE:-Canonical:ubuntu-24_04-lts:server:latest} # Ubuntu 24.04 LTS, x86-64
+ADMIN_USER=${ADMIN_USER:-cprmvadmin}
+ADMIN_SSH_PUBLIC_KEY=${ADMIN_SSH_PUBLIC_KEY:-$HOME/.ssh/id_ed25519.pub}
+VNET_NAME=${VNET_NAME:-vnet-cprmv-$TIER}
+SUBNET_NAME=${SUBNET_NAME:-snet-cprmv-$TIER}
+NSG_NAME=${NSG_NAME:-nsg-cprmv-$TIER}
+PUBLIC_IP_NAME=${PUBLIC_IP_NAME:-pip-cprmv-$TIER}
+
+here=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
+REPO_ROOT=${REPO_ROOT:-$(cd "$here/../.." && pwd)}
+template=$REPO_ROOT/deployment/vm/cloud-init.yaml
+reconciler_dir=$REPO_ROOT/deployment/vm/reconciler
+
 b64() { base64 <"$1" | tr -d '\n'; }
 
 # az prints CRLF line ends on some Windows terminals; a captured value must not carry the CR.
 strip_cr() { tr -d '\r'; }
 
-# render <out>: the cloud-init template with the three files inserted.
+# render <out>: the cloud-init template for $TIER with the three files inserted.
+# Template lines that start with "## " are notes and are dropped; the lines
+# between @@IF_BRANCH_DIFFERS@@ and @@END_IF@@ are kept only when the branch
+# differs from the tier.
 render() {
-  local f out=$1 tpl
+  local f out=$1 tpl='' line keep=1 nl=$'\n'
   for f in "$template" "$reconciler_dir/reconcile.sh" \
     "$reconciler_dir/cprmv-reconcile@.service" "$reconciler_dir/cprmv-reconcile@.timer"; do
     [ -f "$f" ] || die "missing $f (set REPO_ROOT to the checkout)"
   done
-  tpl=$(cat "$template")
+  while IFS= read -r line || [ -n "$line" ]; do
+    case $line in
+      '## '* | '##') continue ;;
+      @@IF_BRANCH_DIFFERS@@)
+        if [ "$BRANCH" = "$TIER" ]; then keep=0; fi
+        continue
+        ;;
+      @@END_IF@@)
+        keep=1
+        continue
+        ;;
+    esac
+    if [ "$keep" = 1 ]; then tpl+=$line$nl; fi
+  done <"$template"
+  [ "$keep" = 1 ] || die "@@IF_BRANCH_DIFFERS@@ without @@END_IF@@ in $template"
+  # Trailing newlines are dropped and one is written back, as $(cat) did before.
+  while [ "${tpl%"$nl"}" != "$tpl" ]; do tpl=${tpl%"$nl"}; done
+  tpl=${tpl//@@TIER_TITLE@@/$tier_title}
+  tpl=${tpl//@@TIER@@/$TIER}
+  tpl=${tpl//@@BRANCH@@/$BRANCH}
   tpl=${tpl//@@RECONCILE_SH_B64@@/$(b64 "$reconciler_dir/reconcile.sh")}
   tpl=${tpl//@@RECONCILE_SERVICE_B64@@/$(b64 "$reconciler_dir/cprmv-reconcile@.service")}
   tpl=${tpl//@@RECONCILE_TIMER_B64@@/$(b64 "$reconciler_dir/cprmv-reconcile@.timer")}
-  case $tpl in *@@RECONCILE_*) die "a placeholder is left in the rendered cloud-init" ;; esac
+  case $tpl in *@@[A-Z]*) die "a placeholder is left in the rendered cloud-init" ;; esac
   printf '%s\n' "$tpl" >"$out"
   # Azure accepts 64 KB of custom data, measured after its own base64.
   [ "$(wc -c <"$out")" -lt 45000 ] || die "rendered cloud-init is too large for custom data"
 }
 
 if [ "${1:-}" = "--render" ]; then
-  [ -n "${2:-}" ] || die "usage: provision.sh --render <file>"
+  [ -n "${2:-}" ] || die "usage: TIER=<acc|stable> provision.sh --render <file>"
   render "$2"
-  echo "rendered cloud-init written to $2"
+  echo "rendered cloud-init for tier $TIER written to $2"
   exit 0
 fi
 
@@ -180,7 +218,7 @@ ip=$(azs network public-ip show --resource-group "$RESOURCE_GROUP" --name "$PUBL
   --query ipAddress --output tsv | strip_cr)
 echo
 echo "Public IP: $ip"
-echo "cloud-init needs a few minutes, then the first reconciler run deploys the head of acc."
+echo "cloud-init needs a few minutes, then the first reconciler run deploys the head of $BRANCH."
 echo "Check:"
 echo "  http://$ip/health"
 echo "  http://$ip/deploy-status.json"
