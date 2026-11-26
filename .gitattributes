@@ -9,3 +9,5 @@ deployment/vm/acc/cloud-init.yaml text eol=lf
 deployment/vm/reconciler/*.service text eol=lf
 deployment/vm/reconciler/*.timer text eol=lf
 .github/rulesets/*.json text eol=lf
+deployment/vm/stable/Caddyfile text eol=lf
+deployment/vm/stable/compose.yml text eol=lf
