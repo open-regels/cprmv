@@ -1,0 +1,185 @@
+name: ACC CI
+
+# Tests, builds and publishes the API image, then waits for the acceptance VM to
+# run it. The check names `test`, `build` and `deploy-acc` are referenced by the
+# rulesets. Renaming a job means updating them.
+#
+# Deliberately no paths filter on push: the reconciler on the VM maps every acc
+# commit to one image, and a commit without an image would stall it. The GitHub
+# Actions layer cache keeps a docs-only rebuild cheap.
+on:
+  pull_request:
+    branches:
+      - acc
+  push:
+    branches:
+      - acc
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+# One group per ref. Pull requests cancel the superseded run; pushes queue, so a
+# commit that is being published is never cancelled half way.
+concurrency:
+  group: acc-ci-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+env:
+  IMAGE: ghcr.io/open-regels/cprmv-api
+
+jobs:
+  test:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Set up Python
+        uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7.1.0
+        with:
+          python-version: '3.14'
+      - name: Install dependencies
+        run: pip install --require-hashes -r serve_api/requirements-dev.txt
+      - name: Compile and import the API
+        working-directory: serve_api
+        run: |
+          python -m py_compile src/serve.py
+          python -c "from src.serve import app"
+      - name: API tests
+        # From serve_api/, as GitLab ran them: the tests import ..src.serve.
+        working-directory: serve_api
+        run: pytest
+      - name: Shellcheck
+        # The version is whatever the ubuntu-24.04 image ships; it is not pinned.
+        # git ls-files covers scripts added later without editing this workflow.
+        # The stubs have no extension, so they are listed explicitly. rdf/<version>/
+        # holds published, versioned artifacts that are not edited, so it is excluded.
+        run: |
+          git ls-files -z -- '*.sh' ':!:rdf/' | xargs -0 shellcheck
+          shellcheck deployment/vm/reconciler/test/stubs/*
+      - name: Check out bats-core
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          repository: bats-core/bats-core
+          ref: eb7f42f8d608ac693d7a4b67474f6714ea68cfc5 # v1.14.0
+          # The action only accepts a path inside the workspace.
+          path: bats-core
+          persist-credentials: false
+      - name: Install pip-audit
+        # Not a project dependency: scripts/test/audit-requirements.bats runs the
+        # real tool (it needs the network, which the runner has). Pinned by hand,
+        # because Renovate does not manage an inline pip argument.
+        run: pip install pip-audit==2.10.1
+      - name: Shell tests
+        # jq, git, curl and flock (util-linux) are on the runner image. The
+        # reconciler tests commit in temporary repositories, so git needs an
+        # identity.
+        run: |
+          git config --global user.email ci@example.invalid
+          git config --global user.name ci
+          ./bats-core/install.sh "$RUNNER_TEMP/bats"
+          "$RUNNER_TEMP/bats/bin/bats" scripts/test deployment/vm/reconciler/test
+
+  build:
+    needs: test
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    # Only the steps gated on `push` use the write permissions. On a pull request
+    # from a fork GitHub reduces the token to read-only regardless.
+    permissions:
+      contents: read
+      packages: write # push the image to GHCR (push runs only)
+      id-token: write # sign the provenance attestation (push runs only)
+      attestations: write # store the attestation (push runs only)
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Set up Buildx
+        uses: docker/setup-buildx-action@f87e5991a6d7451dcb8d9637bfbc97413f497069 # v4.4.1
+      - name: Build, loaded locally for the smoke test
+        uses: docker/build-push-action@c3c9e263c25d99ce0380d002d59b67737d91b0dc # v7.4.0
+        with:
+          context: serve_api
+          load: true
+          tags: cprmv-api:ci
+          build-args: |
+            BUILD_SHA=${{ github.sha }}
+            BUILD_RUN=${{ github.run_number }}
+          cache-from: type=gha
+          # Only pushes write the cache, so a pull request cannot poison it.
+          cache-to: ${{ github.event_name == 'push' && 'type=gha,mode=max' || '' }}
+      - name: Smoke test
+        env:
+          IMAGE_REF: cprmv-api:ci
+          EXPECTED_SHA: ${{ github.sha }}
+        run: sh scripts/smoke-health.sh "$IMAGE_REF" "$EXPECTED_SHA"
+      - name: Log in to GHCR
+        if: github.event_name == 'push'
+        uses: docker/login-action@8aa5831fb8d48d8f76594c7ddde61ae58019f550 # v4.8.0
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Push
+        id: push
+        if: github.event_name == 'push'
+        # The same build again: the layer cache makes it a re-tag and a push.
+        uses: docker/build-push-action@c3c9e263c25d99ce0380d002d59b67737d91b0dc # v7.4.0
+        with:
+          context: serve_api
+          push: true
+          tags: |
+            ${{ env.IMAGE }}:sha-${{ github.sha }}
+            ${{ env.IMAGE }}:acc
+          build-args: |
+            BUILD_SHA=${{ github.sha }}
+            BUILD_RUN=${{ github.run_number }}
+          cache-from: type=gha
+      - name: Verify the pushed image
+        if: github.event_name == 'push'
+        # Pulls what the registry now holds, by digest, and runs the same check.
+        env:
+          IMAGE_REF: ${{ env.IMAGE }}@${{ steps.push.outputs.digest }}
+          EXPECTED_SHA: ${{ github.sha }}
+        run: sh scripts/smoke-health.sh "$IMAGE_REF" "$EXPECTED_SHA"
+      - name: Attest build provenance
+        if: github.event_name == 'push'
+        uses: actions/attest-build-provenance@4d101475d8b20a2381f78447822ac1eab6504dd8 # v4.2.2
+        with:
+          subject-name: ghcr.io/open-regels/cprmv-api
+          subject-digest: ${{ steps.push.outputs.digest }}
+          push-to-registry: true
+
+  deploy-acc:
+    # Not on pull requests: nothing is published there. Until the acceptance VM
+    # exists and runs the reconciler, this job times out after 15 minutes on every
+    # run; it starts to pass once the VM deploys the pushed commit.
+    if: github.event_name != 'pull_request' && github.ref == 'refs/heads/acc'
+    needs: build
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    permissions:
+      contents: read
+    environment:
+      name: acceptance
+      url: https://acc.cprmv.open-regels.nl
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Wait for the VM to run this commit
+        env:
+          # On workflow_dispatch this is the head of the dispatched ref.
+          SHA: ${{ github.sha }}
+        run: |
+          scripts/wait-for-deploy.sh \
+            https://acc.cprmv.open-regels.nl/deploy-status.json \
+            "$SHA" \
+            https://github.com/open-regels/cprmv.git \
+            acc \
+            https://acc.cprmv.open-regels.nl/health

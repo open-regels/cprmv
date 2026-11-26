@@ -72,5 +72,7 @@ run () {
 common="${upgrade_args}"
 
 # Update the compiled requirements files
+# shellcheck disable=SC2086 # $common holds separate pip-compile options, split on purpose
 run pip-compile $common --generate-hashes --allow-unsafe --strip-extras --output-file requirements.txt pyproject.toml "$@"
+# shellcheck disable=SC2086 # $common holds separate pip-compile options, split on purpose
 run pip-compile $common --generate-hashes --allow-unsafe --strip-extras --extra dev,tools --output-file requirements-dev.txt pyproject.toml "$@"
