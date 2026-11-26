@@ -1,10 +1,11 @@
-# Stable tier: mirrors ../acc/compose.yml. Only the status mount differs
-# (/opt/cprmv/stable/www); keep the two files in step.
+# Stable tier: mirrors ../acc/compose.yml. Only the status mount
+# (/opt/cprmv/stable/www) and the CPRMV_ENVIRONMENT value differ; keep the two files in step.
 services:
   cprmv-api:
     image: ${CPRMV_IMAGE}
     environment:
       CPRMV_IMAGE_DIGEST: ${CPRMV_IMAGE_DIGEST}
+      CPRMV_ENVIRONMENT: stable
     healthcheck:
       test:
         - CMD
