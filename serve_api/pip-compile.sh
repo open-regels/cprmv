@@ -72,5 +72,5 @@ run () {
 common="${upgrade_args}"
 
 # Update the compiled requirements files
-run pip-compile $common --output-file requirements.txt pyproject.toml "$@"
-run pip-compile $common --extra dev,tools --output-file requirements-dev.txt pyproject.toml "$@"
+run pip-compile $common --generate-hashes --allow-unsafe --strip-extras --output-file requirements.txt pyproject.toml "$@"
+run pip-compile $common --generate-hashes --allow-unsafe --strip-extras --extra dev,tools --output-file requirements-dev.txt pyproject.toml "$@"

@@ -1,0 +1,7 @@
+# Advisory ids that scripts/audit-requirements.sh passes to pip-audit as
+# --ignore-vuln. One id per line (GHSA-..., PYSEC-..., CVE-...); `#` starts a
+# comment, blank lines are skipped.
+#
+# Every entry must have a matching row in the accepted-findings table of
+# SECURITY-PIPELINE.md, with the reason and a review date. An id listed here
+# without that row is not accepted, only hidden.
