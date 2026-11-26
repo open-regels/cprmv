@@ -519,6 +519,94 @@ one to pass the gates:
    must reach the VM with `deploy-acc` green, and running the reconciler twice by
    hand must change nothing the second time.
 
+## The stable tier (added 26 November 2026)
+
+The acceptance deployment proved itself end to end on 26 November 2026 (PR #23:
+merge to running on the VM in five minutes, `deploy-acc` green). The same shape
+now carries the **stable** tier: the release on `main`, served at
+`https://cprmv.open-regels.nl` with its API at `/docs` and the ReSpec at
+`/respec`. "Stable" is the IOU name for the released, non-acceptance version
+(as in lvg's `azure-lvg-stable.yml`); it is not the external production
+platform.
+
+### Decided
+
+- **A dedicated VM** for the stable tier, CPRMV only, like acceptance. The IOU
+  components on the old VM (Keycloak, Operaton, Skosmos) get VMs of their own in
+  separate work, and their production instances move to external providers.
+- **The image is built again on `main`.** A push to `main` builds, tests,
+  publishes and attests `sha-<main commit>`, exactly as a push to `acc` does,
+  so the reconciler and `/health` work unchanged. Promoting the acceptance image
+  byte for byte was considered and set aside: the image would report the `acc`
+  commit, not the `main` merge commit, and the reconciler's
+  `build.sha == target` check would need a second rule. With the pinned base
+  image and hash-locked requirements the rebuild is close to identical, but not
+  guaranteed byte-identical.
+- **The TLSA record `_443._tcp.cprmv` is removed** at cutover. It pins the old
+  server's key (3 1 1); the new VM's certificate comes from Let's Encrypt with a
+  key Caddy may rotate at renewal, so a key pin would keep breaking. Nobody
+  knows why it was set; if something depends on it, that will surface.
+
+### Design
+
+- **One workflow for both branches.** `acc-ci.yml` becomes `ci.yml`, triggered
+  by pull requests into and pushes to `acc` and `main`. The job ids `test` and
+  `build` stay, so the rulesets keep matching; `publish` and `deploy-acc` become
+  `publish` and `deploy`, with the tier taken from the branch:
+
+  | Branch | Tier | Host | Tags pushed | Environment |
+  |---|---|---|---|---|
+  | `acc` | `acc` | `acc.cprmv.open-regels.nl` | `sha-<commit>`, `acc` | `acceptance` |
+  | `main` | `stable` | `cprmv.open-regels.nl` | `sha-<commit>`, `stable`, `<version>` | `stable` |
+
+  `<version>` is the `version` in `serve_api/pyproject.toml`. A second build of
+  the same version (a re-run, or a later commit before the version is bumped)
+  moves that tag; the VM pins by digest, so nothing that runs moves with it.
+- **The reconciler is unchanged in logic.** The tier `stable` follows the branch
+  `main`: the systemd unit reads `CPRMV_BRANCH` from `/etc/cprmv/%i.env` when
+  that file exists (written by cloud-init for `stable`; `acc` needs none, since
+  its branch equals its tier).
+- **`deployment/vm/stable/`** holds the stable tier's `compose.yml` and
+  `Caddyfile`: the same as acceptance with the host `cprmv.open-regels.nl` and
+  the paths under `/opt/cprmv/stable/`.
+- **Provisioning takes the tier.** `provision.sh`, `cloud-init.yaml` and
+  `cutover-dns.sh` move from `deployment/vm/acc/` to `deployment/vm/` and take
+  `TIER=acc|stable` (default `acc`), deriving the resource names
+  (`rg-cprmv-<tier>`, `vm-cprmv-<tier>`, …), the DNS record (`acc.cprmv` or
+  `cprmv`) and the branch. One copy of each script, not two. For `stable`,
+  `cutover-dns.sh` also deletes the TLSA record set `_443._tcp.cprmv`, after
+  the A record has moved, and says so.
+- **The `main` ruleset** additionally requires `test` and `build`, as `acc`
+  does, once they have reported on a pull request into `main`.
+
+### Release flow
+
+1. A pull request from `acc` into `main` ("Release 0.4.x"). `audit`, `scan`,
+   `test` and `build` run on it. The version in `pyproject.toml` is bumped on
+   `acc` before.
+2. Merge: `publish` builds and pushes the stable image, the stable VM deploys
+   it, `deploy` goes green.
+3. GitLab: `main` is pushed fast-forward to the `gitlab` remote, which starts
+   the Pages job and publishes the ReSpec. That push is asked for each time.
+
+### Rollout
+
+1. Pull request with the above into `acc`; merged, acceptance keeps working
+   (its unit, paths and names do not change).
+2. Release pull request `acc` → `main` (0.4.3 plus the deployment). Its merge
+   publishes the first stable image; `deploy` times out, as on acceptance.
+3. Lower the `cprmv` TTL; provision `TIER=stable`; check the new VM over its IP.
+4. Cut over: `cprmv` → the new IP, TLSA removed. Check
+   `https://cprmv.open-regels.nl/health`, `/docs`, `/respec`.
+5. Add `test` and `build` to the `main` ruleset. Stop the old VM's CPRMV
+   containers and remove both CPRMV site blocks from its Caddyfile.
+
+### Not in this addition
+
+- The old `cprmv-dev` DNS records (A and TLSA), which point at the old VM:
+  removed together with that VM's CPRMV containers, by hand.
+- The IOU components' own VMs.
+
 ## Follow-ups (not in this design)
 
 - Verify provenance on the VM before applying an image.

@@ -259,3 +259,54 @@ The run, in order (spec "One run"): lock (`flock -n`, busy → exit 0 silently) 
 - [ ] **Step 4:** Hand the user `! bash ~/cutover-dns-cprmv-acc.sh`. Check `https://acc.cprmv.open-regels.nl/health` once the certificate is issued. Ask the user to stop the old VM's acc container.
 - [ ] **Step 5:** Prove it: a small pull request (a `CHANGELOG.md` entry for the deployment) merged into `acc` reaches the VM with `deploy-acc` green; then ask the user to run `sudo -u cprmv /usr/local/lib/cprmv/reconcile.sh acc` twice over SSH and confirm `deploy-status.json` changes only `checked_at`.
 - [ ] **Step 6:** Delete the copied `~/*.sh` scripts; housekeeping.
+
+---
+
+## Part C: the stable tier (branch `feat/stable-tier`, from `acc` at 840b6b2)
+
+Spec: "The stable tier (added 26 November 2026)". Global Constraints above apply,
+plus: acceptance must keep working throughout (its unit name, paths, image tags,
+check names and resource names do not change).
+
+### Task C1: one workflow for `acc` and `main`
+
+**Files:** Rename `.github/workflows/acc-ci.yml` → `.github/workflows/ci.yml`; modify `SECURITY-PIPELINE.md`, `.github/rulesets/main.json`.
+
+**Interfaces:**
+- Produces: jobs `test`, `build` (required, unchanged ids), `publish`, `deploy`. Tier from the branch: `acc` → tier `acc`, host `acc.cprmv.open-regels.nl`, environment `acceptance`, tags `sha-<sha>`, `acc`; `main` → tier `stable`, host `cprmv.open-regels.nl`, environment `stable`, tags `sha-<sha>`, `stable`, `<version>`.
+
+- [ ] **Step 1:** Triggers: `pull_request` branches `[acc, main]`, `push` branches `[acc, main]`, `workflow_dispatch`. Concurrency group `ci-${{ github.event.pull_request.number || github.ref }}`.
+- [ ] **Step 2:** A small first step in `publish` (or a `tier` job output) maps `github.ref` to tier/host/environment; `publish` and `deploy` run only on `push` to `refs/heads/acc` or `refs/heads/main`. Values reach `run:` through `env:` only. `environment.name`/`url` from that mapping (`environment` accepts expressions).
+- [ ] **Step 3:** On `main`, also tag `:stable` and `:<version>`, where version is read from `serve_api/pyproject.toml` (`[project] version`), validated against `^[0-9]+\.[0-9]+\.[0-9]+$`, failing the job otherwise.
+- [ ] **Step 4:** `deploy` runs `scripts/wait-for-deploy.sh https://<host>/deploy-status.json "$SHA" https://github.com/open-regels/cprmv.git <branch> https://<host>/health`.
+- [ ] **Step 5:** `.github/rulesets/main.json` requires `audit`, `scan`, `test`, `build`; `SECURITY-PIPELINE.md` checks table and ruleset section updated (main's test/build "added after the first release pull request has reported").
+- [ ] **Step 6:** Verify: zizmor 1.29.0 --offline clean, actionlint 1.7.7 clean, YAML parses. Show the tier mapping for both refs with a dry evaluation (e.g. extract the mapping into `scripts/ci-tier.sh <ref>` with a bats test, if that keeps the workflow simpler — implementer's call, but the mapping must be tested somewhere).
+- [ ] **Step 7: Commit** (ask first): `ci: run the pipeline for acc and main, publishing per tier`
+
+### Task C2: the stable tier on the VM side
+
+**Files:** Modify `deployment/vm/reconciler/cprmv-reconcile@.service`; create `deployment/vm/stable/compose.yml`, `deployment/vm/stable/Caddyfile`.
+
+- [ ] **Step 1:** The service gets `EnvironmentFile=-/etc/cprmv/%i.env` (optional file). reconcile.sh already honours `CPRMV_BRANCH`; no logic change. Add a reconcile.bats test that `CPRMV_BRANCH=main` with tier `stable` fetches `main` and deploys its head (uses `deployment/vm/stable/` from that commit).
+- [ ] **Step 2:** `deployment/vm/stable/compose.yml` and `Caddyfile`: copies of acceptance with host `cprmv.open-regels.nl`, status mount `/opt/cprmv/stable/www`, same pins, headers, logging, healthcheck. Validate with `docker compose config -q` and `caddy validate`.
+- [ ] **Step 3:** Verify: the full reconcile.bats suite in the CI-like container, shellcheck.
+- [ ] **Step 4: Commit** (ask first): `feat(deploy): describe the stable tier`
+
+### Task C3: provisioning and cutover take the tier
+
+**Files:** Move `deployment/vm/acc/{provision.sh,cloud-init.yaml,cutover-dns.sh}` → `deployment/vm/`; modify them, `deployment/vm/README.md`, `.gitattributes` if paths are listed there.
+
+- [ ] **Step 1:** `TIER` env (`acc` default, or `stable`; anything else dies). Derived: `RESOURCE_GROUP=rg-cprmv-$TIER`, `VM_NAME=vm-cprmv-$TIER`, NSG/vnet/pip names likewise (the existing acc names must be reproduced exactly: check provision.sh's current names), DNS record `acc.cprmv` or `cprmv`, branch `acc` or `main`. All still overridable by env.
+- [ ] **Step 2:** cloud-init: tier and paths are template values; for `stable` it writes `/etc/cprmv/stable.env` with `CPRMV_BRANCH=main`, creates `/opt/cprmv/stable{,/www}`, and enables `cprmv-reconcile@stable.timer`. The rendered acc output must stay byte-identical to today's apart from what the move forces (compare `--render` output before and after for `TIER=acc`, and explain any difference) — so a re-run of provision.sh for acc does not report "cloud-init changed".
+- [ ] **Step 3:** cutover-dns.sh: for `stable`, after the A record is verified, delete the record set `_443._tcp.cprmv` (TLSA) if it exists, and print that it did; for `acc` nothing changes. CR-safe like the rest.
+- [ ] **Step 4:** README: one provisioning section with `TIER=`; the stable rollout steps (lower TTL, provision, check over IP, cutover incl. TLSA, ruleset); the release flow (version bump on acc, PR acc → main, GitLab push asked each time).
+- [ ] **Step 5:** Verify: shellcheck (LF copies), `--render` for both tiers + `cloud-init schema`, a stub-az run of cutover-dns.sh for `stable` showing the TLSA delete call and for `acc` showing none.
+- [ ] **Step 6: Commit** (ask first): `feat(deploy): provision and cut over either tier`
+
+### Task C4: rollout (controller and user)
+
+- [ ] Pull request into `acc`, user merge; acceptance keeps running (check its status).
+- [ ] Release pull request `acc` → `main`; user merge; first stable image published.
+- [ ] User: lower `cprmv` TTL, provision `TIER=stable`; controller checks the IP.
+- [ ] User: cutover (A record + TLSA); controller checks `https://cprmv.open-regels.nl/health`, `/docs`, `/respec/`.
+- [ ] Ruleset `main` gets `test`, `build` (script for the user). GitLab push of `main` (asked). Old VM clean-up (user).
