@@ -558,9 +558,9 @@ fastar==0.12.0 \
     # via
     #   fastapi
     #   fastapi-cloud-cli
-fastmcp==4.0.10 \
-    --hash=sha256:1f8462e3d97394a637e1b0f1eaea0002da661c8d98000ad43f0aa3fa1ff523e8 \
-    --hash=sha256:64539631a7dc5873a1c7a44089b2f7b3395dea3ca857e9f81bfe9665a59038d5
+fastmcp==4.1.2 \
+    --hash=sha256:1b70a8467ac4dd6416c7c101cd54562f089b55e6636a196b4a20bdac3ccb0284 \
+    --hash=sha256:3d5eddfe624b002ebcf202d5a55ff13bdce6925ce58bfcaeb28bc2e3bbee1830
     # via cprmv (pyproject.toml)
 fastmcp-slim==4.0.10 \
     --hash=sha256:c2abd40302b8f06b0291413cf537d57bc0f171b5fd98af5cfef3b2b6b506122f \
