@@ -14,7 +14,7 @@ ReSpec: `.gitlab-ci.yml` holds the `create-pages` job and nothing else, and
 All done on 24 November 2026 by the `open-regels` organisation admin.
 
 - The Renovate (Mend) GitHub App has access to `open-regels/cprmv`. Its onboarding
-  pull request (#3) is to be closed once `renovate.json` is on `acc`.
+  pull request (#3) was closed once `renovate.json` was on `acc`.
 - Dependabot alerts are enabled. Renovate's fast route for security fixes depends
   on them.
 - `SEMGREP_APP_TOKEN` is set as a repository secret.
@@ -113,13 +113,14 @@ today.
 
 Rulesets are GitHub state, so this section and `.github/rulesets/` record what a
 diff cannot show. Both were created on 26 November 2026 with `audit` and `scan`;
-`test` and `build` are added to the `acc` ruleset once this pull request's checks
-have reported them (a required check that has never reported blocks every merge).
+`test` and `build` were added later that day, to `acc` after they had first reported
+on a pull request into `acc` and to `main` after the first release pull request (a
+required check that has never reported blocks every merge).
 
 | Ruleset                 | ID         | Branch | Required checks                              |
 | ----------------------- | ---------- | ------ | -------------------------------------------- |
-| `acc supply-chain gate` | `28148785` | `acc`  | `audit`, `scan`, `test`, `build` (the last two added after this pull request's checks have reported) |
-| `main promotion gate`   | `28148786` | `main` | `audit`, `scan`, `test`, `build` (the last two added after the first release pull request has reported them) |
+| `acc supply-chain gate` | `28148785` | `acc`  | `audit`, `scan`, `test`, `build`             |
+| `main promotion gate`   | `28148786` | `main` | `audit`, `scan`, `test`, `build`             |
 
 Both require a pull request with zero approvals and merge commits only, and both
 block branch deletion and force pushes. Neither has bypass actors.

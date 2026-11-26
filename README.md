@@ -30,19 +30,18 @@ CC0-1.0.
 | What                          | URL                                                             |
 | ----------------------------- | --------------------------------------------------------------- |
 | API, stable                   | https://cprmv.open-regels.nl                                    |
-| API, stable (alias)           | https://cprmv.open-rules.eu (once its DNS points at the stable VM) |
+| API, stable (alias)           | https://cprmv.open-rules.eu                                     |
 | Interactive API docs          | https://cprmv.open-regels.nl/docs                               |
 | ReSpec, served by the API     | https://cprmv.open-regels.nl/respec/                            |
 | MCP endpoint                  | https://cprmv.open-regels.nl/mcp                                |
 | API, acceptance               | https://acc.cprmv.open-regels.nl                                |
 | Published ReSpec, per version | `https://standaarden.open-regels.nl/standards/cprmv/<version>/` |
 
-Stable runs what is on `main`; acceptance runs what is on `acc`. Acceptance
-reports its state at `/health` and `/deploy-status.json`, and stable does the same
-once the stable VM is rolled out. `/health` reports the tier in `"environment"`
+Stable runs what is on `main`; acceptance runs what is on `acc`. Both report
+their state at `/health` and `/deploy-status.json`. `/health` reports the tier in `"environment"`
 (`"acceptance"` or `"stable"`), after `"version"` and before `"build"` and `"image"`;
 a value that is not set is `null`. The stable VM also serves `cprmv.open-rules.eu`
-as an alias of `cprmv.open-regels.nl`, once that name's DNS points at it.
+as an alias of `cprmv.open-regels.nl`.
 
 ## Repository layout
 
@@ -177,8 +176,7 @@ reads. A merge into `acc` or `main` is therefore a deploy.
 | `publish` | push the image to GHCR and attest it; after a merge only       | no           |
 | `deploy`  | wait for the tier's VM to run the commit; after a merge only   | no           |
 
-Note 1: required on `acc`; on `main` once the first release pull request has
-reported it.
+Note 1: required on both `acc` and `main`.
 
 A daily **dependency audit** runs `pip-audit` over the pinned requirements of `acc`
 and `main` and keeps a tracking issue open while anything is found. **Renovate**
