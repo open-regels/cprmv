@@ -176,8 +176,9 @@ expected, and the steps below bring the VM up:
 
 ## Release flow
 
-1. Bump the `version` in `serve_api/pyproject.toml` on `acc` (through a pull
-   request, as every change to `acc`).
+1. Bump the version on `acc` (through a pull request, as every change to `acc`)
+   in every place the repository writes it: see "Releasing" in the root
+   `README.md`. The `<version>` image tag is read from `serve_api/pyproject.toml`.
 2. Open a pull request from `acc` into `main` ("Release <version>"). `audit`,
    `scan`, `test` and `build` run on it.
 3. Merge it. `publish` builds and pushes `sha-<main commit>`, `stable` and
