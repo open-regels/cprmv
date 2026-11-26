@@ -105,8 +105,7 @@ or the VM cannot pull the image. Check anonymously, with `<head>` the head of th
 tier's branch (`acc` or `main`):
 
 ```
-docker logout ghcr.io
-docker manifest inspect ghcr.io/open-regels/cprmv-api:sha-<head>
+DOCKER_CONFIG=$(mktemp -d) docker manifest inspect ghcr.io/open-regels/cprmv-api:sha-<head>
 ```
 
 Until the first deploy nothing listens on port 80, so read the status over SSH:
@@ -126,8 +125,8 @@ curl -s http://<ip>/deploy-status.json                             # "state": "r
 
 ### Moving DNS
 
-The A records `acc.cprmv` and `cprmv` in the zone `open-regels.nl` have a TTL of
-3600. Copy the script first, then a day ahead lower the TTL so the cutover takes
+The A record `cprmv` in the zone `open-regels.nl` has a TTL of 3600; `acc.cprmv`
+was lowered to 300 at its cutover. Copy the script first, then a day ahead lower the TTL so the cutover takes
 effect quickly:
 
 ```
@@ -160,7 +159,8 @@ Once a release pull request (below) has merged into `main`, so that
 because the stable VM does not exist yet (as it did on acceptance); that is
 expected, and the steps below bring the VM up:
 
-1. **Lower the TTL** of `cprmv`, a day ahead:
+1. **Lower the TTL** of `cprmv`, a day ahead. First refresh the script, since an
+   older acc-only copy may be in `~`: `cp deployment/vm/cutover-dns.sh ~/cutover-dns.sh`. Then
    `! TIER=stable SUBSCRIPTION=<subscription id> DNS_RESOURCE_GROUP=<resource group> bash ~/cutover-dns.sh --lower-ttl`.
 2. **Provision** with `TIER=stable` (see Provisioning).
 3. **Check over the IP** with the curl checks above, with `<host>`
@@ -206,7 +206,7 @@ expected, and the steps below bring the VM up:
 | ---------- | -------------------------------------------------------------------- | ------------------------------------------------------------------ |
 | `running`  | The target runs and is healthy.                                      | Nothing.                                                           |
 | `waiting`  | The target's image is not on GHCR yet (the build is probably running). What ran before keeps running. | Nothing; it resolves itself.  |
-| `stalled`  | Still no image for the target after 30 minutes.                      | Look at the `build` job of that commit. A new commit unblocks it.  |
+| `stalled`  | Still no image for the target after 30 minutes.                      | Look at the `build` or `publish` job of that commit. A new commit unblocks it.  |
 | `failed`   | The target did not come up; the previous release was restored (`last_attempt.result` says `restored`) or nothing ran before. The commit is not retried. | Read `last_attempt.error`, fix, merge a new commit. |
 | `broken`   | The target failed **and** the restore failed: nothing reliable runs. | **The only state that needs a person.** SSH in, read `journalctl -u cprmv-reconcile@<tier>` and `/opt/cprmv/<tier>/state.json`, and bring a release up by hand with `docker compose -p cprmv-<tier> ...`. |
 

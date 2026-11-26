@@ -303,6 +303,18 @@ check names and resource names do not change).
 - [ ] **Step 5:** Verify: shellcheck (LF copies), `--render` for both tiers + `cloud-init schema`, a stub-az run of cutover-dns.sh for `stable` showing the TLSA delete call and for `acc` showing none.
 - [ ] **Step 6: Commit** (ask first): `feat(deploy): provision and cut over either tier`
 
+### Task C5: the repository README
+
+**Files:** Create/replace the (empty) root `README.md`. Read-only sources: `serve_api/README.md`, `METHODS.md`, `ROADMAP.md`, `CHANGELOG.md`, `html/` (ReSpec build), `SECURITY-PIPELINE.md`, `deployment/vm/README.md`, `.github/workflows/`, the spec.
+
+- [ ] **Step 1:** Introduction: what CPRMV is (the vocabulary, the Rules Serve API, the ReSpec specification), who maintains it, the live URLs (stable `https://cprmv.open-regels.nl` with `/docs`, `/respec`, `/mcp`; acceptance `https://acc.cprmv.open-regels.nl`; the published ReSpec at `https://standaarden.open-regels.nl/standards/cprmv/<version>/`), license.
+- [ ] **Step 2:** Repository layout: a short annotated tree of the top-level folders (`rdf/`, `html/`, `serve_api/`, `scripts/`, `deployment/vm/`, `.github/`, `docs/`) with one line each.
+- [ ] **Step 3:** How to: run the API locally (Docker build + run; the container-based test command that works on Windows, with the quiet-pip settings), run the tests (pytest, bats), recompile the hashed requirements (`make deps-linux` / the Git Bash docker command), build the ReSpec (`html/`), and where method modules go (pointer to `METHODS.md`). Only commands that exist in the repo; check each against the Makefile/scripts.
+- [ ] **Step 4:** CI/CD structure: a Mermaid diagram of the flow (feature branch → PR into `acc` → checks → merge → `publish` → acceptance VM reconciles → `deploy` verdict; release PR `acc` → `main` → stable VM; GitLab Pages at a release), a table of the two tiers (branch, host, image tags, VM, environment), the checks and which are required, and short pointers to `SECURITY-PIPELINE.md` and `deployment/vm/README.md` for detail rather than repeating them.
+- [ ] **Step 5:** Contributing in brief: branch from `acc`, pull requests only into `acc`/`main`, Windows notes (hashed requirements install on Linux only; use the container or WSL), commit/PR conventions as the repo already uses them; links to `CHANGELOG.md`, `ROADMAP.md`.
+- [ ] **Step 6:** No private values (subscription IDs, resource groups, IPs, personal e-mail). Render check: Mermaid syntax valid (e.g. `npx -y @mermaid-js/mermaid-cli@<pinned>` or a careful read), links resolve to files that exist.
+- [ ] **Step 7: Commit** (ask first): `docs: add the repository README`
+
 ### Task C4: rollout (controller and user)
 
 - [ ] Pull request into `acc`, user merge; acceptance keeps running (check its status).

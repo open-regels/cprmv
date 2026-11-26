@@ -70,8 +70,8 @@ new=$(az network public-ip show --subscription "$SUBSCRIPTION" --resource-group 
 
 status=$(curl -fsS --max-time 15 "http://$new/deploy-status.json") ||
   die "http://$new/deploy-status.json is not reachable; not moving DNS"
-printf '%s' "$status" | jq -e '.state == "running"' >/dev/null ||
-  die "the VM does not report state running; not moving DNS. It says: $status"
+printf '%s' "$status" | jq -e --arg t "$TIER" '.state == "running" and .tier == $t' >/dev/null ||
+  die "the VM at $new does not report tier $TIER running; not moving DNS. It says: $status"
 
 # Add the new address first so the record set is never empty, then drop the rest.
 case " $old " in

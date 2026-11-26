@@ -468,9 +468,9 @@ GitHub App access to `open-regels/cprmv`; Dependabot alerts on;
 | Situation | What runs | What the status says | What the workflow says |
 |---|---|---|---|
 | Build failed, no image | previous | `waiting`, then `stalled` | build job failed |
-| Image pulled, container unhealthy | previous (restored) | `failed`, error text | `deploy-acc` fails |
-| Restore also fails | nothing reliable | `broken` | `deploy-acc` fails |
-| VM down or reconciler stopped | unknown | stale `checked_at`, or unreachable | `deploy-acc` times out |
+| Image pulled, container unhealthy | previous (restored) | `failed`, error text | `deploy` fails |
+| Restore also fails | nothing reliable | `broken` | `deploy` fails |
+| VM down or reconciler stopped | unknown | stale `checked_at`, or unreachable | `deploy` times out |
 | Two merges in quick succession | the newer | the newer as target | older run reports superseded |
 
 ## Risks and decisions to revisit

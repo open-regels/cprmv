@@ -1,10 +1,12 @@
 #cloud-config
 # First-boot bootstrap of the CPRMV @@TIER_TITLE@@ VM.
 #
-# This file is a TEMPLATE. provision.sh replaces the three @@...@@ placeholders
-# below with the base64 of the reconciler and its two systemd units, taken from
-# the local checkout, so the VM gets exactly the files that were reviewed and
-# fetches no code from the network at boot. Render it without Azure with:
+# This file is a TEMPLATE. provision.sh fills in the tier, its branch and its
+# name in prose, and puts in the base64 of the reconciler and its two systemd
+# units, taken from the local checkout, so the VM gets exactly the files that
+# were reviewed and fetches no code from the network at boot. A block marked as
+# conditional is kept only when the tier's branch differs from its name
+# (stable -> main). Render it without Azure with:
 #   bash provision.sh --render rendered.yaml
 ## Template notes (lines that start with "## " are dropped from the render):
 ## @@TIER@@, @@BRANCH@@ and @@TIER_TITLE@@ are the tier (acc or stable), its

@@ -43,7 +43,7 @@ All done on 24 November 2026 by the `open-regels` organisation admin.
 | shellcheck                       | runner-provided in `ci.yml` (`test` job); **not pinned**                                | runner  | exception: ubuntu-24.04 ships it, and CI only lints; the local check uses `koalaman/shellcheck:v0.11.0` |
 | Python base image                | `python:3.14-bookworm@sha256:fbaf91204f2758a70a7f7d6cf3c2871851227152a54e6a7b5b59941c4566b6b5` in `serve_api/Dockerfile` line 1 and `PY_IMAGE` in `serve_api/Makefile` | 3.14-bookworm | Renovate, both files in one pull request (see below) |
 | GitLab Pages image               | `node:26-alpine@sha256:6bd9ab43c0ec0190ca7b2d193906cb8b7edf6e7f4afa43ddeccd6452710bffb5` in `.gitlab-ci.yml` | 26 (LTS) | Renovate (`gitlabci` manager, `docker:pinDigests`) |
-| Caddy image                      | `caddy:2.11.9-alpine@sha256:003a97808e781aa9f7e75cc2f43d34d461099031faf5e20faefb9f61126836f0` in `deployment/vm/acc/compose.yml` (released 2026-11-05) | 2.11.9  | Renovate (`docker-compose` manager, `docker:pinDigests`) |
+| Caddy image                      | `caddy:2.11.9-alpine@sha256:003a97808e781aa9f7e75cc2f43d34d461099031faf5e20faefb9f61126836f0` in `deployment/vm/{acc,stable}/compose.yml`, one Renovate PR moves both (same depName) (released 2026-11-05) | 2.11.9  | Renovate (`docker-compose` manager, `docker:pinDigests`) |
 | Python dependencies              | `serve_api/requirements.txt` and `requirements-dev.txt`, `--generate-hashes`                | -       | Renovate (`pip_requirements` per package, `pip-compile` weekly lock-file maintenance); the `audit` drift check rejects an inconsistent bump |
 
 There is no script that compares this table with the workflows. When Renovate
