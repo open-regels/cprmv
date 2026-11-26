@@ -48,6 +48,12 @@
           },
           {
             "context": "scan"
+          },
+          {
+            "context": "test"
+          },
+          {
+            "context": "build"
           }
         ]
       }
