@@ -39,11 +39,14 @@ command -v az >/dev/null 2>&1 || die "az is not installed"
 command -v curl >/dev/null 2>&1 || die "curl is not installed"
 command -v jq >/dev/null 2>&1 || die "jq is not installed"
 
+# az prints CRLF line ends on some Windows terminals; a captured value must not carry the CR.
+strip_cr() { tr -d '\r'; }
+
 dns() { az network dns record-set a "$@" --subscription "$DNS_SUBSCRIPTION" \
   --resource-group "$DNS_RESOURCE_GROUP" --zone-name "$DNS_ZONE" -n "$DNS_RECORD"; }
 
-old=$(dns show --query "ARecords[].ipv4Address" --output tsv | tr '\n' ' ')
-old_ttl=$(dns show --query ttl --output tsv)
+old=$(dns show --query "ARecords[].ipv4Address" --output tsv | strip_cr | tr '\n' ' ')
+old_ttl=$(dns show --query TTL --output tsv | strip_cr)
 
 if [ "$mode" = "--lower-ttl" ]; then
   dns update --set ttl="$TTL" --output none
@@ -52,7 +55,7 @@ if [ "$mode" = "--lower-ttl" ]; then
 fi
 
 new=$(az network public-ip show --subscription "$SUBSCRIPTION" --resource-group "$RESOURCE_GROUP" \
-  --name "$PUBLIC_IP_NAME" --query ipAddress --output tsv)
+  --name "$PUBLIC_IP_NAME" --query ipAddress --output tsv | strip_cr)
 [ -n "$new" ] || die "the public IP $PUBLIC_IP_NAME has no address"
 
 status=$(curl -fsS --max-time 15 "http://$new/deploy-status.json") ||
@@ -70,7 +73,7 @@ for ip in $old; do
 done
 dns update --set ttl="$TTL" --output none
 
-now=$(dns show --query "ARecords[].ipv4Address" --output tsv | tr '\n' ' ')
+now=$(dns show --query "ARecords[].ipv4Address" --output tsv | strip_cr | tr '\n' ' ')
 [ "$(printf '%s' "$now" | tr -d ' ')" = "$new" ] || die "the record set holds '$now', not exactly $new; check it in the portal"
 echo "$DNS_RECORD.$DNS_ZONE"
 echo "  old: $old (TTL $old_ttl)"

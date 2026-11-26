@@ -43,6 +43,9 @@ die() {
 
 b64() { base64 <"$1" | tr -d '\n'; }
 
+# az prints CRLF line ends on some Windows terminals; a captured value must not carry the CR.
+strip_cr() { tr -d '\r'; }
+
 # render <out>: the cloud-init template with the three files inserted.
 render() {
   local f out=$1 tpl
@@ -72,9 +75,26 @@ fi
 [ -f "$ADMIN_SSH_PUBLIC_KEY" ] || die "no SSH public key at $ADMIN_SSH_PUBLIC_KEY (set ADMIN_SSH_PUBLIC_KEY)"
 command -v az >/dev/null 2>&1 || die "az is not installed"
 
+# The key value (not the path) goes to az: without the CR of a CRLF key file, and
+# never echoed, as its comment is usually an e-mail address. az needs the type
+# named for Ed25519.
+ssh_key=$(tr -d '\r' <"$ADMIN_SSH_PUBLIC_KEY" | head -n 1)
+case ${ssh_key%% *} in
+  ssh-ed25519) ssh_key_type=(--ssh-key-type Ed25519) ;;
+  ssh-rsa) ssh_key_type=() ;;
+  *) die "the key in $ADMIN_SSH_PUBLIC_KEY is neither ssh-ed25519 nor ssh-rsa" ;;
+esac
+
 userdata=$(mktemp)
 trap 'rm -f "$userdata"' EXIT
 render "$userdata"
+# az is a native Windows program and, with path conversion off, cannot find a
+# POSIX path such as /tmp/tmp.X: it would take the string itself as custom data.
+userdata_arg=$userdata
+if command -v cygpath >/dev/null 2>&1; then
+  userdata_arg=$(cygpath -m "$userdata")
+  case $userdata_arg in /*) die "could not turn $userdata into a Windows path for az" ;; esac
+fi
 
 # Every call names the subscription; the user's default is left alone.
 azs() { az "$@" --subscription "$SUBSCRIPTION"; }
@@ -99,7 +119,7 @@ fi
 nsg_rule() {
   local name=$1 priority=$2 port=$3 source=$4 current
   if current=$(azs network nsg rule show --resource-group "$RESOURCE_GROUP" \
-    --nsg-name "$NSG_NAME" --name "$name" --query sourceAddressPrefix --output tsv 2>/dev/null); then
+    --nsg-name "$NSG_NAME" --name "$name" --query sourceAddressPrefix --output tsv 2>/dev/null | strip_cr); then
     if [ "$current" = "$source" ]; then
       echo "exists: NSG rule $name"
     else
@@ -140,7 +160,7 @@ fi
 # run whether the rendered cloud-init has changed since.
 want=$(sha256sum <"$userdata" | cut -d' ' -f1)
 if have=$(azs vm show --resource-group "$RESOURCE_GROUP" --name "$VM_NAME" \
-  --query 'tags."cloudinit-sha256"' --output tsv 2>/dev/null); then
+  --query 'tags."cloudinit-sha256"' --output tsv 2>/dev/null | strip_cr); then
   echo "exists: VM $VM_NAME"
   if [ "$have" != "$want" ]; then
     echo "cloud-init changed since this VM was created; delete the VM to apply it (cloud-init runs on first boot only)"
@@ -150,14 +170,14 @@ else
   azs vm create --resource-group "$RESOURCE_GROUP" --name "$VM_NAME" --location "$LOCATION" \
     --size "$VM_SIZE" --image "$VM_IMAGE" \
     --admin-username "$ADMIN_USER" --authentication-type ssh \
-    --ssh-key-values "$ADMIN_SSH_PUBLIC_KEY" \
-    --custom-data "$userdata" --tags "cloudinit-sha256=$want" \
+    --ssh-key-values "$ssh_key" ${ssh_key_type[@]+"${ssh_key_type[@]}"} \
+    --custom-data "$userdata_arg" --tags "cloudinit-sha256=$want" \
     --nsg "$NSG_NAME" --vnet-name "$VNET_NAME" --subnet "$SUBNET_NAME" \
     --public-ip-address "$PUBLIC_IP_NAME" --output none
 fi
 
 ip=$(azs network public-ip show --resource-group "$RESOURCE_GROUP" --name "$PUBLIC_IP_NAME" \
-  --query ipAddress --output tsv)
+  --query ipAddress --output tsv | strip_cr)
 echo
 echo "Public IP: $ip"
 echo "cloud-init needs a few minutes, then the first reconciler run deploys the head of acc."
