@@ -1,0 +1,10 @@
+[Unit]
+Description=Reconcile the CPRMV %i tier with its branch
+After=docker.service network-online.target
+Wants=docker.service network-online.target
+
+[Service]
+Type=oneshot
+User=cprmv
+ExecStart=/usr/local/lib/cprmv/reconcile.sh %i
+TimeoutStartSec=15min

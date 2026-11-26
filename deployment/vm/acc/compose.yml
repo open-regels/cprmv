@@ -1,0 +1,37 @@
+services:
+  cprmv-api:
+    image: ${CPRMV_IMAGE}
+    environment:
+      CPRMV_IMAGE_DIGEST: ${CPRMV_IMAGE_DIGEST}
+    healthcheck:
+      test:
+        - CMD
+        - python
+        - -c
+        - from urllib.request import urlopen; urlopen("http://localhost:8000/health", timeout=5)
+      interval: 30s
+      timeout: 30s
+      start_period: 5s
+      retries: 3
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:8000:8000"
+
+  caddy:
+    image: caddy:2.11.9-alpine@sha256:003a97808e781aa9f7e75cc2f43d34d461099031faf5e20faefb9f61126836f0
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - caddy_data:/data
+      - caddy_config:/config
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - /opt/cprmv/acc/www:/srv/status:ro
+    depends_on:
+      cprmv-api:
+        condition: service_healthy
+
+volumes:
+  caddy_data:
+  caddy_config:
