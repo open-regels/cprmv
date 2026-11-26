@@ -152,6 +152,26 @@ moving; if it does not, restart Caddy over SSH:
 `sudo docker compose -p cprmv-<tier> -f /opt/cprmv/<tier>/current/compose.yml restart caddy`.
 Afterwards, stop the old VM's CPRMV container by hand; the scripts never touch it.
 
+### Serving cprmv.open-rules.eu
+
+`cprmv.open-rules.eu` is an alias on the stable VM: the stable Caddyfile lists it
+next to `cprmv.open-regels.nl`, so the same API answers on both names, each with
+its own certificate. Caddy can obtain that certificate only once the name's DNS
+points at the stable VM. To move it, lower the TTL a day ahead, then cut over,
+with the zone and record overridden:
+
+```
+cp deployment/vm/cutover-dns.sh ~/cutover-dns.sh
+! TIER=stable SUBSCRIPTION=<subscription id> DNS_RESOURCE_GROUP=<resource group> DNS_ZONE=open-rules.eu DNS_RECORD=cprmv bash ~/cutover-dns.sh --lower-ttl
+! TIER=stable SUBSCRIPTION=<subscription id> DNS_RESOURCE_GROUP=<resource group> DNS_ZONE=open-rules.eu DNS_RECORD=cprmv bash ~/cutover-dns.sh
+rm ~/cutover-dns.sh
+```
+
+The TLSA step then looks for `_443._tcp.cprmv` in `open-rules.eu`; if that record
+set does not exist, the script says so and deletes nothing. `DNS_RESOURCE_GROUP`
+is the resource group of the `open-rules.eu` zone, which may differ from the one
+holding `open-regels.nl`.
+
 ### Rolling out the stable tier
 
 Once a release pull request (below) has merged into `main`, so that

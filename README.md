@@ -30,6 +30,7 @@ CC0-1.0.
 | What                          | URL                                                             |
 | ----------------------------- | --------------------------------------------------------------- |
 | API, stable                   | https://cprmv.open-regels.nl                                    |
+| API, stable (alias)           | https://cprmv.open-rules.eu (once its DNS points at the stable VM) |
 | Interactive API docs          | https://cprmv.open-regels.nl/docs                               |
 | ReSpec, served by the API     | https://cprmv.open-regels.nl/respec/                            |
 | MCP endpoint                  | https://cprmv.open-regels.nl/mcp                                |
@@ -38,7 +39,10 @@ CC0-1.0.
 
 Stable runs what is on `main`; acceptance runs what is on `acc`. Acceptance
 reports its state at `/health` and `/deploy-status.json`, and stable does the same
-once the stable VM is rolled out.
+once the stable VM is rolled out. `/health` reports the tier in `"environment"`
+(`"acceptance"` or `"stable"`), after `"version"` and before `"build"` and `"image"`;
+a value that is not set is `null`. The stable VM also serves `cprmv.open-rules.eu`
+as an alias of `cprmv.open-regels.nl`, once that name's DNS points at it.
 
 ## Repository layout
 
@@ -153,7 +157,7 @@ flowchart TD
 | Tier       | Branch | Host                       | Image tags                              | GitHub environment |
 | ---------- | ------ | -------------------------- | --------------------------------------- | ------------------ |
 | acceptance | `acc`  | `acc.cprmv.open-regels.nl` | `sha-<commit>`, `acc`                   | `acceptance`       |
-| stable     | `main` | `cprmv.open-regels.nl`     | `sha-<commit>`, `stable`, `<version>`   | `stable`           |
+| stable     | `main` | `cprmv.open-regels.nl`, alias `cprmv.open-rules.eu` | `sha-<commit>`, `stable`, `<version>`   | `stable`           |
 
 The image is `ghcr.io/open-regels/cprmv-api` and is public. Each tier has its own
 Azure VM, and **the VM pulls; nothing pushes to it.** Every 2 minutes it reads the
