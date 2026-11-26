@@ -1,6 +1,6 @@
 #!/bin/sh
-# Waits until the acceptance VM reports, in its public deploy-status.json, that
-# it runs <sha>. Run by the deploy-acc job after the image is pushed.
+# Waits until the tier's VM reports, in its public deploy-status.json, that
+# it runs <sha>. Run by the deploy job of ci.yml after the image is pushed.
 #
 # Usage: wait-for-deploy.sh <status_url> <sha> <repo_url> <branch> <health_url>
 # Env:   WAIT_TIMEOUT   seconds to wait before giving up (default 900)

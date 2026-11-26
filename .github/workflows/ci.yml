@@ -1,19 +1,22 @@
-name: ACC CI
+name: CI
 
-# Tests, builds and publishes the API image, then waits for the acceptance VM to
-# run it. The check names `test` and `build` are referenced by the rulesets.
-# Renaming a job means updating them.
+# Tests, builds and publishes the API image, then waits for the VM of the tier to
+# run it. One workflow serves two tiers, chosen by the branch (scripts/ci-tier.sh):
+# acc is the acceptance tier, main is the stable tier. The check names `test` and
+# `build` are referenced by the rulesets. Renaming a job means updating them.
 #
-# Deliberately no paths filter on push: the reconciler on the VM maps every acc
-# commit to one image, and a commit without an image would stall it. The GitHub
-# Actions layer cache keeps a docs-only rebuild cheap.
+# Deliberately no paths filter on push: the reconciler on a VM maps every commit
+# of its branch to one image, and a commit without an image would stall it. The
+# GitHub Actions layer cache keeps a docs-only rebuild cheap.
 on:
   pull_request:
     branches:
       - acc
+      - main
   push:
     branches:
       - acc
+      - main
   workflow_dispatch:
 
 permissions:
@@ -22,7 +25,7 @@ permissions:
 # One group per ref. Pull requests cancel the superseded run; pushes queue, so a
 # commit that is being published is never cancelled half way.
 concurrency:
-  group: acc-ci-${{ github.event.pull_request.number || github.ref }}
+  group: ci-${{ github.event.pull_request.number || github.ref }}
   cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 env:
@@ -115,9 +118,11 @@ jobs:
         run: sh scripts/smoke-health.sh "$IMAGE_REF" "$EXPECTED_SHA"
 
   publish:
-    # Push only: nothing is published from a pull request, and the write
-    # permissions exist only here.
-    if: github.event_name == 'push' && github.ref == 'refs/heads/acc'
+    # Push to acc or main only: nothing is published from a pull request, and the
+    # write permissions exist only here.
+    if: >-
+      github.event_name == 'push' &&
+      (github.ref == 'refs/heads/acc' || github.ref == 'refs/heads/main')
     needs: build
     runs-on: ubuntu-24.04
     timeout-minutes: 30
@@ -126,10 +131,45 @@ jobs:
       packages: write # push the image to GHCR
       id-token: write # sign the provenance attestation
       attestations: write # store the attestation
+    outputs:
+      host: ${{ steps.tier.outputs.host }}
+      environment: ${{ steps.tier.outputs.environment }}
+      branch: ${{ steps.tier.outputs.branch }}
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
+      - name: Resolve the tier
+        id: tier
+        env:
+          REF: ${{ github.ref }}
+        run: sh scripts/ci-tier.sh "$REF" >> "$GITHUB_OUTPUT"
+      - name: Resolve the image tags
+        id: tags
+        env:
+          SHA: ${{ github.sha }}
+          TIER: ${{ steps.tier.outputs.tier }}
+        run: |
+          tags="$IMAGE:sha-$SHA
+          $IMAGE:$TIER"
+          if [ "$TIER" = stable ]; then
+            # The release version, from [project] in pyproject.toml.
+            version=$(python3 -c "import tomllib; print(tomllib.load(open('serve_api/pyproject.toml', 'rb'))['project']['version'])")
+            # Whole-string match: a line-by-line grep would let a value with
+            # embedded newlines inject lines into $GITHUB_OUTPUT. Validated
+            # before anything is written to it.
+            if ! [[ "$version" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+              echo "::error::serve_api/pyproject.toml version is not MAJOR.MINOR.PATCH" >&2
+              exit 1
+            fi
+            tags="$tags
+          $IMAGE:$version"
+          fi
+          {
+            echo 'list<<TAGS_END'
+            echo "$tags"
+            echo 'TAGS_END'
+          } >> "$GITHUB_OUTPUT"
       - name: Set up Buildx
         uses: docker/setup-buildx-action@f87e5991a6d7451dcb8d9637bfbc97413f497069 # v4.4.1
       - name: Log in to GHCR
@@ -146,9 +186,7 @@ jobs:
         with:
           context: serve_api
           push: true
-          tags: |
-            ${{ env.IMAGE }}:sha-${{ github.sha }}
-            ${{ env.IMAGE }}:acc
+          tags: ${{ steps.tags.outputs.list }}
           build-args: |
             BUILD_SHA=${{ github.sha }}
             BUILD_RUN=${{ github.run_number }}
@@ -168,31 +206,37 @@ jobs:
           push-to-registry: true
           create-storage-record: false
 
-  deploy-acc:
-    # Push only, like publish, which it needs. Until the acceptance VM
-    # exists and runs the reconciler, this job times out after 15 minutes on every
-    # run; it starts to pass once the VM deploys the pushed commit.
-    if: github.event_name == 'push' && github.ref == 'refs/heads/acc'
+  deploy:
+    # Push to acc or main only, like publish, which it needs. It times out after
+    # 15 minutes while the VM of the tier does not exist or does not run the
+    # reconciler; it passes once the VM deploys the pushed commit.
+    if: >-
+      github.event_name == 'push' &&
+      (github.ref == 'refs/heads/acc' || github.ref == 'refs/heads/main')
     needs: publish
     runs-on: ubuntu-24.04
     timeout-minutes: 20
     permissions:
       contents: read
+    # `acceptance` or `stable`, from the branch. GitHub creates an environment
+    # that does not exist yet on first use (`stable` has not been used so far).
     environment:
-      name: acceptance
-      url: https://acc.cprmv.open-regels.nl
+      name: ${{ needs.publish.outputs.environment }}
+      url: https://${{ needs.publish.outputs.host }}
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
       - name: Wait for the VM to run this commit
         env:
-          # On workflow_dispatch this is the head of the dispatched ref.
+          # The pushed commit.
           SHA: ${{ github.sha }}
+          HOST: ${{ needs.publish.outputs.host }}
+          BRANCH: ${{ needs.publish.outputs.branch }}
         run: |
           scripts/wait-for-deploy.sh \
-            https://acc.cprmv.open-regels.nl/deploy-status.json \
+            "https://$HOST/deploy-status.json" \
             "$SHA" \
             https://github.com/open-regels/cprmv.git \
-            acc \
-            https://acc.cprmv.open-regels.nl/health
+            "$BRANCH" \
+            "https://$HOST/health"

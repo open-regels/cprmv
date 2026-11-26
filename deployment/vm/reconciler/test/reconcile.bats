@@ -449,3 +449,28 @@ deploy() {
   [ ! -e "$D/repo/HEAD" ]
   [ -z "$(git -C "$D/repo" status --porcelain)" ]
 }
+
+@test "the stable tier follows the branch named by CPRMV_BRANCH" {
+  mkdir -p "$WORK/deployment/vm/stable"
+  printf 'services: {} # stable\n' >"$WORK/deployment/vm/stable/compose.yml"
+  git -C "$WORK" add -A
+  git -C "$WORK" -c user.name=t -c user.email=t@example.invalid commit -q -m stable-one
+  git -C "$WORK" push -q "$CPRMV_REPO_URL" HEAD:refs/heads/main
+  main_sha="$(git -C "$WORK" rev-parse HEAD)"
+  # Branches that must NOT be followed: one named like the tier, and acc.
+  printf 'services: {} # other\n' >"$WORK/deployment/vm/stable/compose.yml"
+  git -C "$WORK" -c user.name=t -c user.email=t@example.invalid commit -q -a -m other
+  git -C "$WORK" push -q "$CPRMV_REPO_URL" HEAD:refs/heads/stable HEAD:refs/heads/acc
+  other_sha="$(git -C "$WORK" rev-parse HEAD)"
+  [ "$other_sha" != "$main_sha" ]
+  CPRMV_BRANCH=main run sh "$SCRIPT" stable
+  [ "$status" -eq 0 ]
+  S="$CPRMV_ROOT/stable"
+  [ "$(jq -r .tier "$S/www/deploy-status.json")" = stable ]
+  [ "$(jq -r .state "$S/www/deploy-status.json")" = running ]
+  [ "$(jq -r .running.sha "$S/www/deploy-status.json")" = "$main_sha" ]
+  [ -f "$S/releases/$main_sha/compose.yml" ]
+  [ ! -e "$S/releases/$other_sha" ]
+  [ "$(ups | wc -l)" -eq 1 ]
+  ups | grep -q -- "-p cprmv-stable .*-f $S/releases/$main_sha/compose.yml"
+}
