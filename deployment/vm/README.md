@@ -19,7 +19,9 @@ The design is in `docs/superpowers/specs/2026-11-24-acc-vm-deployment-design.md`
 - Outbound HTTPS **open**, as on an Azure VM by default. If it is ever narrowed to
   an allowlist, keep: `github.com`, `ghcr.io`, `pkg-containers.githubusercontent.com`
   (image layers), Let's Encrypt (`acme-v02.api.letsencrypt.org` and its OCSP/CRL
-  hosts), Docker's apt repository (`download.docker.com`) for provisioning, and every
+  hosts), Docker's apt repository (`download.docker.com`) for provisioning, Docker
+  Hub for the Caddy image (`registry-1.docker.io`, `auth.docker.io`,
+  `production.cloudflare.docker.com`), and every
   external service the API calls, as named in `serve_api/data/cprmvmethods.ttl`
   and `serve_api/methods/` (for instance `repository.officiele-overheidspublicaties.nl`,
   `service.omgevingswet.overheid.nl`, `api-organisaties.overheid.nl`).
@@ -48,27 +50,40 @@ exactly the files that were reviewed; nothing is fetched at boot):
 
 ```
 cp deployment/vm/acc/provision.sh ~/provision-acc.sh
-! ADMIN_SSH_SOURCE=<your address> REPO_ROOT=$PWD bash ~/provision-acc.sh
+! SUBSCRIPTION=<subscription id> DNS_RESOURCE_GROUP=<resource group> ADMIN_SSH_SOURCE=<your address> REPO_ROOT=$PWD bash ~/provision-acc.sh
 ```
 
-`ADMIN_SSH_SOURCE` is required and is never written to a file: the repository is
-public. Defaults (subscription, `westeurope`, resource group `rg-cprmv-acc`,
+`SUBSCRIPTION` and `ADMIN_SSH_SOURCE` are required and are never written to a file:
+the repository is public. (`DNS_RESOURCE_GROUP` is read by `cutover-dns.sh`; the
+same line can carry it.) Defaults (`westeurope`, resource group `rg-cprmv-acc`,
 `vm-cprmv-acc`, `Standard_B2ms`, Ubuntu 24.04, admin user, key `~/.ssh/id_ed25519.pub`)
 sit at the top of the script and can be overridden by environment variables of the
 same name. The script is idempotent: it shows each resource first and creates
 only what is missing; an NSG rule whose source differs is updated.
 
-Remove the copy afterwards (`rm ~/provision-acc.sh`). The VM is tagged with the hash of the cloud-init it was created with; a later run says so when the rendered cloud-init differs. `bash provision.sh --render
-<file>` writes the rendered cloud-init without touching Azure.
+Remove the copy afterwards (`rm ~/provision-acc.sh`). The VM is tagged with the hash
+of the cloud-init it was created with; a later run says so when the rendered
+cloud-init differs. `bash provision.sh --render <file>` writes the rendered cloud-init without touching Azure.
 
 ### Checks after provisioning
+
+First, the `cprmv-api` package on GHCR must be public and linked to the repository,
+or the VM cannot pull the image. Check anonymously, with `<acc head>` the head of `acc`:
+
+```
+docker logout ghcr.io
+docker manifest inspect ghcr.io/open-regels/cprmv-api:sha-<acc head>
+```
+
+Until the first deploy nothing listens on port 80, so read the status over SSH:
+`sudo cat /opt/cprmv/acc/www/deploy-status.json`. `waiting` or `stalled` clears by
+itself once the image can be pulled.
 
 cloud-init takes a few minutes; the first reconciler run follows within about
 three. With `<ip>` as printed by the script:
 
 ```
-curl -s -o /dev/null -w '%{http_code}
-' http://<ip>/health        # 200 (GET only; HEAD gives 405)
+curl -s -o /dev/null -w '%{http_code}\n' http://<ip>/health        # 200 (GET only; HEAD gives 405)
 curl -I -H 'Host: acc.cprmv.open-regels.nl' http://<ip>/           # 308 redirect to https
 curl -sI http://<ip>/deploy-status.json                            # Cache-Control: no-store
 curl -s http://<ip>/deploy-status.json                             # "state": "running"
@@ -81,14 +96,14 @@ script first, then a day ahead lower the TTL so the cutover takes effect quickly
 
 ```
 cp deployment/vm/acc/cutover-dns.sh ~/cutover-dns.sh
-! bash ~/cutover-dns.sh --lower-ttl
+! SUBSCRIPTION=<subscription id> DNS_RESOURCE_GROUP=<resource group> bash ~/cutover-dns.sh --lower-ttl
 ```
 
 Then, once the new VM reports `running`:
 
 ```
-! bash ~/cutover-dns.sh
-rm ~/cutover-dns.sh ~/provision-acc.sh
+! SUBSCRIPTION=<subscription id> DNS_RESOURCE_GROUP=<resource group> bash ~/cutover-dns.sh
+rm ~/cutover-dns.sh
 ```
 
 It refuses unless `http://<new ip>/deploy-status.json` has `state` `running`,

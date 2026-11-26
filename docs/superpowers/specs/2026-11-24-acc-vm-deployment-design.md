@@ -201,8 +201,11 @@ not this deployment's.
 
 - **Registry:** `ghcr.io/open-regels/cprmv-api`, public.
 - **Tag:** `sha-<full 40-character commit>`, one per `acc` commit, immutable by
-  convention (the workflow never re-tags an existing sha). A moving `acc` tag is
-  also pushed for humans; the reconciler never reads it.
+  convention. A re-run of a commit pushes the same tag again, which is harmless: the
+  VM pins by digest. GitHub keeps one pending run per concurrency group, so an
+  intermediate commit may get no image; that is harmless too, since the reconciler
+  targets the head. A moving `acc` tag is also pushed for humans; the reconciler
+  never reads it.
 - **Build metadata baked in:** the Dockerfile takes `BUILD_SHA` and `BUILD_RUN`
   as build arguments and sets them as environment variables and OCI labels
   (`org.opencontainers.image.revision`, `.source`, `.version`). The existing
@@ -241,11 +244,14 @@ Triggers: `pull_request` into `acc`, `push` to `acc`, `workflow_dispatch`.
   then the checks the GitLab job ran: `py_compile src/serve.py`, import
   `src.serve:app`, `pytest`. Permissions `contents: read`.
 - **`build`** (all triggers, needs `test`): Buildx build of `serve_api/` with the
-  build arguments above. On `pull_request` it builds and stops. On `push` it logs
-  in to GHCR with `GITHUB_TOKEN`, pushes `sha-<commit>` and `acc`, and attests
-  provenance (`actions/attest-build-provenance`). Only this job, only on `push`,
-  gets `packages: write`, `id-token: write`, `attestations: write`.
-- **`deploy-acc`** (push only, needs `build`): `environment: acceptance` with
+  build arguments above, loaded locally, and the `/health` smoke test. It builds
+  and stops; permissions `contents: read` only.
+- **`publish`** (push only, needs `build`): logs in to GHCR with `GITHUB_TOKEN`,
+  rebuilds with the same build arguments (the layer cache makes it quick), pushes
+  `sha-<commit>` and `acc`, verifies the pushed digest, and attests provenance
+  (`actions/attest-build-provenance`). Only this job gets `packages: write`,
+  `id-token: write`, `attestations: write`.
+- **`deploy-acc`** (push only, needs `publish`): `environment: acceptance` with
   url `https://acc.cprmv.open-regels.nl`. Polls `deploy-status.json` every
   20 seconds for up to 15 minutes. Succeeds when `running.sha` equals the pushed
   commit and `/health` agrees. **Fails immediately** if the status reports this
@@ -268,7 +274,7 @@ a lock (`flock`) so runs never overlap.
 Paths on the VM, for tier `acc`:
 
 ```
-/opt/cprmv/acc/repo/           a clone of open-regels/cprmv (anonymous HTTPS)
+/opt/cprmv/acc/repo/           bare repository the reconciler creates and fetches (anonymous HTTPS)
 /opt/cprmv/acc/releases/<sha>/ deployment/vm/acc/ exported from that commit, plus .env
 /opt/cprmv/acc/current         symlink → the release that is running
 /opt/cprmv/acc/state.json      running, previous, last attempt, failed shas
@@ -407,7 +413,9 @@ Documented in `deployment/vm/README.md`, which also explains how to reprovision:
   firewall policy already says.
 - Outbound HTTPS **open**, as on an Azure VM by default. If it is ever narrowed to
   an allowlist, the runbook lists what it must keep: `github.com`, `ghcr.io`,
-  `pkg-containers.githubusercontent.com` (image layers), Let's Encrypt
+  `pkg-containers.githubusercontent.com` (image layers), Docker Hub for the Caddy
+  image (`registry-1.docker.io`, `auth.docker.io`,
+  `production.cloudflare.docker.com`), Let's Encrypt
   (`acme-v02.api.letsencrypt.org` and its OCSP/CRL hosts), and every external
   service the API calls, as named in `serve_api/data/cprmvmethods.ttl` and
   `serve_api/methods/` (for instance `repository.officiele-overheidspublicaties.nl`,

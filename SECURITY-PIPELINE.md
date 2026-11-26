@@ -39,7 +39,8 @@ All done on 24 November 2026 by the `open-regels` organisation admin.
 | semgrep                          | `semgrep==1.176.1` in `semgrep.yml`                                                         | 1.176.1 | manual                                           |
 | renovate config validator        | `renovate@44.50.3` in `zizmor.yml`                                                          | 44.50.3 | manual                                           |
 | pip-tools                        | `pip-tools==7.6.2` in `zizmor.yml`, `serve_api/Makefile` and `renovate.json` (`constraints`) | 7.6.2   | manual; 7.7.0 is younger than the 14-day cooldown |
-| pip-audit                        | `pip-audit==2.10.1` in `dependency-audit.yml`                                               | 2.10.1  | manual                                           |
+| pip-audit                        | `pip-audit==2.10.1` in `dependency-audit.yml` and `acc-ci.yml` (`test` job)                 | 2.10.1  | manual                                           |
+| shellcheck                       | runner-provided in `acc-ci.yml` (`test` job); **not pinned**                                | runner  | exception: ubuntu-24.04 ships it, and CI only lints; the local check uses `koalaman/shellcheck:v0.11.0` |
 | Python base image                | `python:3.14-bookworm@sha256:fbaf91204f2758a70a7f7d6cf3c2871851227152a54e6a7b5b59941c4566b6b5` in `serve_api/Dockerfile` line 1 and `PY_IMAGE` in `serve_api/Makefile` | 3.14-bookworm | Renovate, both files in one pull request (see below) |
 | GitLab Pages image               | `node:26-alpine@sha256:6bd9ab43c0ec0190ca7b2d193906cb8b7edf6e7f4afa43ddeccd6452710bffb5` in `.gitlab-ci.yml` | 26 (LTS) | Renovate (`gitlabci` manager, `docker:pinDigests`) |
 | Caddy image                      | `caddy:2.11.9-alpine@sha256:003a97808e781aa9f7e75cc2f43d34d461099031faf5e20faefb9f61126836f0` in `deployment/vm/acc/compose.yml` (released 2026-11-05) | 2.11.9  | Renovate (`docker-compose` manager, `docker:pinDigests`) |
@@ -88,12 +89,13 @@ Dashboard approval) needs the requirements recompiled on the new Python
 | `scan`             | `semgrep.yml`          | Semgrep Code and Supply Chain                                                                                                  |
 | `dependency-audit` | `dependency-audit.yml` | Daily `pip-audit` of `acc` and `main`; not a merge check. Also runs on a pull request that changes the audit itself            |
 | `test`             | `acc-ci.yml`           | `py_compile`, import, `pytest`, shellcheck, bats                                                                             |
-| `build`            | `acc-ci.yml`           | Image build; on a push to `acc`, push to GHCR and attest provenance                                                    |
+| `build`            | `acc-ci.yml`           | Image build and `/health` smoke test; read-only token, runs on pull requests too                                       |
+| `publish`          | `acc-ci.yml`           | Push only: push to GHCR, verify the pushed digest, attest provenance; the only job with write permissions               |
 | `deploy-acc`       | `acc-ci.yml`           | Waits for the VM to report the commit; **not required**, it fails when the VM is down                                  |
 
 The shell scripts are shellchecked and tested with bats-core in `test`:
 `scripts/wait-for-deploy.sh` (the `deploy-acc` poll), `scripts/smoke-health.sh`
-(the `/health` check of the built image, run in `build`) and
+(the `/health` check of the built image, run in `build` and, on the pushed digest, in `publish`) and
 `deployment/vm/reconciler/reconcile.sh` (the reconciler on the VM).
 
 Required checks match by job name, so renaming a job means updating the rulesets.
