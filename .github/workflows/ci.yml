@@ -218,8 +218,7 @@ jobs:
     timeout-minutes: 20
     permissions:
       contents: read
-    # `acceptance` or `stable`, from the branch. GitHub creates an environment
-    # that does not exist yet on first use (`stable` has not been used so far).
+    # `acceptance` or `stable`, from the branch.
     environment:
       name: ${{ needs.publish.outputs.environment }}
       url: https://${{ needs.publish.outputs.host }}

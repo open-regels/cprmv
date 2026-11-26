@@ -36,7 +36,7 @@ ARG BUILD_SHA
 ARG BUILD_RUN
 ENV BUILD_SHA=$BUILD_SHA BUILD_RUN=$BUILD_RUN
 
-# Add labels for better Docker Hub integration
+# Image metadata (OCI labels); the image is published to ghcr.io/open-regels/cprmv-api.
 LABEL maintainer="Bas.Kaptijn@ictu.nl"
 LABEL description="CPRMV Rules Serve API - Experimental API for fetching CPRMV Rules from RuleSets"
 LABEL org.opencontainers.image.version="0.4.3"

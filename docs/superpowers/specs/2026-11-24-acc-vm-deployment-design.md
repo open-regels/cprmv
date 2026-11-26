@@ -615,8 +615,9 @@ platform.
 ## Follow-ups (not in this design)
 
 - Verify provenance on the VM before applying an image.
-- Production: `deployment/vm/prod/`, a promotion workflow on `main`, its own VM
-  or tier instance, versioned tags.
+- ~~Production: `deployment/vm/prod/`, a promotion workflow on `main`, its own VM
+  or tier instance, versioned tags.~~ Done differently on 26 November 2026: see
+  "The stable tier".
 - Port lvg's `check-supply-chain` (pin register against the workflows).
 - A `pre-commit` pre-push hook, and a formatter, if Bas wants them.
 - An image vulnerability scan (for instance Trivy) and an SBOM, which the larger
