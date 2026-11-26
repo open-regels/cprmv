@@ -19,7 +19,7 @@ PY_IMAGE = python:3.14-bookworm@sha256:fbaf91204f2758a70a7f7d6cf3c2871851227152a
 # arguments go to pip-compile.sh, e.g. make deps-linux ARGS=--upgrade
 # (the sed strips CRs a Windows checkout may have put in the script).
 deps-linux:
-	MSYS_NO_PATHCONV=1 docker run --rm -v "$(CURDIR):/s" -w /s $(PY_IMAGE) \
+	MSYS_NO_PATHCONV=1 docker run --rm -e PIP_ROOT_USER_ACTION=ignore -e PIP_DISABLE_PIP_VERSION_CHECK=1 -v "$(CURDIR):/s" -w /s $(PY_IMAGE) \
 		sh -c "pip install -q pip-tools==7.6.2 && sed -i 's/\r$$//' pip-compile.sh && ./pip-compile.sh $(ARGS)"
 
 deps-upgrade:

@@ -28,11 +28,11 @@ All done on 24 November 2026 by the `open-regels` organisation admin.
 | `actions/setup-node`             | `949feb2413d6458794dcd2491c4babbbce0c15c1`                                                  | v7.1.0  | Renovate                                         |
 | `actions/setup-python`           | `6d4fd22b20465ccc0f7354476588e8df7c9ca0e0`                                                  | v7.1.0  | Renovate                                         |
 | `zizmorcore/zizmor-action`       | `45d7276c9ca790aabd705e31ca99c6185c3e76dd`                                                  | v0.8.1  | Renovate                                         |
-| `docker/setup-buildx-action`     | `f87e5991a6d7451dcb8d9637bfbc97413f497069`                                                  | v4.4.1  | Renovate; Part B                                 |
-| `docker/login-action`            | `8aa5831fb8d48d8f76594c7ddde61ae58019f550`                                                  | v4.8.0  | Renovate; Part B                                 |
-| `docker/build-push-action`       | `c3c9e263c25d99ce0380d002d59b67737d91b0dc`                                                  | v7.4.0  | Renovate; Part B                                 |
-| `actions/attest-build-provenance` | `4d101475d8b20a2381f78447822ac1eab6504dd8`                                                 | v4.2.2  | Renovate; Part B                                 |
-| `bats-core/bats-core`            | `eb7f42f8d608ac693d7a4b67474f6714ea68cfc5`, checked out with `actions/checkout`            | v1.14.0 | Renovate; Part B                                 |
+| `docker/setup-buildx-action`     | `f87e5991a6d7451dcb8d9637bfbc97413f497069`                                                  | v4.4.1  | Renovate                                         |
+| `docker/login-action`            | `8aa5831fb8d48d8f76594c7ddde61ae58019f550`                                                  | v4.8.0  | Renovate                                         |
+| `docker/build-push-action`       | `c3c9e263c25d99ce0380d002d59b67737d91b0dc`                                                  | v7.4.0  | Renovate                                         |
+| `actions/attest-build-provenance` | `4d101475d8b20a2381f78447822ac1eab6504dd8`                                                 | v4.2.2  | Renovate                                         |
+| `bats-core/bats-core`            | `eb7f42f8d608ac693d7a4b67474f6714ea68cfc5`, checked out with `actions/checkout`            | v1.14.0 | Renovate                                         |
 | Node.js                          | `node-version: '24.22.2'` in `zizmor.yml`                                                   | 24.22.2 | Renovate (setup-node input); runs the Renovate validator only |
 | Python (CI)                      | `python-version: '3.14'` in `zizmor.yml` and `dependency-audit.yml`                         | 3.14    | Renovate, grouped with the image, behind Dashboard approval |
 | zizmor (the audit tool)          | `version: '1.29.0'` in `zizmor.yml`                                                         | 1.29.0  | Renovate; merge the action update first          |
@@ -42,7 +42,7 @@ All done on 24 November 2026 by the `open-regels` organisation admin.
 | pip-audit                        | `pip-audit==2.10.1` in `dependency-audit.yml`                                               | 2.10.1  | manual                                           |
 | Python base image                | `python:3.14-bookworm@sha256:fbaf91204f2758a70a7f7d6cf3c2871851227152a54e6a7b5b59941c4566b6b5` in `serve_api/Dockerfile` line 1 and `PY_IMAGE` in `serve_api/Makefile` | 3.14-bookworm | Renovate, both files in one pull request (see below) |
 | GitLab Pages image               | `node:26-alpine@sha256:6bd9ab43c0ec0190ca7b2d193906cb8b7edf6e7f4afa43ddeccd6452710bffb5` in `.gitlab-ci.yml` | 26 (LTS) | Renovate (`gitlabci` manager, `docker:pinDigests`) |
-| Caddy image                      | added by Part B                                                                             | -       | Part B                                           |
+| Caddy image                      | `caddy:2.11.9-alpine@sha256:003a97808e781aa9f7e75cc2f43d34d461099031faf5e20faefb9f61126836f0` in `deployment/vm/acc/compose.yml` (released 2026-11-05) | 2.11.9  | Renovate (`docker-compose` manager, `docker:pinDigests`) |
 | Python dependencies              | `serve_api/requirements.txt` and `requirements-dev.txt`, `--generate-hashes`                | -       | Renovate (`pip_requirements` per package, `pip-compile` weekly lock-file maintenance); the `audit` drift check rejects an inconsistent bump |
 
 There is no script that compares this table with the workflows. When Renovate
@@ -67,7 +67,7 @@ is rejected.
 On Windows there is no `make`; from the repository root in Git Bash run:
 
 ```
-MSYS_NO_PATHCONV=1 docker run --rm -v "$PWD/serve_api:/s" -w /s python:3.14-bookworm@sha256:fbaf91204f2758a70a7f7d6cf3c2871851227152a54e6a7b5b59941c4566b6b5 sh -c "pip install -q pip-tools==7.6.2 && sed 's/\r$//' pip-compile.sh > /tmp/pc.sh && sh /tmp/pc.sh"
+MSYS_NO_PATHCONV=1 docker run --rm -e PIP_ROOT_USER_ACTION=ignore -e PIP_DISABLE_PIP_VERSION_CHECK=1 -v "$PWD/serve_api:/s" -w /s python:3.14-bookworm@sha256:fbaf91204f2758a70a7f7d6cf3c2871851227152a54e6a7b5b59941c4566b6b5 sh -c "pip install -q pip-tools==7.6.2 && sed 's/\r$//' pip-compile.sh > /tmp/pc.sh && sh /tmp/pc.sh"
 ```
 
 Add `--upgrade` after `/tmp/pc.sh` to upgrade. On Linux or WSL with native Docker the
@@ -87,9 +87,14 @@ Dashboard approval) needs the requirements recompiled on the new Python
 | `audit`            | `zizmor.yml`           | Workflow analysis, Renovate config, requirements match `pyproject.toml`, every requirement hashed, pins                        |
 | `scan`             | `semgrep.yml`          | Semgrep Code and Supply Chain                                                                                                  |
 | `dependency-audit` | `dependency-audit.yml` | Daily `pip-audit` of `acc` and `main`; not a merge check. Also runs on a pull request that changes the audit itself            |
-| `test`             | `acc-ci.yml`           | Part B: `py_compile`, import of the app, `pytest`                                                                              |
-| `build`            | `acc-ci.yml`           | Part B: image build; on a push to `acc`, push to GHCR and attest provenance                                                    |
-| `deploy-acc`       | `acc-ci.yml`           | Part B: waits for the VM to report the commit; not a merge check                                                               |
+| `test`             | `acc-ci.yml`           | `py_compile`, import, `pytest`, shellcheck, bats                                                                             |
+| `build`            | `acc-ci.yml`           | Image build; on a push to `acc`, push to GHCR and attest provenance                                                    |
+| `deploy-acc`       | `acc-ci.yml`           | Waits for the VM to report the commit; **not required**, it fails when the VM is down                                  |
+
+The shell scripts are shellchecked and tested with bats-core in `test`:
+`scripts/wait-for-deploy.sh` (the `deploy-acc` poll), `scripts/smoke-health.sh`
+(the `/health` check of the built image, run in `build`) and
+`deployment/vm/reconciler/reconcile.sh` (the reconciler on the VM).
 
 Required checks match by job name, so renaming a job means updating the rulesets.
 `audit` and `scan` run on every pull request, whatever its base branch or paths,
@@ -104,17 +109,28 @@ today.
 
 ## Branch rulesets
 
-Rulesets are GitHub state, so this section records what a diff cannot show. They
-are created after Part A merges, with `audit` and `scan`; `test` and `build` are
-added to the `acc` ruleset once Part B has reported them.
+Rulesets are GitHub state, so this section and `.github/rulesets/` record what a
+diff cannot show. Both were created on 26 November 2026 with `audit` and `scan`;
+`test` and `build` are added to the `acc` ruleset once this pull request's checks
+have reported them (a required check that has never reported blocks every merge).
 
-| Ruleset                 | ID                    | Branch | Required checks                              |
-| ----------------------- | --------------------- | ------ | -------------------------------------------- |
-| `acc supply-chain gate` | recorded when created | `acc`  | `audit`, `scan`; Part B adds `test`, `build` |
-| `main promotion gate`   | recorded when created | `main` | `audit`, `scan`                              |
+| Ruleset                 | ID         | Branch | Required checks                              |
+| ----------------------- | ---------- | ------ | -------------------------------------------- |
+| `acc supply-chain gate` | `28148785` | `acc`  | `audit`, `scan`, `test`, `build` (the last two added after this pull request's checks have reported) |
+| `main promotion gate`   | `28148786` | `main` | `audit`, `scan`                              |
 
 Both require a pull request with zero approvals and merge commits only, and both
 block branch deletion and force pushes. Neither has bypass actors.
+
+`.github/rulesets/acc.json` and `main.json` are the record of what the rulesets
+should be, including `test` and `build` for `acc`. They are not applied by CI. To
+apply one, an admin runs, for example:
+
+```
+gh api -X PUT repos/open-regels/cprmv/rulesets/28148785 --input .github/rulesets/acc.json
+```
+
+Keep the file and the live ruleset in step: change one, change the other.
 
 If semgrep.dev is unreachable or `SEMGREP_APP_TOKEN` is revoked, `scan` fails and
 merges stop until the repository owner edits the rulesets.
