@@ -226,6 +226,7 @@ New endpoint, alongside the unchanged `GET /`:
 {
   "status": "ok",
   "version": "0.4.3",
+  "environment": "<CPRMV_ENVIRONMENT>",
   "build": { "sha": "<BUILD_SHA>", "run": "<BUILD_RUN>" },
   "image": { "digest": "<CPRMV_IMAGE_DIGEST>" }
 }
@@ -235,6 +236,10 @@ New endpoint, alongside the unchanged `GET /`:
 built. `image.digest` cannot be known inside the image; the reconciler passes the
 digest it deployed as `CPRMV_IMAGE_DIGEST`. Missing values report `null`, never a
 guess. The compose healthcheck uses `/health` instead of `/`.
+
+*26 November 2026:* `/health` also reports `environment`, from `CPRMV_ENVIRONMENT`
+(read per request; `null` when unset or empty). Each tier's `compose.yml` sets it
+to a literal: `acceptance` or `stable`.
 
 ### The workflow: `.github/workflows/acc-ci.yml`
 
