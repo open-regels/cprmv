@@ -286,7 +286,13 @@ One run:
 4. **Image not there yet:** `docker manifest inspect ghcr.io/open-regels/cprmv-api:sha-<target>`.
    If absent, status `waiting` (the build is probably running) and exit. After
    30 minutes of waiting on the same target, status `stalled`, still without
-   touching what runs.
+   deploying the target. A `docker pull` that fails after the manifest was found
+   is treated the same way (waiting, retried next run), not as a failed commit.
+   *Amended 26 November 2026:* in `waiting`, `stalled` and the failed-target case
+   (step 3), the reconciler still checks that the **running** release is healthy
+   and re-applies it if not; a failure there is reported as a warning and does
+   not mark any commit failed. If the Docker daemon is not reachable, the run
+   changes nothing and reports a warning.
 5. **Prepare:** `docker pull` the sha tag, read the digest it resolved to,
    `git archive <target> deployment/vm/acc | tar -x` into
    `releases/<target>/`, write `.env` with
@@ -327,8 +333,11 @@ a manual step on reconciler changes, and buys that a bad merge cannot replace th
 thing that would roll it back.
 
 Caddy is part of the release, so a Caddyfile change deploys like any other. A
-Caddy restart is the one part of a deploy that drops connections briefly;
-`compose up` only recreates containers whose configuration changed.
+Caddy restart is the one part of a deploy that drops connections briefly.
+Because each release has its own directory, the Caddyfile's mount source
+changes with every release, so **Caddy is recreated on every deploy**, not only
+when the Caddyfile changes (accepted 26 November 2026: acceptance tolerates a
+brief drop per deploy).
 
 ### Compose and Caddy for acceptance
 
@@ -368,7 +377,8 @@ in the deployment uses it.
 
 **cloud-init does the bootstrap** on first boot: Docker Engine and the compose
 plugin from Docker's apt repository, git and jq, the `cprmv` user, `/opt/cprmv/acc`,
-the anonymous clone, the reconciler and its units, `systemctl enable --now
+`/opt/cprmv/acc` owned by `cprmv` (the reconciler creates its own bare
+repository there on its first run), the reconciler and its units, `systemctl enable --now
 cprmv-reconcile@acc.timer`. The first reconciler run deploys the head of `acc`.
 Caddy cannot obtain a certificate until DNS points at the VM; until then the
 deployment is checked over plain HTTP on the IP.

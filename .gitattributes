@@ -3,4 +3,5 @@
 # with CRLF, which breaks the scripts and makes the compile drift check noisy.
 *.sh text eol=lf
 *.bats text eol=lf
+deployment/vm/reconciler/test/stubs/* text eol=lf
 serve_api/requirements*.txt text eol=lf
