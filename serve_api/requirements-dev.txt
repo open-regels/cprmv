@@ -2715,9 +2715,9 @@ uvloop==0.23.0 \
     --hash=sha256:fefea5cf8cdda9053b962ca8a90216fb0b1d40907dcb6819382b42e483e6e9f6 \
     --hash=sha256:ff7144d8167e513fe39fbb46bffb4f6f192dfb1f4b0b4e9102e1fd4f212e4747
     # via uvicorn
-virtualenv==21.14.4 \
-    --hash=sha256:2d1a394ef089220b4606408b184433e49417a6e5590a09c7b8a67fb1e013af56 \
-    --hash=sha256:d7f167214b3c4f69df5386677dae5091dbc9c400fc46080187ae28064c9d453d
+virtualenv==21.14.9 \
+    --hash=sha256:4d1bee354cd81c820da3bee56e38be3426490f8d1fc54e10ea5b2072ebad8ef8 \
+    --hash=sha256:ac51744da66ae56ff814b087d65096c94de698ec520adc624b108b679655809b
     # via pre-commit
 vulture==2.16 \
     --hash=sha256:6e0f1c312cef1c87856957e5c2ca9608834a7c794c2180477f30bf0e4cc58eee \
