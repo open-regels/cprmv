@@ -24,7 +24,9 @@ def test_get_root():
     assert response.status_code == 200
     assert response.json() == {"CPRMV Rules Serve API": "0.4.3"}
 
-HEALTH_ENV = ("BUILD_SHA", "BUILD_RUN", "CPRMV_IMAGE_DIGEST", "CPRMV_ENVIRONMENT")
+HEALTH_ENV = (
+    "BUILD_SHA", "BUILD_RUN", "BUILD_RELEASE", "CPRMV_IMAGE_DIGEST", "CPRMV_ENVIRONMENT",
+)
 
 
 def test_health_reports_build_and_digest(monkeypatch):
@@ -32,15 +34,17 @@ def test_health_reports_build_and_digest(monkeypatch):
     monkeypatch.setenv("BUILD_RUN", "42")
     monkeypatch.setenv("CPRMV_IMAGE_DIGEST", "sha256:feed")
     monkeypatch.setenv("CPRMV_ENVIRONMENT", "acceptance")
+    monkeypatch.setenv("BUILD_RELEASE", "v2026.11.0")
     response = client.get("/health")
     assert response.status_code == 200
     assert list(response.json().keys()) == [
-        "status", "version", "environment", "build", "image",
+        "status", "version", "environment", "release", "build", "image",
     ]
     assert response.json() == {
         "status": "ok",
         "version": "0.4.3",
         "environment": "acceptance",
+        "release": "v2026.11.0",
         "build": {"sha": "abc123", "run": "42"},
         "image": {"digest": "sha256:feed"},
     }
@@ -51,6 +55,7 @@ def test_health_reports_null_when_unset(monkeypatch):
         monkeypatch.delenv(name, raising=False)
     body = client.get("/health").json()
     assert body["environment"] is None
+    assert body["release"] is None
     assert body["build"] == {"sha": None, "run": None}
     assert body["image"] == {"digest": None}
 
@@ -60,8 +65,16 @@ def test_health_treats_empty_as_null(monkeypatch):
         monkeypatch.setenv(name, "")
     body = client.get("/health").json()
     assert body["environment"] is None
+    assert body["release"] is None
     assert body["build"] == {"sha": None, "run": None}
     assert body["image"] == {"digest": None}
+
+
+def test_health_reads_the_release_per_request(monkeypatch):
+    monkeypatch.setenv("BUILD_RELEASE", "v2026.11.0")
+    assert client.get("/health").json()["release"] == "v2026.11.0"
+    monkeypatch.setenv("BUILD_RELEASE", "v2026.12.1")
+    assert client.get("/health").json()["release"] == "v2026.12.1"
 
 #def test_get_mapping():
 #    result = get_mapping(CPRMVMETHODS.juriconnect)

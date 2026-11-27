@@ -196,18 +196,20 @@ expected, and the steps below bring the VM up:
 
 ## Release flow
 
-1. Bump the version on `acc` (through a pull request, as every change to `acc`)
-   in every place the repository writes it: see "Releasing" in the root
-   `README.md`. The `<version>` image tag is read from `serve_api/pyproject.toml`.
-2. Open a pull request from `acc` into `main` ("Release <version>"). `audit`,
+Releases are cut with `/bump-release`; "Releasing" in the root `README.md`
+describes the release number and the steps. For the VMs:
+
+1. A pull request `Release vYYYY.MM.N` into `acc` writes `serve_api/RELEASE` and
+   the release SBOM. Its merge deploys acceptance, which then reports that
+   release at `/health`.
+2. A pull request from `acc` into `main` ("Release vYYYY.MM.N"). `audit`,
    `scan`, `test` and `build` run on it.
-3. Merge it. `publish` builds and pushes `sha-<main commit>`, `stable` and
-   `<version>`; the stable VM deploys it within minutes, and `deploy` goes green.
-   (On the first release `deploy` times out instead: the stable VM does not exist
-   yet. See "Rolling out the stable tier".)
+3. Merge it. `publish` builds and pushes `sha-<main commit>`, `stable`,
+   `<version>` (the vocabulary version, from `serve_api/pyproject.toml`) and
+   `vYYYY.MM.N`; the stable VM deploys it within minutes, and `deploy` goes green.
 4. GitLab: push `main` fast-forward to the `gitlab` remote, which starts the Pages
-   job and publishes the ReSpec. That push is asked for each time; it is never
-   part of a merge.
+   job and publishes the ReSpec. A fixed step of every release, done by
+   `/bump-release` after a fast-forward check; it is never part of a merge.
 
 ## Reading `deploy-status.json`
 

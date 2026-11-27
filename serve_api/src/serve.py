@@ -144,14 +144,17 @@ def cprmv_info():
 @app.get("/health")
 def health() -> dict:
     """
-    liveness and build metadata: version, the environment (tier) the container
-    runs in (CPRMV_ENVIRONMENT, read per request), the git SHA and CI run the
-    image was built from, and the image digest; each is null when not set
+    liveness and build metadata: version (the vocabulary version), the
+    environment (tier) the container runs in (CPRMV_ENVIRONMENT), the release
+    number the image was built at (BUILD_RELEASE, vYYYY.MM.N), the git SHA and
+    CI run the image was built from, and the image digest; all read per
+    request, each null when not set or empty
     """
     return {
         "status": "ok",
         "version": app.version,
         "environment": os.environ.get("CPRMV_ENVIRONMENT") or None,
+        "release": os.environ.get("BUILD_RELEASE") or None,
         "build": {
             "sha": os.environ.get("BUILD_SHA") or None,
             "run": os.environ.get("BUILD_RUN") or None,

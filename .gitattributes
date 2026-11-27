@@ -5,6 +5,10 @@
 *.bats text eol=lf
 deployment/vm/reconciler/test/stubs/* text eol=lf
 serve_api/requirements*.txt text eol=lf
+# Read by scripts/read-release.sh in CI and by scripts/write-sbom.py; both reject a CR.
+serve_api/RELEASE text eol=lf
+# Its FROM line is read by sed in /bump-release (.claude/commands/bump-release.md).
+serve_api/Dockerfile text eol=lf
 deployment/vm/cloud-init.yaml text eol=lf
 deployment/vm/reconciler/*.service text eol=lf
 deployment/vm/reconciler/*.timer text eol=lf
