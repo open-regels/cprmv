@@ -25,7 +25,7 @@ output:
     they came from, which moves when a comment is edited, so bom-refs become the
     package URL instead, and the line-quoting description is dropped;
   - components and dependencies are sorted, keys are sorted, the root component
-    comes from pyproject.toml.
+    comes from pyproject.toml (name and the vocabulary version).
 The requirements file does not record which package needs which, so the graph is
 flat: the root depends on every component. The components and their hashes are
 the content; do not read the graph as a resolution tree.
@@ -33,8 +33,17 @@ the content; do not read the graph as a resolution tree.
 CycloneDX 1.6 is the tool's default specification version; it is passed
 explicitly so a tool upgrade cannot change it unnoticed.
 
+The file is named after the RELEASE, vYYYY.MM.N from serve_api/RELEASE, which
+only a release (/bump-release) writes. The vocabulary version in pyproject.toml
+(0.4.3) stays the same across releases with different dependencies, so it cannot
+name one document per release; docs/sbom/cprmv-api-0.4.3.cdx.json is the record
+of what stable ran before release numbers. Every mode fails while
+serve_api/RELEASE is missing or is not one line vYYYY.MM.N: there is no release
+to name the file after, and a release that reached main without one is exactly
+what --verify-release must report.
+
 Usage:
-  python scripts/write-sbom.py                  write docs/sbom/cprmv-api-<version>.cdx.json
+  python scripts/write-sbom.py                  write docs/sbom/cprmv-api-<release>.cdx.json
   python scripts/write-sbom.py --check          exit 1 if that file is missing or stale
   python scripts/write-sbom.py --verify-release exit 1 if missing; warn if stale
   python scripts/write-sbom.py --print-path     print that file's path and exit
@@ -43,6 +52,7 @@ Usage:
 from __future__ import annotations
 
 import json
+import re
 import shutil
 import subprocess
 import sys
@@ -52,20 +62,49 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent
 REQUIREMENTS = "serve_api/requirements.txt"
 PYPROJECT = "serve_api/pyproject.toml"
+RELEASE_FILE = "serve_api/RELEASE"
+# The same expression as scripts/read-release.sh, which ci.yml validates the file
+# with before building; a test keeps the two equal.
+RELEASE_PATTERN = r"^v[0-9]{4}\.(0[1-9]|1[0-2])\.[0-9]+$"
 SPEC_VERSION = "1.6"
 # The project is "cprmv" but the SBOM describes the API image's dependencies,
 # and the file name says so.
 FILE_PREFIX = "cprmv-api"
 
 
-def output_path(version: str) -> str:
+class ReleaseError(Exception):
+    """serve_api/RELEASE is missing or malformed."""
+
+
+def output_path(release: str) -> str:
     """Repository-relative, forward slashes, whatever the platform."""
-    return f"docs/sbom/{FILE_PREFIX}-{version}.cdx.json"
+    return f"docs/sbom/{FILE_PREFIX}-{release}.cdx.json"
 
 
 def project(root: Path) -> tuple[str, str]:
     meta = tomllib.loads((root / PYPROJECT).read_text(encoding="utf-8"))["project"]
     return meta["name"], meta["version"]
+
+
+def release(root: Path) -> str:
+    """The release number in serve_api/RELEASE: the value and at most one
+    trailing newline, nothing else, which is what read-release.sh accepts (it
+    compares the file byte for byte with that), so the two accept exactly the
+    same files. A CR, a NUL or a second newline fails."""
+    path = root / RELEASE_FILE
+    if not path.is_file():
+        raise ReleaseError(f"no {RELEASE_FILE}")
+    value = path.read_bytes().decode("utf-8", errors="replace")
+    if value.endswith("\n"):
+        value = value[:-1]
+    # re.$ would also match before a final newline; fullmatch on the stripped
+    # value, without the anchors, is the whole-string test.
+    if not re.fullmatch(RELEASE_PATTERN[1:-1], value):
+        raise ReleaseError(
+            f"{RELEASE_FILE} is not a release number vYYYY.MM.N "
+            "(one line, nothing else)"
+        )
+    return value
 
 
 def normalise(raw: dict, name: str, version: str) -> dict:
@@ -151,9 +190,28 @@ def comparable(text: str) -> str:
 
 def main(argv: list[str], root: Path = ROOT) -> int:
     _, version = project(root)
-    out = output_path(version)
+    verify = "--verify-release" in argv
+    try:
+        rel = release(root)
+    except ReleaseError as err:
+        if verify and not (root / RELEASE_FILE).is_file():
+            # On a push to main: the promotion carried no release number.
+            message = (
+                f"no {RELEASE_FILE}: main has not been released with a release "
+                "number. Cut releases with /bump-release, which writes it."
+            )
+        elif not (root / RELEASE_FILE).is_file():
+            message = (
+                f"no {RELEASE_FILE}: the SBOM is named after the release number. "
+                "Write it first (/bump-release does)."
+            )
+        else:
+            message = str(err)
+        print(f"::error::{message}", file=sys.stderr)
+        return 1
+    out = output_path(rel)
 
-    # --print-path, so the workflow can ask which file belongs to this version
+    # --print-path, so the workflow can ask which file belongs to this release
     # without restating the naming rule above.
     if "--print-path" in argv:
         print(out)
@@ -171,7 +229,6 @@ def main(argv: list[str], root: Path = ROOT) -> int:
     # document for the version being released. A missing SBOM is a failure;
     # drift is a warning that says which.
     strict = "--check" in argv
-    verify = "--verify-release" in argv
     if strict or verify:
         if not target.exists():
             print(
@@ -203,7 +260,10 @@ def main(argv: list[str], root: Path = ROOT) -> int:
     with open(target, "w", encoding="utf-8", newline="\n") as fh:
         fh.write(generated)
     count = len(json.loads(generated)["components"])
-    print(f"{out}: {count} components (shipped dependencies of cprmv-api {version})")
+    print(
+        f"{out}: {count} components "
+        f"(shipped dependencies of cprmv-api {rel}, vocabulary {version})"
+    )
     return 0
 
 

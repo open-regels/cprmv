@@ -31,10 +31,13 @@ COPY methods/ ./methods/
 # and SSL_FIX.md for provenance and details.
 COPY certs/ ./certs/
 
-# Build metadata, reported by GET /health
+# Build metadata, reported by GET /health. BUILD_RELEASE is the release number
+# (vYYYY.MM.N) from serve_api/RELEASE, passed by CI on both tiers; empty before
+# the first release and in local builds, which /health reports as null.
 ARG BUILD_SHA
 ARG BUILD_RUN
-ENV BUILD_SHA=$BUILD_SHA BUILD_RUN=$BUILD_RUN
+ARG BUILD_RELEASE
+ENV BUILD_SHA=$BUILD_SHA BUILD_RUN=$BUILD_RUN BUILD_RELEASE=$BUILD_RELEASE
 
 # Image metadata (OCI labels); the image is published to ghcr.io/open-regels/cprmv-api.
 LABEL maintainer="Bas.Kaptijn@ictu.nl"

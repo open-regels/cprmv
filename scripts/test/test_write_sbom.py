@@ -61,33 +61,103 @@ def state():
     return {"doc": raw_doc()}
 
 
+RELEASE = "v2099.01.7"
+
+
 @pytest.fixture
 def repo(tmp_path, monkeypatch, state):
-    """A project root with a pyproject and a requirements file, and the tool
-    replaced by the fixture. `state` lets a test change what the tool returns."""
+    """A project root with a pyproject, a requirements file and a RELEASE, and
+    the tool replaced by the fixture. `state` lets a test change what the tool
+    returns. The pyproject version and the release differ, so a test can tell
+    which of the two a file name came from."""
     (tmp_path / "serve_api").mkdir()
     (tmp_path / "serve_api" / "pyproject.toml").write_text(
         '[project]\nname = "cprmv"\nversion = "9.9.9"\n', encoding="utf-8"
     )
     (tmp_path / "serve_api" / "requirements.txt").write_text("", encoding="utf-8")
+    write_release(tmp_path, RELEASE + "\n")
     monkeypatch.setattr(W, "run_tool", lambda root: json.loads(json.dumps(state["doc"])))
     return tmp_path
 
 
+def write_release(root, text):
+    (root / "serve_api" / "RELEASE").write_bytes(text.encode("utf-8"))
+
+
 def sbom_file(repo):
-    return repo / "docs" / "sbom" / "cprmv-api-9.9.9.cdx.json"
+    return repo / "docs" / "sbom" / f"cprmv-api-{RELEASE}.cdx.json"
 
 
-def test_output_path_carries_the_version_from_pyproject(repo, capsys):
+def test_output_path_carries_the_release_not_the_vocabulary_version(repo, capsys):
     assert W.project(repo) == ("cprmv", "9.9.9")
-    assert W.output_path("9.9.9") == "docs/sbom/cprmv-api-9.9.9.cdx.json"
+    assert W.release(repo) == RELEASE
+    assert W.output_path(RELEASE) == f"docs/sbom/cprmv-api-{RELEASE}.cdx.json"
     assert W.main(["--write"], repo) == 0
     assert sbom_file(repo).exists()
+    assert not (repo / "docs" / "sbom" / "cprmv-api-9.9.9.cdx.json").exists()
+    assert RELEASE in capsys.readouterr().out
 
 
-def test_the_real_pyproject_version_is_used():
-    _, version = W.project(REPO)
-    assert W.output_path(version).endswith(f"-{version}.cdx.json")
+def test_a_release_without_a_trailing_newline_is_read(repo):
+    write_release(repo, RELEASE)
+    assert W.release(repo) == RELEASE
+
+
+def test_the_release_pattern_is_the_one_ci_validates_with():
+    """ci.yml validates serve_api/RELEASE with scripts/read-release.sh. The two
+    must accept the same values, or a release could build and then have no SBOM
+    (or the reverse)."""
+    shell = (REPO / "scripts" / "read-release.sh").read_text(encoding="utf-8")
+    assert f"=~ {W.RELEASE_PATTERN} ]]" in shell
+
+
+MODES = [[], ["--write"], ["--check"], ["--verify-release"], ["--print-path"]]
+
+
+@pytest.mark.parametrize("argv", MODES)
+def test_every_mode_fails_without_a_release(repo, capsys, argv):
+    (repo / "serve_api" / "RELEASE").unlink()
+    assert W.main(argv, repo) == 1
+    out, err = capsys.readouterr()
+    assert out == ""
+    assert "no serve_api/RELEASE" in err
+    assert not (repo / "docs").exists()
+
+
+def test_verify_release_says_main_was_not_released_with_a_number(repo, capsys):
+    (repo / "serve_api" / "RELEASE").unlink()
+    assert W.main(["--verify-release"], repo) == 1
+    assert (
+        "no serve_api/RELEASE: main has not been released with a release number"
+        in capsys.readouterr().err
+    )
+
+
+@pytest.mark.parametrize(
+    "text",
+    [
+        "2099.01.7\n",  # no v
+        "v2099.13.0\n",  # month 13
+        "v2099.1.0\n",  # month not zero-padded
+        "v2099.01.7\r\n",  # CRLF
+        "v2099.01.7\nv2099.01.8\n",  # two lines
+        "v2099.01.7/../../x\n",  # a path
+        "",  # empty
+        "v2099.01.7\n\n",  # two trailing newlines: read-release.sh rejects it too
+        "v2099.01.7\0",  # a NUL byte
+        "v2099.0\x001.7\n",  # a NUL inside the number
+        " v2099.01.7\n",  # a leading space
+    ],
+)
+@pytest.mark.parametrize("argv", MODES)
+def test_every_mode_fails_on_a_malformed_release(repo, capsys, argv, text):
+    write_release(repo, text)
+    assert W.main(argv, repo) == 1
+    out, err = capsys.readouterr()
+    assert out == ""
+    assert "serve_api/RELEASE" in err
+    assert "is not a release number" in err
+    assert not (repo / "docs").exists()
 
 
 def test_normalise_removes_volatile_fields_and_sorts():
@@ -173,7 +243,7 @@ def test_verify_release_fails_only_on_missing(repo, state, capsys):
 def test_print_path_prints_the_path_without_running_the_tool(repo, capsys, monkeypatch):
     monkeypatch.setattr(W, "run_tool", lambda root: pytest.fail("tool must not run"))
     assert W.main(["--print-path"], repo) == 0
-    assert capsys.readouterr().out.strip() == "docs/sbom/cprmv-api-9.9.9.cdx.json"
+    assert capsys.readouterr().out.strip() == f"docs/sbom/cprmv-api-{RELEASE}.cdx.json"
     assert not (repo / "docs").exists()
 
 

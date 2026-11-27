@@ -6,13 +6,15 @@ name: Release SBOM
 #
 # Two copies, deliberately, because neither is sufficient alone:
 #
-#   - docs/sbom/cprmv-api-<version>.cdx.json, committed at release time by
-#     `python scripts/write-sbom.py`. Durable: a question about a version that
-#     shipped a year ago is answerable from git. Two checks below, of different
-#     strength: on the release pull request -- the one that adds this
-#     version's file -- it must match serve_api/requirements.txt exactly; on a
-#     promotion it must exist, and drift is only a warning, because a promotion
-#     carries later commits.
+#   - docs/sbom/cprmv-api-<release>.cdx.json, committed at release time by
+#     `python scripts/write-sbom.py`, named after serve_api/RELEASE
+#     (vYYYY.MM.N, written by /bump-release). Durable: a question about a
+#     release that shipped a year ago is answerable from git. Two checks below,
+#     of different strength: on the release pull request -- the one that adds
+#     this release's file -- it must match serve_api/requirements.txt exactly;
+#     on a promotion it must exist, and drift is only a warning, because a
+#     promotion carries later commits. cprmv-api-0.4.3.cdx.json is the record
+#     of what stable ran before release numbers, and stays.
 #   - the artifact this workflow uploads, which is what a scanner or a
 #     Dependency-Track import can fetch without a checkout. This repository is
 #     public, so GitHub caps artifact retention at 90 days -- hence the
@@ -36,6 +38,7 @@ on:
       - 'docs/sbom/**'
       - 'serve_api/requirements.txt'
       - 'serve_api/pyproject.toml'
+      - 'serve_api/RELEASE'
 
 permissions:
   contents: read
@@ -73,7 +76,7 @@ jobs:
         run: python -m pytest scripts/test/test_write_sbom.py
 
       # Both checks run BEFORE "Generate the SBOM". That step writes
-      # docs/sbom/cprmv-api-<version>.cdx.json in the workspace, so a check
+      # docs/sbom/cprmv-api-<release>.cdx.json in the workspace, so a check
       # after it compares a fresh generation with itself and cannot fail.
 
       - name: The released version has an SBOM
@@ -83,6 +86,8 @@ jobs:
         # still the right one for the version being released. --verify-release
         # fails when the file for this version is missing, and warns when it
         # has drifted. The strict check belongs where the release is cut.
+        # It also fails when serve_api/RELEASE is missing: a promotion to main
+        # without a release number was not cut with /bump-release.
         if: ${{ github.event_name == 'push' }}
         run: python scripts/write-sbom.py --verify-release
 
@@ -93,7 +98,9 @@ jobs:
         # an earlier release, and requirements that have moved since are
         # expected. Re-runs on every push to the pull request, since the paths
         # filter above matches its whole diff, so a rebase is checked too.
-        if: ${{ github.event_name == 'pull_request' }}
+        # A tree without serve_api/RELEASE (only before the first release) has
+        # no release SBOM to check: a release pull request always adds it.
+        if: ${{ github.event_name == 'pull_request' && hashFiles('serve_api/RELEASE') != '' }}
         env:
           GH_TOKEN: ${{ github.token }}
           PR: ${{ github.event.pull_request.number }}
@@ -110,9 +117,16 @@ jobs:
       - name: Generate the SBOM
         # After the checks (see above): the uploaded copy describes this
         # commit's requirements, which on a promotion is what is deployed.
+        # Skipped, with the upload, only on a pull request whose tree has no
+        # serve_api/RELEASE yet (before the first release): there is no release
+        # to name the document after. On a push or a manual run without one it
+        # runs and fails loudly; on a push "The released version has an SBOM"
+        # has already failed before it.
+        if: ${{ github.event_name != 'pull_request' || hashFiles('serve_api/RELEASE') != '' }}
         run: python scripts/write-sbom.py
 
       - name: Upload the SBOM
+        if: ${{ github.event_name != 'pull_request' || hashFiles('serve_api/RELEASE') != '' }}
         uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
           name: sbom-${{ github.sha }}

@@ -241,6 +241,8 @@ guess. The compose healthcheck uses `/health` instead of `/`.
 (read per request; `null` when unset or empty). Each tier's `compose.yml` sets it
 to a literal: `acceptance` or `stable`.
 
+*27 November 2026:* `/health` also reports `release`, between `environment` and `build`: the release number `vYYYY.MM.N` from the `BUILD_RELEASE` build argument, which CI reads from `serve_api/RELEASE` (read per request; `null` when unset or empty); see `2026-11-27-release-versioning-design.md`.
+
 ### The workflow: `.github/workflows/acc-ci.yml`
 
 Triggers: `pull_request` into `acc`, `push` to `acc`, `workflow_dispatch`.
