@@ -187,6 +187,8 @@ jobs:
           context: serve_api
           push: true
           tags: ${{ steps.tags.outputs.list }}
+          # BuildKit SBOM attestation, stored with the image in GHCR; covers the OS packages.
+          sbom: true
           build-args: |
             BUILD_SHA=${{ github.sha }}
             BUILD_RUN=${{ github.run_number }}
