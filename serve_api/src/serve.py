@@ -451,6 +451,9 @@ def load_methods():
         module_name = file_path.stem
         # Dynamically import the module
         print(f"Loading method: {module_name}")
+        # module_name is the stem of a file in the image's own methods/ directory, read
+        # at start-up; no request input reaches it.
+        # nosemgrep: python.lang.security.audit.non-literal-import.non-literal-import
         module = importlib.import_module(module_name)
         for name, obj in inspect.getmembers(module, inspect.isclass):
             # print(f"checking {name} member")

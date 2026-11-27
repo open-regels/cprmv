@@ -37,9 +37,15 @@ class core_web(PublicationMethod):
             else:
                 req = Request(puburl)
             self.add_headers(req)
+            # puburl comes from repository-publication-location-format in
+            # data/cprmvmethods.ttl, which ships in the image. Every format there starts
+            # with a literal https://<host>/; the request only fills placeholders in the
+            # path and query, so it cannot change the scheme (file://) or the host.
             if httpmethod == "POST":
+                # nosemgrep: python.lang.security.audit.dynamic-urllib-use-detected.dynamic-urllib-use-detected
                 response = urlopen(req, context=self.app.SSL_CONTEXT, data=body)
             else:
+                # nosemgrep: python.lang.security.audit.dynamic-urllib-use-detected.dynamic-urllib-use-detected
                 response = urlopen(req, context=self.app.SSL_CONTEXT)
             with tempfile.NamedTemporaryFile(delete=False) as tmp_file:
                 shutil.copyfileobj(response, tmp_file)
