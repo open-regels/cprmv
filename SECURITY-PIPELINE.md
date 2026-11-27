@@ -65,7 +65,9 @@ WSL); `make deps-linux ARGS=--upgrade` upgrades. A compile on Windows differs in
 platform markers, and the hashed Linux files will not `pip install` on Windows:
 platform-only dependencies such as `colorama` and `pywin32-ctypes` are absent from
 them. The `audit` job recompiles and fails on any drift, so a Windows-compiled file
-is rejected.
+is rejected. `requirements-dev.txt` is compiled with `--constraint requirements.txt`,
+so a shipped package has the same version in both files and the tests run against
+the versions the image ships.
 
 On Windows there is no `make`; from the repository root in Git Bash run:
 
