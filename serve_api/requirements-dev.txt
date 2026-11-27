@@ -749,9 +749,9 @@ detect-installer==0.2.1 \
     --hash=sha256:85f889d4d19c1caf5bef89ef389eb920cd8c6c2a868e1eeceec24527b93021e7 \
     --hash=sha256:87e2ce7d05cb108b178f8e45bb80d3d88c0cb4b397983345c18ad6562e02e620
     # via fastapi-cloud-cli
-distlib==0.4.3 \
-    --hash=sha256:4b0ce306c966eb73bc3a7b6abad017c556dadd92c44701562cd528ac7fde4d5b \
-    --hash=sha256:f152097224a0ae24be5a0f6bae1b9359af82133bce63f98a95f86cae1aede9ed
+distlib==0.4.4 \
+    --hash=sha256:ca4175b4ac7f71223cc30ed7248c45d2b38c2439d8ee6e498ab67ed63cf3508d \
+    --hash=sha256:cf09d55b1e85a89576b036aeb71550bfd68320f3f21761ca329eadadad918638
     # via virtualenv
 dnspython==2.9.2 \
     --hash=sha256:8d4d39a513e649d634004ce4d39ade2352efcea472a0247535a5c2d18a9d7ba9 \
