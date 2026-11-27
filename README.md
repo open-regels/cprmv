@@ -210,6 +210,19 @@ For detail, read:
    grep -rln "0\.4\.3" serve_api html/package.json --exclude-dir=data --exclude-dir=respec --exclude-dir=__pycache__ --exclude='requirements*.txt'
    ```
 
+   Then regenerate the release SBOM and commit it with the bump:
+
+   ```
+   pip install cyclonedx-bom==8.0.1
+   python scripts/write-sbom.py
+   ```
+
+   This writes `docs/sbom/cprmv-api-<version>.cdx.json` from
+   `serve_api/requirements.txt`. The `Release SBOM` workflow fails the release
+   pull request that adds it if the committed file does not match the requirements, and
+   `main` if the file for the released version is missing. The container image
+   carries its own SBOM attestation (BuildKit, `sbom: true` in `ci.yml`) in GHCR.
+
 2. Open a pull request from `acc` into `main`, named `Release <version>`.
 3. Merge it. `publish` tags the image `stable` and `<version>`, and the stable VM
    deploys it within minutes.

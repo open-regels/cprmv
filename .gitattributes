@@ -11,3 +11,6 @@ deployment/vm/reconciler/*.timer text eol=lf
 .github/rulesets/*.json text eol=lf
 deployment/vm/stable/Caddyfile text eol=lf
 deployment/vm/stable/compose.yml text eol=lf
+scripts/*.py text eol=lf
+scripts/test/*.py text eol=lf
+docs/sbom/*.json text eol=lf
