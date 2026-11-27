@@ -813,9 +813,9 @@ fastapi==0.142.2 \
     # via
     #   -c requirements.txt
     #   cprmv (pyproject.toml)
-fastapi-cli==0.0.32 \
-    --hash=sha256:38024d2345275e1b37ce8848727a580d84901b570e96b3256d9d36a9a5039424 \
-    --hash=sha256:8dcc286fa32f01bbd3f65dd09cfd5a2540ed5f2230b77db7fd30978d6165f3c4
+fastapi-cli==0.0.34 \
+    --hash=sha256:4a1185b66308c7543e98957426a8ecd205d58853514cb9a68c78066f2e6e467b \
+    --hash=sha256:7eeb74cf83edd75d22a9289713db03d8a0be3ed7a8daa48a3703a12d4f2a4615
     # via
     #   -c requirements.txt
     #   fastapi
