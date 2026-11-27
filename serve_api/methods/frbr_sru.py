@@ -51,6 +51,10 @@ class frbr_sru(core_web):
         try:
             print(f"retrieving versioning information through SRU service: {sru_url}")
             req = Request(sru_url)
+            # sru_url comes from frbr-sru:url in data/cprmvmethods.ttl, which ships in the
+            # image: a literal https://zoekservice.overheid.nl/ prefix whose query
+            # placeholders the request fills, so it cannot change the scheme or the host.
+            # nosemgrep: python.lang.security.audit.dynamic-urllib-use-detected.dynamic-urllib-use-detected
             response = urlopen(req, context=self.app.SSL_CONTEXT)
             print("Saving response from SRU")
             with tempfile.NamedTemporaryFile(delete=False) as tmp_file:

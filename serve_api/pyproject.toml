@@ -17,7 +17,7 @@ dependencies = [
 
 [project.optional-dependencies]
 dev = ["pytest", "pytest-cov", "httpx", "pre-commit"]
-tools = ["bandit", "black", "mypy", "ruff", "safety", "vulture"]
+tools = ["bandit", "black", "mypy", "ruff", "vulture"]
 
 [tools.ruff]
 line-length = 120
