@@ -13,6 +13,7 @@ from fastapi.responses import PlainTextResponse
 from fastapi.responses import FileResponse
 from parse import parse, search, with_pattern, Result, Match
 from urllib.request import Request, urlopen
+from urllib.parse import urlsplit
 from urllib.error import URLError
 from lxml import etree
 import shutil
@@ -256,8 +257,7 @@ def rules(
 
 @app.get("/ref")
 def ref(
-    reference : str = "",
-    api_key: None | str = Depends(header_scheme)
+    reference : str = ""
 ):
     """
     Supported reference methods
@@ -289,19 +289,35 @@ def ref(
       Example: https://cprmv.open-regels.nl/rules/BWBR0015703/Artikel%2020/onderdeel%20a.
 
     """
-    headers = {}
-    if api_key is not None:
-        headers = dict(app.current_request_headers.get())
-        headers['x-api-key'] = api_key
-        app.current_request_headers.set(headers)
+    # The redirect carries no request headers: a client re-sends its own headers
+    # (x-api-key included) to the new location, and echoing them back only exposes
+    # the key in logs and tooling (issue #1).
     redirect_url = detect_cprmv_serve_reference_method_and_transform(reference)
-    if redirect_url is not None:
-        response = RedirectResponse(
-            url=redirect_url,
-            headers = app.current_request_headers.get()
-        )
-        return response
+    if redirect_url is not None and is_safe_redirect(redirect_url):
+        # is_safe_redirect allows only a path on this API or a CELLAR URL, so the
+        # reference cannot send the caller to another site.
+        # nosemgrep: python.fastapi.web.tainted-redirect-fastapi.tainted-redirect-fastapi
+        return RedirectResponse(url=redirect_url)
     return {"error": "not a valid or supported reference..."}
+
+# hosts /ref may redirect to besides this API itself: EU CELLAR, where the ELI
+# reference method finds the publications
+SAFE_REDIRECT_HOSTS = {"publications.europa.eu"}
+
+def is_safe_redirect(url):
+    """True for a path on this API ("/rules/..." but not "//host" or "/\\host"),
+    or an http(s) URL on SAFE_REDIRECT_HOSTS without user info."""
+    if "\\" in url or any(ord(c) < 0x21 or ord(c) == 0x7f for c in url):
+        return False
+    if url.startswith("/"):
+        return not url.startswith("//")
+    parts = urlsplit(url)
+    return (
+        parts.scheme in ("http", "https")
+        and parts.username is None
+        and parts.password is None
+        and parts.hostname in SAFE_REDIRECT_HOSTS
+    )
 
 # old deprecated helper endpoints for which the /ref endpoint came in place
 # helper endpoint
