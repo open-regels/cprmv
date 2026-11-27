@@ -198,17 +198,28 @@ and closes a tracking issue labelled `security` and `ci`.
 
 ## Findings we accept, and why
 
-Semgrep Supply Chain findings have no inline suppression. They are triaged in the
-Semgrep UI with a comment, and the platform's API does not return that comment.
-Advisories accepted for the dependency audit have no comment field at all.
-**This table is the record**: each row is the reason, and the comment in the UI
-repeats it. A finding marked ignored in the UI, or an ID in
-`scripts/pip-audit-accepted.txt`, without a row here is a gap.
+A decision on a finding is recorded in one of two places, and only one of them is
+in git.
 
-None today.
+- **Semgrep Code false positives** are suppressed inline: a comment with the
+  reason, then `# nosemgrep: <full rule id>` above the line. The reason is
+  reviewed in the pull request and holds for every Semgrep project that scans the
+  repository. They get no row here.
+- **Everything else** is triaged in the Semgrep UI with a comment, and the
+  platform's API does not return that comment: Supply Chain findings, which have
+  no inline mechanism, and Code findings that are true positives we accept rather
+  than fix (a `nosemgrep` would misstate them as false). Advisories accepted for
+  the dependency audit have no comment field at all. **This table is the
+  record**: each row is the reason, and the comment in the UI repeats it. A
+  finding marked ignored in the UI, or an ID in `scripts/pip-audit-accepted.txt`,
+  without a row here is a gap.
 
-| Package (version) | Advisory | Source (Semgrep finding ID or pip-audit) | Decision | Reason | Revisit when |
-| ----------------- | -------- | ---------------------------------------- | -------- | ------ | ------------ |
+Last triaged on 27 November 2026, from the Semgrep findings of `acc` at `2341daa`
+and `main` at `502a351`.
+
+| Package, file (version) | Advisory or rule | Source (Semgrep finding ID or pip-audit) | Decision | Reason | Revisit when |
+| ----------------------- | ---------------- | ---------------------------------------- | -------- | ------ | ------------ |
+| `html/index.html:14`, Logius `respec-nlgov.js` (unversioned build) | `html.security.audit.missing-integrity.missing-integrity` (Code) | 1107098784 (one finding in the UI for `acc` and `main`) | accepted, 27 Nov 2026 | Logius publishes the NL-gov ReSpec profile at one fixed URL and replaces it in place, so an `integrity` hash would break the spec on every upstream release. The tag carries `class="remove"`: ReSpec strips it from the exported document, and neither published copy (`html/public/<version>/` on GitLab Pages, `serve_api/respec/` in the image) loads it. Exposure is limited to building and editing the spec, from a government host over HTTPS. | Logius publishes versioned builds, or the ReSpec build (#21, #24) vendors the profile |
 
 ## Not carried over from lvg, and why
 
