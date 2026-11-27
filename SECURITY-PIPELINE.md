@@ -39,6 +39,8 @@ All done on 24 November 2026 by the `open-regels` organisation admin.
 | semgrep                          | `semgrep==1.176.1` in `semgrep.yml`                                                         | 1.176.1 | manual                                           |
 | renovate config validator        | `renovate@44.50.3` in `zizmor.yml`                                                          | 44.50.3 | manual                                           |
 | pip-tools                        | `pip-tools==7.6.2` in `zizmor.yml`, `serve_api/Makefile` and `renovate.json` (`constraints`) | 7.6.2   | manual; 7.7.0 is younger than the 14-day cooldown |
+| cyclonedx-bom (the SBOM tool)    | `cyclonedx-bom==8.0.1` in `sbom.yml`                                                    | 8.0.1   | manual (a plain `pip install` line); newest release at least 14 days old |
+| pytest in the SBOM workflow      | `pytest==9.1.1` in `sbom.yml`                                                           | 9.1.1   | manual; keep equal to the pin in `serve_api/requirements-dev.txt` |
 | pip-audit                        | `pip-audit==2.10.1` in `dependency-audit.yml` and `ci.yml` (`test` job)                 | 2.10.1  | manual                                           |
 | shellcheck                       | runner-provided in `ci.yml` (`test` job); **not pinned**                                | runner  | exception: ubuntu-24.04 ships it, and CI only lints; the local check uses `koalaman/shellcheck:v0.11.0` |
 | Python base image                | `python:3.14-bookworm@sha256:fbaf91204f2758a70a7f7d6cf3c2871851227152a54e6a7b5b59941c4566b6b5` in `serve_api/Dockerfile` line 1 and `PY_IMAGE` in `serve_api/Makefile` | 3.14-bookworm | Renovate, both files in one pull request (see below) |
@@ -89,12 +91,14 @@ Dashboard approval) needs the requirements recompiled on the new Python
 | `scan`             | `semgrep.yml`          | Semgrep Code and Supply Chain                                                                                                  |
 | `dependency-audit` | `dependency-audit.yml` | Daily `pip-audit` of `acc` and `main`; not a merge check. Also runs on a pull request that changes the audit itself            |
 | `test`             | `ci.yml`               | `py_compile`, import, `pytest`, shellcheck, bats                                                                             |
+| `release-sbom`     | `sbom.yml`             | Not a required check. Tests the SBOM script; on push to `main` the release in `serve_api/RELEASE` must exist and have its SBOM; on a pull request that changes it, it must match `requirements.txt`; uploads the SBOM as a 90-day artifact |
 | `build`            | `ci.yml`               | Image build and `/health` smoke test; read-only token, runs on pull requests too                                       |
-| `publish`          | `ci.yml`               | Push to `acc` or `main` only: push to GHCR (tags `sha-<commit>` and `acc`; on `main` `sha-<commit>`, `stable` and `<version>` from `serve_api/pyproject.toml`), verify the pushed digest, attest provenance; the only job with write permissions |
+| `publish`          | `ci.yml`               | Push to `acc` or `main` only: push to GHCR (tags `sha-<commit>` and `acc`; on `main` `sha-<commit>`, `stable`, `<version>` from `serve_api/pyproject.toml` and `vYYYY.MM.N` from `serve_api/RELEASE`), verify the pushed digest, attest provenance; the only job with write permissions |
 | `deploy`           | `ci.yml`               | Push only: waits for the VM of the tier (environment `acceptance` for `acc`, `stable` for `main`, created by GitHub on first use) to report the commit; **not required**, it fails when the VM is down |
 
 The shell scripts are shellchecked and tested with bats-core in `test`:
-`scripts/ci-tier.sh` (the branch to tier mapping), `scripts/wait-for-deploy.sh` (the `deploy` poll), `scripts/smoke-health.sh`
+`scripts/ci-tier.sh` (the branch to tier mapping), `scripts/read-release.sh` (reads and validates
+`serve_api/RELEASE` for `build` and `publish`), `scripts/wait-for-deploy.sh` (the `deploy` poll), `scripts/smoke-health.sh`
 (the `/health` check of the built image, run in `build` and, on the pushed digest, in `publish`) and
 `deployment/vm/reconciler/reconcile.sh` (the reconciler on the VM).
 
@@ -108,6 +112,42 @@ https://github.com/open-regels/cprmv/issues/4 (the same problem as
 `sgort/ttl-editor#128`). Until it is solved, the contributor pushes a branch to this
 repository instead, or an admin edits the ruleset for that merge. There are no forks
 today.
+
+## Release SBOM
+
+`sbom.yml` ("Release SBOM") keeps a bill of materials per release, so that "was
+that release affected by this advisory?" can be answered later (ICTU
+recommendation 10). Workflow artifacts last at most 90 days on a public
+repository, so the durable copy is `docs/sbom/cprmv-api-<release>.cdx.json`,
+committed at release time by `/bump-release` (see "Releasing" in the README).
+
+- **Named after the release number**, `vYYYY.MM.N` from `serve_api/RELEASE`, not
+  after the vocabulary version: stable was released several times at 0.4.3 with
+  different dependencies, so a file per vocabulary version would be overwritten
+  by each of them. `docs/sbom/cprmv-api-0.4.3.cdx.json` is the record of what
+  stable ran before release numbers (27 November 2026) and stays as it is. The
+  script refuses to run while `serve_api/RELEASE` is missing or malformed, so on
+  a pull request whose tree has none (only before the first release) the
+  workflow skips the strict check, the generation and the upload. Nothing else
+  is skipped: on a push to `main` a missing `RELEASE` fails `--verify-release`,
+  and a manual run without one fails at the generation.
+
+- `scripts/write-sbom.py` runs `cyclonedx-py` (CycloneDX 1.6) on
+  `serve_api/requirements.txt`: the shipped, hash-locked dependencies. The
+  development dependencies are not in the image and not in the SBOM; the daily
+  dependency audit covers both files. The output is deterministic (no serial
+  number or timestamp, sorted), so the same requirements give the same bytes.
+  The requirements file records no dependency graph, so the graph in the
+  document is flat.
+- On a pull request that changes the release's SBOM file the strict `--check`
+  must pass; on a push to `main` `serve_api/RELEASE` and its file must exist
+  (`--verify-release`), and drift is only a warning, because a promotion carries
+  later commits.
+- The container image has its own SBOM: the `publish` job builds with
+  `sbom: true`, and BuildKit attaches an SBOM attestation to the image in GHCR.
+  It covers the Debian packages the application SBOM does not.
+- `release-sbom` is not a required check, as in the sibling repositories. The
+  `cyclonedx-bom` pin is updated by hand, like `semgrep`.
 
 ## Branch rulesets
 
