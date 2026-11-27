@@ -74,5 +74,9 @@ common="${upgrade_args}"
 # Update the compiled requirements files
 # shellcheck disable=SC2086 # $common holds separate pip-compile options, split on purpose
 run pip-compile $common --generate-hashes --allow-unsafe --strip-extras --output-file requirements.txt pyproject.toml "$@"
+# The development file is constrained by the shipped one, compiled just above, so
+# every shipped package has the same version in both and the tests run against
+# what the image ships. Compiled on their own, the two drifted apart (typer and
+# fastapi-cloud-cli, found on Renovate pull request #43).
 # shellcheck disable=SC2086 # $common holds separate pip-compile options, split on purpose
-run pip-compile $common --generate-hashes --allow-unsafe --strip-extras --extra dev,tools --output-file requirements-dev.txt pyproject.toml "$@"
+run pip-compile $common --generate-hashes --allow-unsafe --strip-extras --extra dev,tools --constraint requirements.txt --output-file requirements-dev.txt pyproject.toml "$@"
