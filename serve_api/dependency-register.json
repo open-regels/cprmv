@@ -1,0 +1,608 @@
+{
+  "$comment": "The dependency register: one assessment per direct dependency per group of serve_api/pyproject.toml (runtime, dev, tools), against the six criteria in linked-data-explorer's docs/dependency-criteria.md. The manifest field holds the group. Read by scripts/dependency_gate.py in the requirements-review job, which fails a pull request that adds a direct dependency without an entry here, or with an entry the PyPI and GitHub evidence contradicts; every entry a change adds or alters is judged against fetched evidence. These entries were written after the fact, on 28 November 2026. The dependencies came in through GitLab merge requests, not GitHub pull requests, so `added.commit` names the commit that introduced each one and `pr` is null. The eight with outcome replace are declared, but nothing runs them or reads their result; #48 tracks removing them or wiring them up.",
+  "dependencies": [
+    {
+      "name": "ciso8601",
+      "manifest": "runtime",
+      "added": {
+        "date": "2025-09-08",
+        "pr": null,
+        "commit": "c5e4996"
+      },
+      "assessed": {
+        "date": "2026-11-28",
+        "version": "2.3.3"
+      },
+      "criteria": {
+        "maintained": {
+          "holds": true,
+          "why": "One release in the twelve months to 28 November 2026, 2.4.1 on 9 November; the locked 2.3.3 is of 20 August 2025, fifteen months old."
+        },
+        "maintainers": {
+          "holds": true,
+          "why": "Two PyPI owners (closeio and tomst), and the repository belongs to the closeio organisation on GitHub."
+        },
+        "licence": {
+          "holds": true
+        },
+        "releasePolicy": {
+          "holds": true
+        },
+        "footprint": {
+          "holds": true,
+          "why": "A C extension, but 2.3.3 ships a cp314 manylinux x86_64 wheel for the image, and it brings no other pins."
+        },
+        "needed": {
+          "holds": false,
+          "why": "Its one call, ciso8601.parse_datetime in methods/frbr_sru.py, assigns date_ts and nothing reads it, and the import in src/serve.py is unused; the same file already checks dates with datetime.fromisoformat in valid_date."
+        }
+      },
+      "outcome": "replace",
+      "followUp": 48,
+      "status": "assessed"
+    },
+    {
+      "name": "fastapi",
+      "manifest": "runtime",
+      "added": {
+        "date": "2025-09-02",
+        "pr": null,
+        "commit": "4b70e47"
+      },
+      "assessed": {
+        "date": "2026-11-28",
+        "version": "0.142.2"
+      },
+      "criteria": {
+        "maintained": {
+          "holds": true,
+          "why": "127 releases in the twelve months to 28 November 2026; the locked 0.142.2 is of 30 September 2026 and 0.165.0 followed on 18 November."
+        },
+        "maintainers": {
+          "holds": true,
+          "why": "The repository belongs to the fastapi organisation on GitHub, which satisfies the signal, but a single PyPI account (tiangolo) owns the project and no PyPI organisation is set."
+        },
+        "licence": {
+          "holds": true
+        },
+        "releasePolicy": {
+          "holds": false,
+          "why": "Still 0.x, and its own docs (deployment/versions) say any release may break and ask for an exact pin; the hash lock gives that, but Renovate offers each 0.x minor as an ordinary update, without the Dashboard approval majors get, and 0.142.2 carries no PyPI attestation."
+        },
+        "footprint": {
+          "holds": false,
+          "why": "Pure py3-none-any wheel, but the standard extra brings 55 of the 98 runtime pins, 28 of them only through it, among them sentry-sdk (via fastapi-cloud-cli), seven opentelemetry packages, protobuf and requests."
+        },
+        "needed": {
+          "holds": true,
+          "why": "It is the service: src/serve.py builds the FastAPI app with its routes, APIKeyHeader security and static files, and the Dockerfile starts it with fastapi run from the standard extra's fastapi-cli; nothing else in the tree serves HTTP."
+        }
+      },
+      "outcome": "keep",
+      "status": "assessed"
+    },
+    {
+      "name": "fastmcp",
+      "manifest": "runtime",
+      "added": {
+        "date": "2026-09-10",
+        "pr": null,
+        "commit": "033cc5a"
+      },
+      "assessed": {
+        "date": "2026-11-28",
+        "version": "4.1.8"
+      },
+      "criteria": {
+        "maintained": {
+          "holds": true,
+          "why": "83 releases in the twelve months to 28 November 2026; the locked 4.1.8 is of 10 November 2026 and 4.2.6 followed on 25 November."
+        },
+        "maintainers": {
+          "holds": true,
+          "why": "Two PyPI accounts (jlowin as owner, n80n8 as maintainer), and the repository belongs to the PrefectHQ organisation on GitHub."
+        },
+        "licence": {
+          "holds": true
+        },
+        "releasePolicy": {
+          "holds": false,
+          "why": "Its versioning policy (gofastmcp.com, installation page) allows breaking changes in minor versions such as 4.1 to 4.2 and asks for an exact pin; the hash lock gives that, but Renovate offers each minor as an ordinary update, and 4.1.8 carries no PyPI attestation."
+        },
+        "footprint": {
+          "holds": false,
+          "why": "Pure py3-none-any wheel, but it brings 63 of the 98 runtime pins, 36 of them only through it, among them cryptography and cffi, authlib, pyjwt and joserfc, and the jsonschema stack, for one call in the service."
+        },
+        "needed": {
+          "holds": true,
+          "why": "src/serve.py calls FastMCP.from_fastapi on the app and mounts its http_app at /mcp, which exposes the API's routes as MCP tools; it replaced fastapi-mcp in the same commit, and nothing else in the tree speaks MCP."
+        }
+      },
+      "outcome": "keep",
+      "status": "assessed"
+    },
+    {
+      "name": "lxml",
+      "manifest": "runtime",
+      "added": {
+        "date": "2025-09-02",
+        "pr": null,
+        "commit": "4b70e47"
+      },
+      "assessed": {
+        "date": "2026-11-28",
+        "version": "6.1.3"
+      },
+      "criteria": {
+        "maintained": {
+          "holds": true,
+          "why": "11 releases in the twelve months to 28 November 2026, the 6.x line alongside the 7.0 pre-releases; the locked 6.1.3 is of 2 September 2026 and 6.2.0 followed on 27 November."
+        },
+        "maintainers": {
+          "holds": true,
+          "why": "Two PyPI owners (faassen and scoder), and the repository belongs to the lxml organisation on GitHub."
+        },
+        "licence": {
+          "holds": true
+        },
+        "releasePolicy": {
+          "holds": true,
+          "why": "Majors are rare and announced through alpha and beta releases (7.0.0a1 in May, 7.0.0b1 in August 2026) while the current major keeps getting fixes; no PyPI attestation on 6.1.3."
+        },
+        "footprint": {
+          "holds": true,
+          "why": "A compiled extension, but 6.1.3 ships a cp314 manylinux2014 x86_64 wheel for the image, so nothing builds from source, and it brings no other pins."
+        },
+        "needed": {
+          "holds": true,
+          "why": "methods/core_xml.py and methods/frbr_sru.py parse the publications with etree, and core_xml.py runs the XSLT transforms to Turtle under XSLTAccessControl with network and file reads off; the standard library has no XSLT processor."
+        }
+      },
+      "outcome": "keep",
+      "status": "assessed"
+    },
+    {
+      "name": "parse",
+      "manifest": "runtime",
+      "added": {
+        "date": "2025-09-02",
+        "pr": null,
+        "commit": "4b70e47"
+      },
+      "assessed": {
+        "date": "2026-11-28",
+        "version": "1.22.2"
+      },
+      "criteria": {
+        "maintained": {
+          "holds": true,
+          "why": "Seven releases in the twelve months to 28 November 2026; the locked 1.22.2 is of 18 September 2026 and 1.22.4 followed on 20 October."
+        },
+        "maintainers": {
+          "holds": true,
+          "why": "Two PyPI accounts (richard as owner, wim.glenn as maintainer) satisfy the signal, but the repository belongs to a user, r1chardj0n3s, not an organisation."
+        },
+        "licence": {
+          "holds": true
+        },
+        "releasePolicy": {
+          "holds": true
+        },
+        "footprint": {
+          "holds": true,
+          "why": "A single pure py2.py3-none-any module with no dependencies of its own."
+        },
+        "needed": {
+          "holds": true,
+          "why": "The reference and identifier formats in the methods graph are parse format strings: src/serve.py uses parse, search and with_pattern, and methods/ReferenceMethod.py, PublicationMethod.py and frbr_sru.py parse with them; re would mean rewriting those formats as regular expressions."
+        }
+      },
+      "outcome": "keep",
+      "status": "assessed"
+    },
+    {
+      "name": "rdflib",
+      "manifest": "runtime",
+      "added": {
+        "date": "2025-09-02",
+        "pr": null,
+        "commit": "4b70e47"
+      },
+      "assessed": {
+        "date": "2026-11-28",
+        "version": "7.6.0"
+      },
+      "criteria": {
+        "maintained": {
+          "holds": true,
+          "why": "Two releases in the twelve months to 28 November 2026, 7.5.0 on 28 November 2025 and the locked 7.6.0 on 13 February 2026; nothing in the nine months since, which is slow but inside the signal."
+        },
+        "maintainers": {
+          "holds": true,
+          "why": "Four PyPI accounts (three owners, one maintainer), and the repository belongs to the RDFLib organisation on GitHub."
+        },
+        "licence": {
+          "holds": true
+        },
+        "releasePolicy": {
+          "holds": true
+        },
+        "footprint": {
+          "holds": true,
+          "why": "Pure py3-none-any wheel that brings one pin, pyparsing, and nothing else."
+        },
+        "needed": {
+          "holds": true,
+          "why": "CPRMV is RDF: src/serve.py loads the methods graph from Turtle, and the methods in methods/ (core_api, core_json, dso, frbr_sru, iou, juriconnect, roo, PublicationMethod) read their configuration from it and build their results with rdflib."
+        }
+      },
+      "outcome": "keep",
+      "status": "assessed"
+    },
+    {
+      "name": "httpx",
+      "manifest": "dev",
+      "added": {
+        "date": "2025-09-02",
+        "pr": null,
+        "commit": "3473843"
+      },
+      "assessed": {
+        "date": "2026-11-28",
+        "version": "0.28.1"
+      },
+      "criteria": {
+        "maintained": {
+          "holds": true,
+          "why": "The locked 0.28.1 of 6 December 2024 was the latest stable release for almost two years; 1.0 pre-releases came in August 2026 and 0.29.0 on 26 November 2026, so the signal holds, but on a slow stable line."
+        },
+        "maintainers": {
+          "holds": true,
+          "why": "Two PyPI accounts (lovelydinosaur as owner, cagil as maintainer), and the repository belongs to the encode organisation on GitHub."
+        },
+        "licence": {
+          "holds": true
+        },
+        "releasePolicy": {
+          "holds": false,
+          "why": "Still 0.x with a 1.0 in pre-release, so 0.29 and 1.0 may each break; Renovate offers the 0.x minor as an ordinary update, and 0.28.1 carries no PyPI attestation. Here it only reaches the tests."
+        },
+        "footprint": {
+          "holds": true,
+          "why": "Pure py3-none-any wheel, and every pin it brings is already in the tree through fastapi's standard extra."
+        },
+        "needed": {
+          "holds": true,
+          "why": "serve_api/test/test_serve.py and test_ref.py drive the app through fastapi.testclient.TestClient, which needs httpx; the runtime gets it through fastapi's standard extra, and this dev entry keeps the tests working without it."
+        }
+      },
+      "outcome": "keep",
+      "status": "assessed"
+    },
+    {
+      "name": "pre-commit",
+      "manifest": "dev",
+      "added": {
+        "date": "2025-09-02",
+        "pr": null,
+        "commit": "3473843"
+      },
+      "assessed": {
+        "date": "2026-11-28",
+        "version": "4.6.2"
+      },
+      "criteria": {
+        "maintained": {
+          "holds": true,
+          "why": "Five releases in the twelve months to 28 November 2026; the locked 4.6.2 is of 10 August 2026 and 4.7.0 followed on 12 October."
+        },
+        "maintainers": {
+          "holds": true,
+          "why": "The repository belongs to the pre-commit organisation on GitHub, which satisfies the signal, but a single PyPI account (asottile) owns the project."
+        },
+        "licence": {
+          "holds": true
+        },
+        "releasePolicy": {
+          "holds": true
+        },
+        "footprint": {
+          "holds": true,
+          "why": "Pure py2.py3-none-any wheel; 7 of the 10 pins it brings are there only for it, virtualenv and nodeenv among them, all dev-only."
+        },
+        "needed": {
+          "holds": false,
+          "why": "The repository has no .pre-commit-config.yaml, and no workflow, Makefile target or script runs pre-commit; SECURITY-PIPELINE.md lists a pre-push stage as a follow-up that has not been set up."
+        }
+      },
+      "outcome": "replace",
+      "followUp": 48,
+      "status": "assessed"
+    },
+    {
+      "name": "pytest",
+      "manifest": "dev",
+      "added": {
+        "date": "2025-09-02",
+        "pr": null,
+        "commit": "3473843"
+      },
+      "assessed": {
+        "date": "2026-11-28",
+        "version": "9.1.1"
+      },
+      "criteria": {
+        "maintained": {
+          "holds": true,
+          "why": "Five releases in the twelve months to 28 November 2026; the locked 9.1.1 is of 19 June 2026 and 9.2.0 followed on 27 October."
+        },
+        "maintainers": {
+          "holds": true,
+          "why": "Seven PyPI owners, and the repository belongs to the pytest-dev organisation on GitHub."
+        },
+        "licence": {
+          "holds": true
+        },
+        "releasePolicy": {
+          "holds": true,
+          "why": "Semver with a changelog per release and deprecation warnings before a removal in a major, and 9.1.1 is attested by a trusted publisher (GitHub, pytest-dev/pytest, workflow deploy.yml)."
+        },
+        "footprint": {
+          "holds": true,
+          "why": "Pure py3-none-any wheel; the four pins it brings are shared with other packages in the dev tree."
+        },
+        "needed": {
+          "holds": true,
+          "why": "The API tests step of ci.yml runs pytest in serve_api/ for the required test check, as `serve_api/Makefile`'s `tests` target does locally; serve_api/test/test_ref.py uses its fixtures and parametrize, and sbom.yml pins the same 9.1.1 for scripts/test."
+        }
+      },
+      "outcome": "keep",
+      "status": "assessed"
+    },
+    {
+      "name": "pytest-cov",
+      "manifest": "dev",
+      "added": {
+        "date": "2025-09-02",
+        "pr": null,
+        "commit": "3473843"
+      },
+      "assessed": {
+        "date": "2026-11-28",
+        "version": "7.1.0"
+      },
+      "criteria": {
+        "maintained": {
+          "holds": true,
+          "why": "One release in the twelve months to 28 November 2026, the locked 7.1.0 on 21 March 2026."
+        },
+        "maintainers": {
+          "holds": true,
+          "why": "The repository belongs to the pytest-dev organisation on GitHub, which satisfies the signal, but a single PyPI account (ionel) owns the project."
+        },
+        "licence": {
+          "holds": true
+        },
+        "releasePolicy": {
+          "holds": true
+        },
+        "footprint": {
+          "holds": true,
+          "why": "Pure py3-none-any wheel that brings one pin of its own, coverage."
+        },
+        "needed": {
+          "holds": false,
+          "why": "Nothing passes --cov: the API tests step of ci.yml and `serve_api/Makefile`'s `tests` target run plain pytest, and there is no pytest or coverage configuration in the repository."
+        }
+      },
+      "outcome": "replace",
+      "followUp": 48,
+      "status": "assessed"
+    },
+    {
+      "name": "bandit",
+      "manifest": "tools",
+      "added": {
+        "date": "2025-09-02",
+        "pr": null,
+        "commit": "4b70e47"
+      },
+      "assessed": {
+        "date": "2026-11-28",
+        "version": "1.9.4"
+      },
+      "criteria": {
+        "maintained": {
+          "holds": true,
+          "why": "Two releases in the twelve months to 28 November 2026, 1.9.3 on 19 January and the locked 1.9.4 on 25 February 2026."
+        },
+        "maintainers": {
+          "holds": true,
+          "why": "Three PyPI owners under the PyCQA organisation on PyPI, which also owns the repository on GitHub."
+        },
+        "licence": {
+          "holds": true
+        },
+        "releasePolicy": {
+          "holds": true,
+          "why": "1.9.4 is attested by a trusted publisher (GitHub, PyCQA/bandit, workflow publish-to-pypi.yml), with release notes on GitHub."
+        },
+        "footprint": {
+          "holds": true,
+          "why": "Pure py3-none-any wheel that brings one pin of its own, stevedore."
+        },
+        "needed": {
+          "holds": false,
+          "why": "No workflow, Makefile target, script or pre-commit configuration runs bandit, and it has no configuration here; Semgrep Code is the static analysis CI runs, as with safety, dropped on 27 November 2026 for the same reason."
+        }
+      },
+      "outcome": "replace",
+      "followUp": 48,
+      "status": "assessed"
+    },
+    {
+      "name": "black",
+      "manifest": "tools",
+      "added": {
+        "date": "2025-09-02",
+        "pr": null,
+        "commit": "4b70e47"
+      },
+      "assessed": {
+        "date": "2026-11-28",
+        "version": "26.10.1"
+      },
+      "criteria": {
+        "maintained": {
+          "holds": true,
+          "why": "Nine releases in the twelve months to 28 November 2026, the locked 26.10.1 the latest, of 10 October 2026."
+        },
+        "maintainers": {
+          "holds": true,
+          "why": "Five PyPI owners, and the repository belongs to the psf organisation on GitHub."
+        },
+        "licence": {
+          "holds": true
+        },
+        "releasePolicy": {
+          "holds": true,
+          "why": "Calendar versions with a stable style changed only in the first release of a year, and 26.10.1 is attested by a trusted publisher (GitHub, psf/black, workflow pypi_upload.yml)."
+        },
+        "footprint": {
+          "holds": true,
+          "why": "A mypyc-compiled cp314 manylinux wheel for the image, with a pure wheel beside it, and one pin of its own, pytokens."
+        },
+        "needed": {
+          "holds": false,
+          "why": "No workflow, Makefile target, script or pre-commit configuration runs black, and CI has no format check; SECURITY-PIPELINE.md leaves ruff format to the maintainers, and black is not mentioned outside pyproject.toml (apart from the compiled requirements-dev.txt and a comment in scripts/write-sbom.py naming that file's contents)."
+        }
+      },
+      "outcome": "replace",
+      "followUp": 48,
+      "status": "assessed"
+    },
+    {
+      "name": "mypy",
+      "manifest": "tools",
+      "added": {
+        "date": "2025-09-02",
+        "pr": null,
+        "commit": "4b70e47"
+      },
+      "assessed": {
+        "date": "2026-11-28",
+        "version": "2.4.0"
+      },
+      "criteria": {
+        "maintained": {
+          "holds": true,
+          "why": "Twelve releases in the twelve months to 28 November 2026; the locked 2.4.0 is of 1 October 2026 and 2.4.1 followed on 28 October."
+        },
+        "maintainers": {
+          "holds": true,
+          "why": "Twelve PyPI accounts, and the repository belongs to the python organisation on GitHub."
+        },
+        "licence": {
+          "holds": true
+        },
+        "releasePolicy": {
+          "holds": true,
+          "why": "Releases come with a CHANGELOG.md entry naming the changes that can surface new errors; no PyPI attestation on 2.4.0."
+        },
+        "footprint": {
+          "holds": true,
+          "why": "A mypyc-compiled cp314 manylinux wheel for the image, and two pins of its own, ast-serialize and librt."
+        },
+        "needed": {
+          "holds": false,
+          "why": "No workflow, Makefile target, script or pre-commit configuration runs mypy, and there is no mypy configuration; serve_api/ is not type-checked anywhere today."
+        }
+      },
+      "outcome": "replace",
+      "followUp": 48,
+      "status": "assessed"
+    },
+    {
+      "name": "ruff",
+      "manifest": "tools",
+      "added": {
+        "date": "2025-09-02",
+        "pr": null,
+        "commit": "4b70e47"
+      },
+      "assessed": {
+        "date": "2026-11-28",
+        "version": "0.16.10"
+      },
+      "criteria": {
+        "maintained": {
+          "holds": true,
+          "why": "49 releases in the twelve months to 28 November 2026; the locked 0.16.10 is of 1 October 2026 and 0.17.6 followed on 19 November."
+        },
+        "maintainers": {
+          "holds": true,
+          "why": "Four PyPI accounts, and the repository belongs to the astral-sh organisation on GitHub."
+        },
+        "licence": {
+          "holds": true
+        },
+        "releasePolicy": {
+          "holds": false,
+          "why": "Still 0.x, and its versioning policy makes each minor the one that may change rules and formatting; Renovate offers the minor as an ordinary update, and 0.16.10 carries no PyPI attestation."
+        },
+        "footprint": {
+          "holds": true,
+          "why": "A single Rust binary in a py3-none-manylinux_2_17 x86_64 wheel, with no pins of its own."
+        },
+        "needed": {
+          "holds": false,
+          "why": "No workflow, Makefile target, script or pre-commit configuration runs ruff; the [tools.ruff] table in pyproject.toml is misnamed (ruff reads [tool.ruff]), and SECURITY-PIPELINE.md leaves ruff format to the maintainers."
+        }
+      },
+      "outcome": "replace",
+      "followUp": 48,
+      "status": "assessed"
+    },
+    {
+      "name": "vulture",
+      "manifest": "tools",
+      "added": {
+        "date": "2025-09-02",
+        "pr": null,
+        "commit": "4b70e47"
+      },
+      "assessed": {
+        "date": "2026-11-28",
+        "version": "2.16"
+      },
+      "criteria": {
+        "maintained": {
+          "holds": true,
+          "why": "Two releases in the twelve months to 28 November 2026, 2.15 on 4 March and the locked 2.16 on 25 March 2026."
+        },
+        "maintainers": {
+          "holds": false,
+          "why": "One PyPI owner (jendrik), no PyPI organisation, and the repository belongs to a user, jendrikseipp: a bus factor of one, for a tool with no runtime role."
+        },
+        "licence": {
+          "holds": true
+        },
+        "releasePolicy": {
+          "holds": true
+        },
+        "footprint": {
+          "holds": true,
+          "why": "Pure py3-none-any wheel with no pins of its own."
+        },
+        "needed": {
+          "holds": false,
+          "why": "No workflow, Makefile target, script or pre-commit configuration runs vulture, and it has no whitelist or configuration here."
+        }
+      },
+      "outcome": "replace",
+      "followUp": 48,
+      "status": "assessed"
+    }
+  ],
+  "cooldownOverrides": []
+}

@@ -71,8 +71,19 @@ run () {
 
 common="${upgrade_args}"
 
+# Never add --uploaded-prior-to here (or pass it through "$@"): pip-compile
+# writes it into the header of both files, the `audit` job's byte-for-byte
+# recompile then fails, and Renovate's pip-compile manager rejects the unknown
+# header option and stops maintaining the files. The 14-day cooldown is the
+# environment variable PIP_UPLOADED_PRIOR_TO=P14D, which `make deps-linux` sets;
+# pip applies it and pip-compile does not record it (see serve_api/Makefile).
+
 # Update the compiled requirements files
 # shellcheck disable=SC2086 # $common holds separate pip-compile options, split on purpose
 run pip-compile $common --generate-hashes --allow-unsafe --strip-extras --output-file requirements.txt pyproject.toml "$@"
+# The development file is constrained by the shipped one, compiled just above, so
+# every shipped package has the same version in both and the tests run against
+# what the image ships. Compiled on their own, the two drifted apart (typer and
+# fastapi-cloud-cli, found on Renovate pull request #43).
 # shellcheck disable=SC2086 # $common holds separate pip-compile options, split on purpose
-run pip-compile $common --generate-hashes --allow-unsafe --strip-extras --extra dev,tools --output-file requirements-dev.txt pyproject.toml "$@"
+run pip-compile $common --generate-hashes --allow-unsafe --strip-extras --extra dev,tools --constraint requirements.txt --output-file requirements-dev.txt pyproject.toml "$@"

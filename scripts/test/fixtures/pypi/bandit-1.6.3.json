@@ -1,0 +1,50 @@
+{
+ "info": {
+  "name": "bandit",
+  "version": "1.6.3",
+  "license": "",
+  "license_expression": null,
+  "classifiers": [
+   "License :: OSI Approved :: Apache Software License"
+  ],
+  "project_urls": {
+   "Homepage": "https://bandit.readthedocs.io/en/latest/"
+  },
+  "home_page": "https://bandit.readthedocs.io/en/latest/",
+  "yanked": true,
+  "yanked_reason": "This version dropped py2 but was still published as a universal wheel, thus causing issues install via py2 pip."
+ },
+ "ownership": {
+  "organization": "PyCQA",
+  "roles": [
+   {
+    "role": "Owner",
+    "user": "chair6"
+   },
+   {
+    "role": "Owner",
+    "user": "ericwb"
+   },
+   {
+    "role": "Owner",
+    "user": "tkelsey"
+   }
+  ]
+ },
+ "urls": [
+  {
+   "filename": "bandit-1.6.3-py2.py3-none-any.whl",
+   "packagetype": "bdist_wheel",
+   "upload_time_iso_8601": "2020-12-06T20:25:15.415396Z",
+   "yanked": true,
+   "yanked_reason": "This version dropped py2 but was still published as a universal wheel, thus causing issues install via py2 pip."
+  },
+  {
+   "filename": "bandit-1.6.3.tar.gz",
+   "packagetype": "sdist",
+   "upload_time_iso_8601": "2020-12-06T20:25:12.930374Z",
+   "yanked": true,
+   "yanked_reason": "This version dropped py2 but was still published as a universal wheel, thus causing issues install via py2 pip."
+  }
+ ]
+}
