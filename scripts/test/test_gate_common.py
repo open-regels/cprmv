@@ -75,10 +75,15 @@ def test_pin_without_equals_raises():
 
 
 def test_direct_groups_real_pyproject():
+    # The shape of the real file, not its contents: a test that lists the
+    # dependencies would fail every pull request that adds or removes one,
+    # and this job is a required check.
     groups = G.direct_groups((REPO / "serve_api" / "pyproject.toml").read_text(encoding="utf-8"))
-    assert groups["runtime"] == {"fastapi", "rdflib", "parse", "lxml", "ciso8601", "fastmcp"}
-    assert groups["dev"] == {"pytest", "pytest-cov", "httpx", "pre-commit"}
-    assert groups["tools"] == {"bandit", "black", "mypy", "ruff", "vulture"}
+    assert set(groups) == {"runtime", "dev", "tools"}
+    assert all(groups[g] for g in groups)
+    names = set().union(*groups.values())
+    assert all(n == G.normalise(n) and "[" not in n for n in names)
+    assert "fastapi" in groups["runtime"]  # declared as fastapi[standard]
 
 
 def test_direct_groups_strips_extras_and_specifiers():

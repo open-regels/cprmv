@@ -72,9 +72,11 @@ def run(tmp_path, base, head, fetch, extra=()):
 
 
 def test_scan_real_requirements_has_no_problems():
-    for name, count in (("requirements.txt", 98), ("requirements-dev.txt", 122)):
+    # No exact pin counts: they change with every dependency pull request,
+    # including Renovate's lock-file maintenance, and this job is a required check.
+    for name in ("requirements.txt", "requirements-dev.txt"):
         scan = R.scan_requirements((REPO / "serve_api" / name).read_text(encoding="utf-8"), name)
-        assert len(scan.pins) == count
+        assert len(scan.pins) > 50
         assert scan.problems == []
 
 
