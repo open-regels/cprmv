@@ -159,8 +159,9 @@ warning, as in the npm gate. The author is read from the event, never from anyth
 ### 4.7 CI
 
 - **`requirements-review` job** in `zizmor.yml` (one job, one required check, like `lockfile-review`):
-  script tests and `--check-register` first, then — when either requirements file changed — the review and
-  the gate, worst status wins, one comment (`<!-- requirements-review -->`) with a verdict list at the top
+  script tests and `--check-register` first, then — when either requirements file, `pyproject.toml` or
+  `serve_api/dependency-register.json` changed (the register because every register change is judged,
+  4.3; corrected during the build) — the review and the gate, worst status wins, one comment (`<!-- requirements-review -->`) with a verdict list at the top
   that truncation never cuts, posted by a `requirements-review-comment` job with no checkout. Values
   through `env:` only; no `labeled` trigger; permissions `contents: read`, `issues: read`,
   `pull-requests: read`.
