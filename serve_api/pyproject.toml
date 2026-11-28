@@ -13,6 +13,7 @@ dependencies = [
   "lxml",
   "ciso8601",
   "fastmcp",
+  "tomli-w",
 ]
 
 [project.optional-dependencies]
