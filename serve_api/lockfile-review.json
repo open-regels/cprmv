@@ -1,0 +1,18 @@
+{
+  "$comment": "Read by scripts/dependency_gate.py, scripts/requirements_review.py and scripts/dependency_review.py. The allow-list is the permissive set the npm repositories (linked-data-explorer, ronl-business-api, ttl-editor) use in their lockfile-review.json, which every runtime pin in requirements.txt already satisfies except two transitive ones: certifi (MPL-2.0) and typing-extensions (PSF-2.0), present when this file was added and left off the list on purpose. A licence the list does not allow is a signal that its criterion cannot hold, so the entry must say holds false with a why and the new dependency gets looked at. MPL-2.0, PSF-2.0 and custom licences are left off on purpose, as in the npm lists. minReleaseAgeDays is the cooldown: a pin the requirements add or change must have been on PyPI at least that many days before the run, the same 14 days Renovate waits (exceptions in the register's cooldownOverrides). The allow-list also feeds the gate's licence signal for a new direct dependency.",
+  "minReleaseAgeDays": 14,
+  "allowLicenses": [
+    "MIT",
+    "ISC",
+    "Apache-2.0",
+    "BSD-2-Clause",
+    "BSD-3-Clause",
+    "BlueOak-1.0.0",
+    "0BSD",
+    "MIT-0",
+    "Unlicense",
+    "CC0-1.0",
+    "Python-2.0",
+    "CC-BY-4.0"
+  ]
+}

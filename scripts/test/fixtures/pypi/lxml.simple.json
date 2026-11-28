@@ -1,0 +1,70 @@
+{
+ "meta": {
+  "_last-serial": 44257714,
+  "api-version": "1.4"
+ },
+ "name": "lxml",
+ "project-status": {
+  "status": "active"
+ },
+ "versions": [
+  "6.1.3",
+  "6.2.0"
+ ],
+ "files": [
+  {
+   "filename": "lxml-6.1.3-cp313-cp313-manylinux_2_26_x86_64.manylinux_2_28_x86_64.whl",
+   "upload-time": "2026-09-02T14:48:31.969653Z",
+   "yanked": false,
+   "provenance": null
+  },
+  {
+   "filename": "lxml-6.1.3-cp314-cp314-manylinux2014_x86_64.manylinux_2_17_x86_64.whl",
+   "upload-time": "2026-09-02T14:49:07.343252Z",
+   "yanked": false,
+   "provenance": null
+  },
+  {
+   "filename": "lxml-6.1.3-cp314-cp314-manylinux_2_26_aarch64.manylinux_2_28_aarch64.whl",
+   "upload-time": "2026-09-02T14:49:09.650582Z",
+   "yanked": false,
+   "provenance": null
+  },
+  {
+   "filename": "lxml-6.1.3-cp314-cp314-manylinux_2_26_x86_64.manylinux_2_28_x86_64.whl",
+   "upload-time": "2026-09-02T14:49:14.154819Z",
+   "yanked": false,
+   "provenance": null
+  },
+  {
+   "filename": "lxml-6.1.3-cp314-cp314-musllinux_1_2_x86_64.whl",
+   "upload-time": "2026-09-02T14:49:33.502715Z",
+   "yanked": false,
+   "provenance": null
+  },
+  {
+   "filename": "lxml-6.1.3-cp314-cp314-win_amd64.whl",
+   "upload-time": "2026-09-02T14:50:26.348572Z",
+   "yanked": false,
+   "provenance": null
+  },
+  {
+   "filename": "lxml-6.1.3-cp314-cp314t-manylinux_2_26_x86_64.manylinux_2_28_x86_64.whl",
+   "upload-time": "2026-09-02T14:49:52.447057Z",
+   "yanked": false,
+   "provenance": null
+  },
+  {
+   "filename": "lxml-6.1.3.tar.gz",
+   "upload-time": "2026-09-02T14:48:02.287400Z",
+   "yanked": false,
+   "provenance": null
+  },
+  {
+   "filename": "lxml-6.2.0-cp315-cp315-win_arm64.whl",
+   "upload-time": "2026-11-27T15:07:29.885576Z",
+   "yanked": false,
+   "provenance": null
+  }
+ ]
+}

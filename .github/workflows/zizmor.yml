@@ -67,3 +67,194 @@ jobs:
         run: |
           pip install --dry-run --ignore-installed --require-hashes --no-deps -r serve_api/requirements.txt
           pip install --dry-run --ignore-installed --require-hashes --no-deps -r serve_api/requirements-dev.txt
+
+  # What a pull request's requirements change contains (scripts/requirements_review.py)
+  # and the dependency gate (scripts/dependency_gate.py) on the same change: a new
+  # direct dependency needs a register entry that holds against PyPI and GitHub
+  # evidence, and every pin either requirements file adds or changes must be at least
+  # 14 days old (docs/superpowers/specs/2026-11-28-dependency-register-gate-design.md,
+  # §4.5-4.7). The Python counterpart of lvg's `lockfile-review`.
+  #
+  # It runs on every pull request, because this workflow has no paths filter, and
+  # decides inside the job whether anything relevant changed: a required check must
+  # always report. The script tests and the register's shape are checked every time;
+  # the review and the gate only when requirements.txt, requirements-dev.txt,
+  # pyproject.toml or dependency-register.json differ from the base (every register
+  # change is judged against evidence, §4.3). On a push there is no pull request to
+  # judge, so the gate step writes a note and succeeds.
+  #
+  # Two jobs, for the trust boundary: this one runs code from the head ref (the
+  # scripts and the requirements) with a read-only token; the comment job holds the
+  # write token and runs no repository code at all.
+  #
+  # The trigger has the default types only, deliberately not labeled/unlabeled: a
+  # pull request opened with labels (every Renovate pull request) would start two
+  # runs on one commit. Renovate's `security` label arrives a second or so after
+  # `opened`, so the gate waits for Renovate's labels through the API instead.
+  requirements-review:
+    # Required checks match by name. Renaming this job means updating the rulesets.
+    name: requirements-review
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: read
+      # The gate asks whether the issue an override or a follow-up cites is still
+      # open, and, for a pull request by Renovate, who put the `security` label on
+      # it: both through the issues API, which answers for pull requests too.
+      issues: read # register issues and Renovate labels, read-only
+      pull-requests: read # the issues endpoints for a pull request number
+    outputs:
+      changed: ${{ steps.gate.outputs.changed }}
+      report: ${{ steps.gate.outputs.report }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+          # The whole history, so the merge ref's parents (and the BASE_SHA fallback)
+          # are there to diff against and to export the base serve_api/ files from.
+          fetch-depth: 0
+      - name: Set up Python
+        uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7.1.0
+        with:
+          python-version: '3.14'
+      - name: Test the review and gate scripts
+        # Tested where they run. The scripts are stdlib only; pytest must match
+        # serve_api/requirements-dev.txt, as in sbom.yml.
+        run: |
+          python -m pip install pytest==9.1.1
+          python -m pytest scripts/test
+      - name: Check the register
+        # Before the comparison step, which skips a pull request that changes none
+        # of the files: a malformed register must fail the check even then, or it
+        # would sit broken until the next requirements change.
+        run: python scripts/dependency_gate.py --check-register --register serve_api/dependency-register.json
+      - name: Compare the requirements with the base
+        id: gate
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+          # Values reach the scripts through the environment only, never interpolated
+          # into the shell. The token is read-only (see the job's permissions). The
+          # author and number let the gate ask the API whether renovate[bot] labelled
+          # this pull request `security`; the payload's labels are not used, because
+          # they are stale on the run that matters. The author decides the Renovate
+          # cooldown route (owner's decision (b)) and comes from the event, never from
+          # anything a person can set on the pull request.
+          # GITHUB_REPOSITORY, which the gate also reads, is the runner's own default
+          # variable; a workflow cannot override it, so it is not restated here.
+          GITHUB_TOKEN: ${{ github.token }}
+          PR_AUTHOR: ${{ github.event.pull_request.user.login }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+        run: |
+          if [ "$EVENT_NAME" != pull_request ]; then
+            echo "No pull request ($EVENT_NAME): the gate judges pull requests only."
+            echo "No pull request (\`$EVENT_NAME\`): the requirements review and the gate judge pull requests only." >> "$GITHUB_STEP_SUMMARY"
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          # The base is the merge ref's first parent, HEAD^1: the base branch as
+          # GitHub merged this pull request onto it. BASE_SHA is the base when the
+          # event fired; on a re-run after the base has moved, diffing against it
+          # would count pin changes that came in on the base as this pull request's.
+          # BASE_SHA stays as the fallback for a HEAD with a single parent (a
+          # checkout of the head commit itself, not of the merge ref).
+          if git rev-parse --verify --quiet 'HEAD^2' > /dev/null; then
+            base_rev=$(git rev-parse 'HEAD^1')
+          else
+            base_rev=$BASE_SHA
+          fi
+          echo "Comparing with $base_rev."
+          files="pyproject.toml requirements.txt requirements-dev.txt dependency-register.json"
+          changed=false
+          for f in $files; do
+            if ! git diff --quiet "$base_rev" HEAD -- "serve_api/$f"; then
+              echo "serve_api/$f differs from the base."
+              changed=true
+            fi
+          done
+          echo "changed=$changed" >> "$GITHUB_OUTPUT"
+          if [ "$changed" = false ]; then
+            echo "None of $files in serve_api/ changed: nothing for the gate to judge."
+            echo "None of $files in \`serve_api/\` changed: nothing for the requirements review or the gate to judge." >> "$GITHUB_STEP_SUMMARY"
+            exit 0
+          fi
+          t="$RUNNER_TEMP/requirements-review"
+          base="$t/base"
+          mkdir -p "$base"
+          # The base copies of the serve_api/ files. A file the base does not have
+          # (the register, before the pull request that adds it) stays absent: the
+          # gate reads a missing base register as an empty one.
+          for f in $files; do
+            if git cat-file -e "$base_rev:serve_api/$f" 2> /dev/null; then
+              git show "$base_rev:serve_api/$f" > "$base/$f"
+            fi
+          done
+          review_status=0
+          python scripts/requirements_review.py "$base" serve_api --out "$t/review.md" || review_status=$?
+          if [ ! -f "$t/review.md" ]; then
+            # No report means the review did not run, whatever its status said.
+            review_status=2
+            printf '#### Requirements diff\n\n**✗ The requirements review could not run** — the check fails. See the job log.\n' > "$t/review.md"
+          fi
+          gate_status=0
+          python scripts/dependency_gate.py "$base" serve_api --out "$t/gate.md" || gate_status=$?
+          if [ ! -f "$t/gate.md" ]; then
+            gate_status=2
+            printf '#### Dependency gate\n\n**✗ The dependency gate could not run** — the check fails. See the job log.\n' > "$t/gate.md"
+          fi
+          # One comment: the marker once, a verdict per part that a cut never reaches,
+          # the gate's section first. --combine exits with the worst status of the
+          # parts and writes both files on failure too, saying why.
+          combine_status=0
+          python scripts/dependency_gate.py --combine "$t/gate.md" "$gate_status" "$t/review.md" "$review_status" \
+            --out "$t/comment.md" --summary "$t/summary.md" || combine_status=$?
+          worst=$combine_status
+          for s in "$review_status" "$gate_status"; do
+            if [ "$s" -gt "$worst" ]; then worst=$s; fi
+          done
+          if [ ! -s "$t/comment.md" ]; then
+            worst=2
+            printf '<!-- requirements-review -->\n### Requirements review\n\n- ✗ Comment: could not run — the check fails. See the job log.\n' > "$t/comment.md"
+            cp "$t/comment.md" "$t/summary.md"
+          fi
+          cat "$t/summary.md" >> "$GITHUB_STEP_SUMMARY"
+          # A delimiter per run, so no report content can end the value early.
+          delim="EOF_$(openssl rand -hex 16)"
+          { echo "report<<$delim"; cat "$t/comment.md"; echo; echo "$delim"; } >> "$GITHUB_OUTPUT"
+          # Anything above 2 is a crash, reported as 2.
+          if [ "$worst" -gt 2 ]; then worst=2; fi
+          exit "$worst"
+
+  requirements-review-comment:
+    name: requirements-review-comment
+    needs: requirements-review
+    # !cancelled(), not always(): a red check still gets the comment that says why,
+    # but a run superseded by a newer push does not overwrite the newer report with
+    # its own. A report must exist: an empty body would fail the job and leave the
+    # previous comment standing. Same-repository branches only: a fork's token is
+    # read-only, and its summary suffices.
+    if: >-
+      !cancelled() && github.event_name == 'pull_request' &&
+      needs.requirements-review.outputs.changed == 'true' &&
+      needs.requirements-review.outputs.report != '' &&
+      github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: ubuntu-24.04
+    permissions:
+      pull-requests: write # to post or update the one comment
+    steps:
+      - name: Post or update the requirements review comment
+        # No checkout: this job runs no repository code. The report arrives through
+        # env, never ${{ }} inside the script (template injection).
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPO: ${{ github.repository }}
+          PR: ${{ github.event.pull_request.number }}
+          REPORT: ${{ needs.requirements-review.outputs.report }}
+        run: |
+          marker='<!-- requirements-review -->'
+          id=$(gh api --paginate "repos/$REPO/issues/$PR/comments" \
+            --jq ".[] | select(.user.login == \"github-actions[bot]\" and (.body | startswith(\"$marker\"))) | .id" | head -n1)
+          if [ -n "$id" ]; then
+            gh api --method PATCH "repos/$REPO/issues/comments/$id" -f body="$REPORT" > /dev/null
+          else
+            gh api --method POST "repos/$REPO/issues/$PR/comments" -f body="$REPORT" > /dev/null
+          fi

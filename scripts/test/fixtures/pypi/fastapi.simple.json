@@ -1,0 +1,34 @@
+{
+ "meta": {
+  "_last-serial": 43847139,
+  "api-version": "1.4"
+ },
+ "name": "fastapi",
+ "project-status": {
+  "status": "active"
+ },
+ "versions": [
+  "0.142.2",
+  "0.165.0"
+ ],
+ "files": [
+  {
+   "filename": "fastapi-0.142.2-py3-none-any.whl",
+   "upload-time": "2026-09-30T09:51:09.800102Z",
+   "yanked": false,
+   "provenance": null
+  },
+  {
+   "filename": "fastapi-0.142.2.tar.gz",
+   "upload-time": "2026-09-30T09:51:11.277181Z",
+   "yanked": false,
+   "provenance": null
+  },
+  {
+   "filename": "fastapi-0.165.0.tar.gz",
+   "upload-time": "2026-11-18T19:15:37.076981Z",
+   "yanked": false,
+   "provenance": null
+  }
+ ]
+}

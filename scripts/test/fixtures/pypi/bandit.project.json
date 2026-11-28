@@ -1,0 +1,74 @@
+{
+ "info": {
+  "name": "bandit",
+  "version": "1.9.4",
+  "license": "Apache-2.0",
+  "license_expression": null,
+  "classifiers": [
+   "Programming Language :: Python :: 3.14"
+  ],
+  "project_urls": {
+   "Discord": "https://discord.gg/qYxpadCgkx",
+   "Documentation": "https://bandit.readthedocs.io/",
+   "Homepage": "https://bandit.readthedocs.io/",
+   "Issue Tracker": "https://github.com/PyCQA/bandit/issues",
+   "Release Notes": "https://github.com/PyCQA/bandit/releases",
+   "Source Code": "https://github.com/PyCQA/bandit",
+   "Sponsor": "https://psfmember.org/civicrm/contribute/transact/?reset=1&id=42"
+  },
+  "home_page": "https://bandit.readthedocs.io/",
+  "yanked": false,
+  "yanked_reason": null
+ },
+ "ownership": {
+  "organization": "PyCQA",
+  "roles": [
+   {
+    "role": "Owner",
+    "user": "chair6"
+   },
+   {
+    "role": "Owner",
+    "user": "ericwb"
+   },
+   {
+    "role": "Owner",
+    "user": "tkelsey"
+   }
+  ]
+ },
+ "releases": {
+  "1.9.4": [
+   {
+    "filename": "bandit-1.9.4-py3-none-any.whl",
+    "packagetype": "bdist_wheel",
+    "upload_time_iso_8601": "2026-02-25T06:44:13.694900Z",
+    "yanked": false,
+    "yanked_reason": null
+   },
+   {
+    "filename": "bandit-1.9.4.tar.gz",
+    "packagetype": "sdist",
+    "upload_time_iso_8601": "2026-02-25T06:44:15.503849Z",
+    "yanked": false,
+    "yanked_reason": null
+   }
+  ],
+  "1.6.3": [
+   {
+    "filename": "bandit-1.6.3-py2.py3-none-any.whl",
+    "packagetype": "bdist_wheel",
+    "upload_time_iso_8601": "2020-12-06T20:25:15.415396Z",
+    "yanked": true,
+    "yanked_reason": "This version dropped py2 but was still published as a universal wheel, thus causing issues install via py2 pip."
+   },
+   {
+    "filename": "bandit-1.6.3.tar.gz",
+    "packagetype": "sdist",
+    "upload_time_iso_8601": "2020-12-06T20:25:12.930374Z",
+    "yanked": true,
+    "yanked_reason": "This version dropped py2 but was still published as a universal wheel, thus causing issues install via py2 pip."
+   }
+  ]
+ }
+}

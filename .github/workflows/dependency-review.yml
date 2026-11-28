@@ -1,0 +1,109 @@
+name: Dependency review
+
+# ICTU recommendation 11: once a quarter, check that every dependency is still
+# maintained, by the same criteria recommendation 1 applies before one is added
+# (docs/dependency-criteria.md in linked-data-explorer). Nothing else here notices
+# an abandoned package: it raises no advisory, so the daily audit is silent, and it
+# opens no Renovate pull request. So this runs on a clock and opens an issue, the
+# same way the daily audit reaches a person (spec §4.7,
+# docs/superpowers/specs/2026-11-28-dependency-register-gate-design.md).
+#
+# scripts/dependency_review.py re-gathers the PyPI and GitHub evidence for every
+# direct dependency in serve_api/pyproject.toml and every register entry, and lists
+# entries past their assessed major, replace and override entries with the state of
+# their issue, the cooldown overrides, and the previous quarter's Renovate security
+# exceptions and logged young pins.
+on:
+  schedule:
+    # 06:23 UTC on the second day of each quarter. Off the hour, like the daily
+    # audit, because GitHub queues scheduled workflows at the top of it.
+    - cron: '23 6 2 1,4,7,10 *'
+  workflow_dispatch:
+  # So a change to the review is exercised before it is merged. The issue step is
+  # skipped on a pull request; see its `if:`. Not a required check, so the paths
+  # filter cannot leave a merge waiting on it.
+  pull_request:
+    paths:
+      - '.github/workflows/dependency-review.yml'
+      - 'scripts/dependency_review.py'
+      - 'scripts/dependency_gate.py'
+      - 'scripts/gate_common.py'
+      - 'scripts/pypi_evidence.py'
+      - 'scripts/requirements_review.py'
+      - 'scripts/test/test_dependency_review.py'
+      # The review's tests import the fake PyPI and GitHub from the gate's tests.
+      - 'scripts/test/test_dependency_gate.py'
+      - 'serve_api/dependency-register.json'
+      - 'serve_api/lockfile-review.json'
+      - 'serve_api/pyproject.toml'
+      - 'serve_api/requirements.txt'
+      - 'serve_api/requirements-dev.txt'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  # Not "audit": that is zizmor.yml's required check, and required checks match by
+  # name.
+  dependency-review:
+    name: dependency-review
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: read
+      # Writing includes reading, which the issue-state lookups and the search for
+      # Renovate's pull requests need.
+      issues: write # to open the quarter's review issue
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Set up Python
+        uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7.1.0
+        with:
+          python-version: '3.14'
+
+      - name: Test the review script
+        # pytest must match serve_api/requirements-dev.txt, as in sbom.yml.
+        run: |
+          python -m pip install pytest==9.1.1
+          python -m pytest scripts/test/test_dependency_review.py
+
+      # Reads serve_api/ and asks PyPI and the GitHub API; installs nothing. The
+      # token reads public repositories (archived, owner type), the register's
+      # issues and Renovate's merged pull requests.
+      - name: Gather the evidence
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+          GITHUB_REPOSITORY: ${{ github.repository }}
+          REVIEW_FILE: ${{ runner.temp }}/review.md
+        run: |
+          python scripts/dependency_review.py --dir serve_api --out "$REVIEW_FILE"
+          cat "$REVIEW_FILE" >> "$GITHUB_STEP_SUMMARY"
+
+      # One issue per quarter. A re-run in the same quarter leaves an existing issue's
+      # body alone, because the outcomes are recorded in it, and adds the fresh
+      # evidence as a comment instead.
+      - name: Open or update the quarter's review issue
+        if: ${{ github.event_name != 'pull_request' }}
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+          REVIEW_FILE: ${{ runner.temp }}/review.md
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: |
+          title=$(head -n 1 "$REVIEW_FILE" | sed 's/^## //')
+          printf '\n\nRun: %s\n' "$RUN_URL" >> "$REVIEW_FILE"
+          existing=$(gh issue list --state all --label dependencies --search "in:title \"$title\"" --json number,title \
+            --jq "[.[] | select(.title == \"$title\")] | .[0].number // empty")
+          if [ -n "$existing" ]; then
+            gh issue comment "$existing" --body-file "$REVIEW_FILE"
+            echo "Added the evidence to #$existing"
+          else
+            gh issue create --title "$title" --body-file "$REVIEW_FILE" --label dependencies
+            echo "Opened the review issue"
+          fi

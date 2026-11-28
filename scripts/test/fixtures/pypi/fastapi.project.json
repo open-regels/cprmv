@@ -1,0 +1,57 @@
+{
+ "info": {
+  "name": "fastapi",
+  "version": "0.165.0",
+  "license": null,
+  "license_expression": "MIT",
+  "classifiers": [
+   "Programming Language :: Python :: 3.14"
+  ],
+  "project_urls": {
+   "Changelog": "https://fastapi.tiangolo.com/release-notes/",
+   "Documentation": "https://fastapi.tiangolo.com/",
+   "Homepage": "https://github.com/fastapi/fastapi",
+   "Issues": "https://github.com/fastapi/fastapi/issues",
+   "Repository": "https://github.com/fastapi/fastapi"
+  },
+  "home_page": null,
+  "yanked": false,
+  "yanked_reason": null
+ },
+ "ownership": {
+  "organization": null,
+  "roles": [
+   {
+    "role": "Owner",
+    "user": "tiangolo"
+   }
+  ]
+ },
+ "releases": {
+  "0.142.2": [
+   {
+    "filename": "fastapi-0.142.2-py3-none-any.whl",
+    "packagetype": "bdist_wheel",
+    "upload_time_iso_8601": "2026-09-30T09:51:09.800102Z",
+    "yanked": false,
+    "yanked_reason": null
+   },
+   {
+    "filename": "fastapi-0.142.2.tar.gz",
+    "packagetype": "sdist",
+    "upload_time_iso_8601": "2026-09-30T09:51:11.277181Z",
+    "yanked": false,
+    "yanked_reason": null
+   }
+  ],
+  "0.165.0": [
+   {
+    "filename": "fastapi-0.165.0.tar.gz",
+    "packagetype": "sdist",
+    "upload_time_iso_8601": "2026-11-18T19:15:37.076981Z",
+    "yanked": false,
+    "yanked_reason": null
+   }
+  ]
+ }
+}

@@ -5,3 +5,6 @@ __pycache__
 
 # Local Semgrep state (Guardian / CLI cache); never committed
 .semgrep/
+
+# Subagent-driven-development working files
+.superpowers/

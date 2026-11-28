@@ -19,6 +19,8 @@ All done on 24 November 2026 by the `open-regels` organisation admin.
   on them.
 - `SEMGREP_APP_TOKEN` is set as a repository secret.
 - The issue labels `security` and `ci` exist, for the daily dependency audit.
+- The issue label `dependencies` exists (created 28 November 2026), for the
+  quarterly dependency review.
 
 ## Pinned
 
@@ -34,13 +36,14 @@ All done on 24 November 2026 by the `open-regels` organisation admin.
 | `actions/attest-build-provenance` | `4d101475d8b20a2381f78447822ac1eab6504dd8`                                                 | v4.2.2  | Renovate                                         |
 | `bats-core/bats-core`            | `eb7f42f8d608ac693d7a4b67474f6714ea68cfc5`, checked out with `actions/checkout`            | v1.14.0 | Renovate                                         |
 | Node.js                          | `node-version: '24.22.2'` in `zizmor.yml`                                                   | 24.22.2 | Renovate (setup-node input); runs the Renovate validator only |
-| Python (CI)                      | `python-version: '3.14'` in `zizmor.yml` and `dependency-audit.yml`                         | 3.14    | Renovate, grouped with the image, behind Dashboard approval |
+| Python (CI)                      | `python-version: '3.14'` in `zizmor.yml`, `dependency-audit.yml` and `dependency-review.yml` | 3.14    | Renovate, grouped with the image, behind Dashboard approval |
 | zizmor (the audit tool)          | `version: '1.29.0'` in `zizmor.yml`                                                         | 1.29.0  | Renovate; merge the action update first          |
 | semgrep                          | `semgrep==1.176.1` in `semgrep.yml`                                                         | 1.176.1 | manual                                           |
 | renovate config validator        | `renovate@44.50.3` in `zizmor.yml`                                                          | 44.50.3 | manual                                           |
 | pip-tools                        | `pip-tools==7.6.2` in `zizmor.yml`, `serve_api/Makefile` and `renovate.json` (`constraints`) | 7.6.2   | manual; 7.7.0 is younger than the 14-day cooldown |
 | cyclonedx-bom (the SBOM tool)    | `cyclonedx-bom==8.0.1` in `sbom.yml`                                                    | 8.0.1   | manual (a plain `pip install` line); newest release at least 14 days old |
-| pytest in the SBOM workflow      | `pytest==9.1.1` in `sbom.yml`                                                           | 9.1.1   | manual; keep equal to the pin in `serve_api/requirements-dev.txt` |
+| pytest in the script workflows   | `pytest==9.1.1` in `sbom.yml`, `zizmor.yml` (`requirements-review`) and `dependency-review.yml` | 9.1.1   | manual; keep equal to the pin in `serve_api/requirements-dev.txt` |
+| pip in the compile container     | `pip==26.3` in `serve_api/Makefile` (`deps-linux`)                                      | 26.3    | manual; at least 26.1, the first pip that reads `PIP_UPLOADED_PRIOR_TO=P14D` (see "Cooldown") |
 | pip-audit                        | `pip-audit==2.10.1` in `dependency-audit.yml` and `ci.yml` (`test` job)                 | 2.10.1  | manual                                           |
 | shellcheck                       | runner-provided in `ci.yml` (`test` job); **not pinned**                                | runner  | exception: ubuntu-24.04 ships it, and CI only lints; the local check uses `koalaman/shellcheck:v0.11.0` |
 | Python base image                | `python:3.14-bookworm@sha256:fbaf91204f2758a70a7f7d6cf3c2871851227152a54e6a7b5b59941c4566b6b5` in `serve_api/Dockerfile` line 1 and `PY_IMAGE` in `serve_api/Makefile` | 3.14-bookworm | Renovate, both files in one pull request (see below) |
@@ -72,8 +75,12 @@ the versions the image ships.
 On Windows there is no `make`; from the repository root in Git Bash run:
 
 ```
-MSYS_NO_PATHCONV=1 docker run --rm -e PIP_ROOT_USER_ACTION=ignore -e PIP_DISABLE_PIP_VERSION_CHECK=1 -v "$PWD/serve_api:/s" -w /s python:3.14-bookworm@sha256:fbaf91204f2758a70a7f7d6cf3c2871851227152a54e6a7b5b59941c4566b6b5 sh -c "pip install -q pip-tools==7.6.2 && sed 's/\r$//' pip-compile.sh > /tmp/pc.sh && sh /tmp/pc.sh"
+MSYS_NO_PATHCONV=1 docker run --rm -e PIP_ROOT_USER_ACTION=ignore -e PIP_DISABLE_PIP_VERSION_CHECK=1 -v "$PWD/serve_api:/s" -w /s python:3.14-bookworm@sha256:fbaf91204f2758a70a7f7d6cf3c2871851227152a54e6a7b5b59941c4566b6b5 sh -c "pip install -q pip==26.3 pip-tools==7.6.2 && sed 's/\r$//' pip-compile.sh > /tmp/pc.sh && PIP_UPLOADED_PRIOR_TO=P14D sh /tmp/pc.sh"
 ```
+
+`PIP_UPLOADED_PRIOR_TO=P14D` is the developer's cooldown; keep it in this command
+as in the Makefile, on the compile only, so the image's own pip never sees it
+(see "Cooldown").
 
 Add `--upgrade` after `/tmp/pc.sh` to upgrade. On Linux or WSL with native Docker the
 output files are owned by root; `chown` them back before committing.
@@ -90,6 +97,8 @@ Dashboard approval) needs the requirements recompiled on the new Python
 | Check              | Workflow               | Covers                                                                                                                         |
 | ------------------ | ---------------------- | ------------------------------------------------------------------------------------------------------------------------------ |
 | `audit`            | `zizmor.yml`           | Workflow analysis, Renovate config, requirements match `pyproject.toml`, every requirement hashed, pins                        |
+| `requirements-review` | `zizmor.yml`        | The register gate (see "Dependency register gate"): script tests and the register's shape on every run; on a pull request that changes `serve_api/requirements.txt`, `requirements-dev.txt`, `pyproject.toml` or `dependency-register.json`, the requirements diff, new direct dependencies against the register, and the 14-day cooldown. One comment (`<!-- requirements-review -->`), posted by `requirements-review-comment`. Required once the owner has added it (see "Branch rulesets") |
+| `dependency-review` | `dependency-review.yml` | Quarterly (2 January, April, July, October), on demand, and on a pull request that changes the review, the gate scripts, their tests, the register or the serve_api requirements (no issue is opened then): the evidence for every direct dependency, opened as one issue per quarter labelled `dependencies`; not a merge check |
 | `scan`             | `semgrep.yml`          | Semgrep Code and Supply Chain                                                                                                  |
 | `dependency-audit` | `dependency-audit.yml` | Daily `pip-audit` of `acc` and `main`; not a merge check. Also runs on a pull request that changes the audit itself            |
 | `test`             | `ci.yml`               | `py_compile`, import, `pytest`, shellcheck, bats                                                                             |
@@ -105,8 +114,11 @@ The shell scripts are shellchecked and tested with bats-core in `test`:
 `deployment/vm/reconciler/reconcile.sh` (the reconciler on the VM).
 
 Required checks match by job name, so renaming a job means updating the rulesets.
-`audit` and `scan` run on every pull request, whatever its base branch or paths,
-so a pull request cannot skip a required check by not triggering it.
+`audit`, `requirements-review` and `scan` run on every pull request, whatever its
+base branch or paths, so a pull request cannot skip a required check by not
+triggering it. `requirements-review` decides inside the job, with `git diff`
+against the base, whether there is anything to judge, and succeeds with a note
+when there is not.
 
 **Fork pull requests.** GitHub passes no secrets to a pull request from a fork, so
 `semgrep ci` does not start and `scan` **fails** for a fork pull request. Tracked in
@@ -114,6 +126,97 @@ https://github.com/open-regels/cprmv/issues/4 (the same problem as
 `sgort/ttl-editor#128`). Until it is solved, the contributor pushes a branch to this
 repository instead, or an admin edits the ruleset for that merge. There are no forks
 today.
+
+## Dependency register gate
+
+The same gate as in linked-data-explorer, ttl-editor, ronl-business-api and lvg
+(ICTU recommendations 1 and 6), reimplemented in Python for PyPI
+(`docs/superpowers/specs/2026-11-28-dependency-register-gate-design.md`). The
+criteria are linked-data-explorer's `docs/dependency-criteria.md`, the one copy
+every repository links to. The scripts are stdlib only and tested under pytest
+in `scripts/test/` with no network:
+
+- `scripts/requirements_review.py` compares the base and head copies of both
+  requirements files: pins added, removed, updated and downgraded. A pin without
+  hashes or from anywhere but PyPI blocks. Every added pin is looked up on PyPI,
+  and a licence off the allow-list in `serve_api/lockfile-review.json` or a pin
+  with no wheel for the image is listed, not blocking.
+- `scripts/dependency_gate.py` judges every direct dependency that is new to a
+  group of `serve_api/pyproject.toml` (`runtime`, `dev`, `tools`), and every entry
+  `serve_api/dependency-register.json` adds or changes, against PyPI and GitHub
+  evidence. A criterion the entry says holds while the evidence says it does not,
+  a missing or short `why`, an assessed major other than the locked one, a cited
+  issue that is not an open issue, or a missing `licence`/`repository` field
+  where PyPI cannot supply one blocks. It also enforces the cooldown (below).
+- Ways through, each written into the comment and the job summary: a committed
+  override (`status: "override"` with an open issue, or a `cooldownOverrides`
+  entry with an open issue), or a Renovate security pull request: author
+  `renovate[bot]` and the `security` label put on by `renovate[bot]`, read from
+  the issues API (waiting up to 60 s for Renovate's labels), never from the
+  event payload. A Renovate security pull request also passes a missing register
+  entry with a warning.
+- Exit codes: 0 clean, 1 blocking, 2 could not evaluate. A PyPI or GitHub
+  failure, or a malformed file, is 2 and fails the check; it never reads as clean.
+
+The job runs the script tests and `--check-register` on every run, so a broken
+register fails even a pull request that touches nothing else. On a pull request
+whose serve_api files differ, it exports the base copies with `git show`, runs
+the review and the gate, combines them with `--combine` (verdicts at the top,
+which a cut to GitHub's comment limit never removes; the full text in the job
+summary) and exits with the worst status. Values reach the scripts through
+`env:` only; the comment job holds the only write token and runs no repository
+code. There is no `labeled` trigger. Fork pull requests get the job summary, no
+comment.
+
+`scripts/dependency_review.py` runs quarterly in `dependency-review.yml`
+(ICTU recommendation 11): every register entry and direct dependency with its
+evidence and signals gathered again, entries whose locked major has moved past
+`assessed.version`, `replace` and `override` entries with the state of their
+issue, the `cooldownOverrides`, and the previous quarter's merged Renovate pull
+requests: those labelled `security`, and the young pins the gate logged on
+them. A person records keep, replace or accept per finding in the issue.
+
+## Cooldown
+
+Every pin a pull request adds or changes in either requirements file must have
+been uploaded to PyPI at least 14 days before the run (`minReleaseAgeDays` in
+`serve_api/lockfile-review.json`, the same 14 days as Renovate's
+`minimumReleaseAge`). "Uploaded" is the earliest upload of that version's files.
+A younger pin blocks `requirements-review` on a person's pull request unless a
+`cooldownOverrides` entry with an open issue covers it.
+
+**The remaining exception: Renovate's routine pull requests** (owner's decision
+(b), 28 November 2026). Renovate's pip-compile manager passes no cutoff to
+pip-compile and rejects a header option it does not know
+(`lib/modules/manager/pip-compile/common.ts` L306-317), and hosted Renovate
+cannot be given the variable below, so every Renovate pull request re-resolves
+the transitive pins with no cutoff, and the weekly lock-file maintenance almost
+always brings at least one pin younger than 14 days. Blocking those would stop
+the maintenance for good. So on any pull request whose author is
+`renovate[bot]`, young pins are **logged, not blocked**: listed in the comment,
+the job summary and the next quarterly review. The new-dependency rules still
+apply, and the package Renovate updates has already waited its 14 days. For
+CPRMV's transitive tree, the cooldown is enforced on people's changes and logged
+on Renovate's.
+
+This route keys on the pull request's author only, read from the event
+(`github.event.pull_request.user.login`). A person who pushes commits to a
+`renovate/*` branch is still inside a pull request authored by `renovate[bot]`,
+so young pins in those commits are logged, not blocked. Review a Renovate pull
+request with commits from someone else as a person's change.
+
+**The developer path.** `make deps-linux` (and `deps-upgrade`, and the docker
+command under "Recompiling the requirements") sets the environment variable
+`PIP_UPLOADED_PRIOR_TO=P14D` for the compile only (not for the bootstrap
+`pip install`, so the image's own pip never sees it) and installs `pip==26.3`
+next to `pip-tools==7.6.2`; pip 26.1 is the first to accept the `P<n>D` form.
+pip then resolves only files at least 14 days old, so a person's recompile meets
+the gate's cooldown before it is pushed. It must stay the variable, never
+pip-compile's `--uploaded-prior-to` flag: pip-compile writes the flag into the
+requirements header, `audit` recompiles with `./pip-compile.sh` and compares
+byte for byte, and Renovate's pip-compile manager rejects a header option it
+does not know and stops maintaining the files. The variable is applied and not
+recorded, and `audit`'s recompile sets none and keeps the committed pins.
 
 ## Release SBOM
 
@@ -167,8 +270,16 @@ required check that has never reported blocks every merge).
 Both require a pull request with zero approvals and merge commits only, and both
 block branch deletion and force pushes. Neither has bypass actors.
 
+**`requirements-review` is still to be added, by the owner.** Add it to
+`acc supply-chain gate` after the job has first reported on a pull request into
+`acc`. Add it to `main promotion gate` only after it has reported on a release
+pull request into `main`, not before; then update the table above. Until
+then it runs and comments but does not block a merge. A required check that has
+never reported blocks every merge, which is why it waits for the first run.
+
 `.github/rulesets/acc.json` and `main.json` are the record of what the rulesets
-should be, including `test` and `build` for both branches. They are not applied by CI. To
+should be, including `test` and `build` for both branches, and already
+`requirements-review` for both: apply them once the check has reported. They are not applied by CI. To
 apply one, an admin runs, for example:
 
 ```
@@ -240,3 +351,10 @@ and `main` at `502a351`.
   Renovate validator) are pinned by version, but their own transitive dependencies
   are not, as in lvg.
 - **Playwright, bundle checks, preview cleanup.** Nothing here they would check.
+- **lvg's `lockfile-review` and `dependency-review` scripts.** They read
+  `package-lock.json` and the npm registry. The same rules are carried over as
+  Python scripts for PyPI (`requirements-review`, `dependency-review`; see
+  "Dependency register gate"), not the Node scripts. Two differences are on
+  purpose: every register change is judged against evidence, not only
+  shape-checked; and young pins in Renovate's routine pull requests are logged,
+  not blocked (see "Cooldown").
